@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<settings>
+	<author>lexustheme</author>
+	<name>Customize</name>
+	<id>customize</id>
+	<icon>fa fa-paint-brush</icon>
+	<item>
+		<id>style_profile</id>
+		<label>Style Profile</label>
+		<type>style_profile</type>
+		<default>0</default>
+	</item>
+	<item>
+		<id>action</id>
+		<label>Live Edit</label>
+		<action>customize</action>
+		<type>link</type>
+		<class>btn btn-primary</class>
+	</item>
+	<item>
+		<id>custom_css</id>
+		<label>Custom Css</label>
+		<type>custom_css</type>
+		<default>0</default>
+	</item>
+	<item>
+		<id>custom_js</id>
+		<label>Custom Javascript</label>
+		<type>custom_js</type>
+		<default>0</default>
+	</item>
+</settings>

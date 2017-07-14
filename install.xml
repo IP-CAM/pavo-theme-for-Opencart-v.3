@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <file path="admin/controller/marketplace/install.php">
+        <operation>
+            <search><![CDATA[{% 'system/library/', %}]]></search>
+            <add position="before"><![CDATA[
+                'system/pavothemer/',
+            ]]></add>
+        </operation>
+    </file>
+</modification>
