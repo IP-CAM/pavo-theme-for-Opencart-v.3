@@ -1,6 +1,11 @@
 <?php
 // Heading
-$_['heading_title']       = 'Pavo Themmer';
+$_['heading_title']       = 'PavoThemer';
+
+// Menus
+$_['menu_settings_text'] 	= 'Settings';
+$_['menu_customize_text'] 	= 'Customize';
+$_['menu_sampledata_text'] 	= 'Sample Data';
 
 // Text
 $_['text_save'] = 'Save';

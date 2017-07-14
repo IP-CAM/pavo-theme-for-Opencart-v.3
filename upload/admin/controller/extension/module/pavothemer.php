@@ -90,6 +90,30 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	/**
+	 * Customize
+	 *
+	 * @since 1.0.0
+	 */
+	public function customize() {
+		// add scripts
+		$this->document->addScript( 'view/javascript/pavothemer/customize.js' );
+		$this->document->addStyle( 'view/stylesheet/pavothemer/customize.css' );
+
+		$this->data['iframeURI'] = HTTPS_CATALOG;
+		$this->template = 'extension/module/pavothemer/customize';
+		parent::index();
+	}
+
+	/**
+	 * Sample data
+	 *
+	 * @since 1.0.0
+	 */
+	public function sampledata() {
+
+	}
+
+	/**
 	 * Validate post form
 	 *
 	 * @since 1.0.0
@@ -215,21 +239,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// insert default option values
 		// $this->model_setting_setting->editSetting( 'lx_config', $settings, $this->config->get( 'config_store_id' ) );
 		$this->model_setting_setting->editSetting( 'lx_config', $defaultOptions, $this->config->get( 'config_store_id' ) );
-	}
-
-	/**
-	 * Customize
-	 *
-	 * @since 1.0.0
-	 */
-	public function customize() {
-		// add scripts
-		$this->document->addScript( 'view/javascript/pavothemer/customize.js' );
-		$this->document->addStyle( 'view/stylesheet/pavothemer/customize.css' );
-
-		$this->data['iframeURI'] = HTTPS_CATALOG;
-		$this->template = 'extension/module/pavothemer/customize';
-		parent::index();
 	}
 
 }
