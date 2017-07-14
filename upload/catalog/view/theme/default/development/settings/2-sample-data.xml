@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<settings>
+	<author>lexustheme</author>
+	<name>Data Sample</name>
+	<id>data-sample</id>
+	<icon>fa fa-cloud-download</icon>
+	<item>
+		<id>notice</id>
+		<label>Default Theme</label>
+		<type>notice</type>
+		<content>
+			<![CDATA[
+				<div class="alert alert-success">
+					<i>The framework supports you two way to put your customization on theme.<ul><li>You create your css file(s) and put in LEXUS_THEME/stylesheet/local. All files will be loaded automatic</li><li>Or use tools at bellow</li></ul></i>
+				</div>
+			]]>
+		</content>
+	</item>
+	<item>
+		<id>panel</id>
+		<label>Default Theme</label>
+		<type>select</type>
+		<default>0</default>
+		<options>
+			<option>
+				<text>Enable</text>
+				<value>1</value>
+			</option>
+			<option>
+				<text>Disable</text>
+				<value>0</value>
+			</option>
+		</options>
+	</item>
+</settings>

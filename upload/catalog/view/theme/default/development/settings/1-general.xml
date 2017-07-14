@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<settings>
+	<author>lexustheme</author>
+	<name>General</name>
+	<id>general</id>
+	<icon>fa fa-gear</icon>
+	<item>
+		<id>default_theme</id>
+		<group>Global</group>
+		<label>Default Theme</label>
+		<type>select</type>
+		<wrapper_class>xxx</wrapper_class>
+		<default>0</default>
+		<multiple>0</multiple>
+		<required>0</required>
+		<option>
+			<text>Enable</text>
+			<value>1</value>
+		</option>
+		<option>
+			<text>Disable</text>
+			<value>0</value>
+		</option>
+	</item>
+	<item>
+		<id>theme_width</id>
+		<group>Global</group>
+		<label>Width</label>
+		<type>text</type>
+		<default>auto</default>
+		<placeholder>0</placeholder>
+		<required>1</required>
+		<desc>Enter Layout width, such as 940px or 96%. Put value "auto" -> Layout width is used in stylesheet.css of theme</desc>
+	</item>
+	<item>
+		<id>enable_custom_copyright</id>
+		<group>Global</group>
+		<label>Enabled Custom Copyright</label>
+		<type>radio</type>
+		<default>0</default>
+		<option>
+			<text>Yes</text>
+			<value>1</value>
+		</option>
+		<option>
+			<text>No</text>
+			<value>0</value>
+		</option>
+	</item>
+	<item>
+		<id>copyright_text</id>
+		<group>Global</group>
+		<label>Copyright</label>
+		<type>summernote</type>
+		<default><![CDATA[Copyright 2013 ThemeLexus.Com]]></default>
+	</item>
+	<item>
+		<label>Enable Quickview</label>
+		<id>quickview</id>
+		<type>radio</type>
+		<group>Other Settings</group>
+		<default>0</default>
+		<option>
+			<text>Yes</text>
+			<value>1</value>
+		</option>
+		<option>
+			<text>No</text>
+			<value>0</value>
+		</option>
+	</item>
+	<item>
+		<label>Logo Type</label>
+		<id>logo_type</id>
+		<type>select</type>
+		<group>Other Settings</group>
+		<default>logo-theme</default>
+		<option>
+			<text>Logo In Theme</text>
+			<value>logo-theme</value>
+		</option>
+		<option>
+			<text>Logo Opencart</text>
+			<value>logo-opencart</value>
+		</option>
+	</item>
+	<item>
+		<label>Background</label>
+		<id>background</id>
+		<type>select</type>
+		<group>Other Settings</group>
+		<default>bg-default</default>
+		<option>
+			<text>Default</text>
+			<value>bg-default</value>
+		</option>
+		<option>
+			<text>Home2</text>
+			<value>bg-home2</value>
+		</option>
+		<option>
+			<text>Home6</text>
+			<value>bg-home6</value>
+		</option>
+	</item>
+	<item>
+		<label>Layout Header</label>
+		<id>header_layout</id>
+		<type>select</type>
+		<group>Other Settings</group>
+		<default>headerv1</default>
+		<option>
+			<text>Header version 1</text>
+			<value>headerv1</value>
+		</option>
+		<option>
+			<text>Header version 2</text>
+			<value>headerv2</value>
+		</option>
+		<option>
+			<text>Header version 3</text>
+			<value>headerv3</value>
+		</option>
+		<option>
+			<text>Header version 4</text>
+			<value>headerv4</value>
+		</option>
+		<option>
+			<text>Header version 5</text>
+			<value>headerv5</value>
+		</option>
+		<option>
+			<text>Header version 6</text>
+			<value>headerv6</value>
+		</option>
+		</item>
+	<item>
+		<label>Footer Layout</label>
+		<id>footer_layout</id>
+		<type>select</type>
+		<group>Other Settings</group>
+		<default>footerv1</default>
+		<option>
+			<text>Footer default</text>
+			<value>footer</value>
+		</option>
+		<option>
+			<text>Footer version 1</text>
+			<value>footerv1</value>
+		</option>
+		<option>
+			<text>Footer version 2</text>
+			<value>footerv2</value>
+		</option>
+		<option>
+			<text>Footer version 3</text>
+			<value>footerv3</value>
+		</option>
+		<option>
+			<text>Footer version 4</text>
+			<value>footerv4</value>
+		</option>
+		<option>
+			<text>Footer version 5</text>
+			<value>footerv5</value>
+		</option>
+	</item>
+	<item>
+		<label>Offcanvas menu</label>
+		<id>offcanvas</id>
+		<group>Other Settings</group>
+		<default>category</default>
+		<type>select</type>
+		<option>
+			<text>Category</text>
+			<value>category</value>
+		</option>
+		<option>
+			<text>Megamenu</text>
+			<value>megamenu</value>
+		</option>
+	</item>
+	<item>
+		<label>Main Content Home FullWidth</label>
+		<id>home_container_full</id>
+		<type>radio</type>
+		<group>Other Settings</group>
+		<default>0</default>
+		<option>
+			<text>No</text>
+			<value>0</value>
+		</option>
+		<option>
+			<text>Yes</text>
+			<value>1</value>
+		</option>
+	</item>
+	<item>
+		<id>layout</id>
+		<label>Layout</label>
+		<group>Other Settings</group>
+		<default>fullwidth</default>
+		<type>select</type>
+		<option>
+			<text>Full Width</text>
+			<value>fullwidth</value>
+		</option>
+		<option>
+			<text>Boxed Large</text>
+			<value>boxed-lg</value>
+		</option>
+	</item>
+</settings>

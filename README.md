@@ -1,2 +1,2 @@
 # pavothemer
-PavoThemer OpenCart Module
+Theme Lexus OpenCart Framework
