@@ -1,10 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <modification>
-    <file path="admin/controller/marketplace/install.php">
+	<name>PavoThemer</name>
+	<code>pavothemer</code>
+	<version>1.0.0</version>
+	<author>Pavotheme</author>
+	<link>http://www.pavothemes.com</link>
+    <file path="admin/controller/common/column_left.php">
         <operation>
-            <search><![CDATA[{% 'system/library/', %}]]></search>
+            <search><![CDATA[// Catalog]]></search>
             <add position="before"><![CDATA[
-                'system/pavothemer/',
+                // pavothemer langauge file
+                $this->load->language('extension/module/pavothemer');
+
+                // PavoThemer Settings menu
+                $settings = array();
+                // view settings panel
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/edit' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_settings_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/edit', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()   
+                    );
+                }
+
+                // access customize
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/customize' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_customize_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/customize', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()   
+                    );
+                }
+
+                // view settings panel
+                if ( $this->user->hasPermission( 'access', 'extension/module/sampledata' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_sampledata_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/sampledata', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()   
+                    );
+                }
+
+                if ( $settings ) {
+                    $data['menus'][] = array(
+                        'id'       => 'pavothemer',
+                        'icon'     => 'fa fa-cog fw',
+                        'name'     => $this->language->get( 'heading_title' ),
+                        'href'     => '',
+                        'children' => array()
+                    );
+                }
+                // End PavoThemer Settings menu
             ]]></add>
         </operation>
     </file>

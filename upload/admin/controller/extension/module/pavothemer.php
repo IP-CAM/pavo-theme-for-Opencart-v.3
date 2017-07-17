@@ -2,7 +2,7 @@
 
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
-require_once DIR_SYSTEM . 'pavothemer/pavothemer.php';
+require_once dirname( __FILE__ ) . '/pavothemer/pavothemer.php';
 
 /**
  * Theme Control Controller
@@ -218,6 +218,19 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @return mixed
 	 */
 	public function install() {
+		// START ADD USER PERMISSION
+		$this->load->model('user/user_group');
+		// access - modify pavothemer edit
+		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/edit');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/edit');
+		// access - modify pavothemer customize
+		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/customize');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/customize');
+		// access - modify pavothemer sampledata
+		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/sampledata');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/sampledata');
+		// END ADD USER PERMISSION
+
 		$settingFields = LxSettingHelper::getSettings( $this->config->get('config_theme') );
 		$this->load->model( 'setting/setting' );
 		$settings = array();
