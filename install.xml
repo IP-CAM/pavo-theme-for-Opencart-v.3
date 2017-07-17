@@ -32,12 +32,28 @@
                     );
                 }
 
-                // view settings panel
-                if ( $this->user->hasPermission( 'access', 'extension/module/sampledata' ) ) {
-                    $settings[] = array(
-                        'name'     => $this->language->get('menu_sampledata_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/sampledata', 'user_token=' . $this->session->data['user_token'], true),
+                $tools = array();
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/import' ) ) {
+                    $tools[] = array(
+                        'name'     => $this->language->get('menu_tool_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
+                    );
+                }
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/export' ) ) {
+                    $tools[] = array(
+                        'name'     => $this->language->get('menu_tool_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()   
+                    );
+                }
+
+                // view settings panel
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/import' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/export' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_tool_text'),
+                        'href'     => '',
+                        'children' => $tools
                     );
                 }
 
@@ -47,7 +63,7 @@
                         'icon'     => 'fa fa-cog fw',
                         'name'     => $this->language->get( 'heading_title' ),
                         'href'     => '',
-                        'children' => array()
+                        'children' => $settings
                     );
                 }
                 // End PavoThemer Settings menu

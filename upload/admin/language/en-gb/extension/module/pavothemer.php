@@ -5,7 +5,9 @@ $_['heading_title']       = 'PavoThemer';
 // Menus
 $_['menu_settings_text'] 	= 'Settings';
 $_['menu_customize_text'] 	= 'Customize';
-$_['menu_sampledata_text'] 	= 'Sample Data';
+$_['menu_tool_text'] 		= 'Tools';
+$_['menu_import_text'] 		= 'Import';
+$_['menu_export_text'] 		= 'Export';
 
 // Text
 $_['text_save'] = 'Save';

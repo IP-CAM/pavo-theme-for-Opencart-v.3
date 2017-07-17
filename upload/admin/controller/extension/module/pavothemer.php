@@ -22,7 +22,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 *
 	 * @since 1.0.0
 	 */
-	public function index() {
+	public function edit() {
 		// load language file
 		$this->load->language('extension/module/pavothemer');
 		// load setting model
@@ -105,11 +105,18 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	/**
-	 * Sample data
-	 *
+	 * Import
 	 * @since 1.0.0
 	 */
-	public function sampledata() {
+	public function import() {
+		var_dump(1); die();
+	}
+
+	/**
+	 * Export
+	 * @since 1.0.0
+	 */
+	public function export() {
 
 	}
 
@@ -227,8 +234,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/customize');
 		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/customize');
 		// access - modify pavothemer sampledata
-		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/sampledata');
-		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/sampledata');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/import');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/import');
+		// export
+		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/export');
+		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/export');
 		// END ADD USER PERMISSION
 
 		$settingFields = LxSettingHelper::getSettings( $this->config->get('config_theme') );
@@ -250,6 +260,13 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		// insert default option values
 		$this->model_setting_setting->editSetting( 'lx_config', $defaultOptions, $this->config->get( 'config_store_id' ) );
+	}
+
+	/**
+	 * 
+	 */
+	public function uninstall() {
+
 	}
 
 }

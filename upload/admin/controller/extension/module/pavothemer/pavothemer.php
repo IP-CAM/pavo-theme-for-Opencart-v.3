@@ -8,7 +8,7 @@
 
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
-defined( 'PAVOTHEMER_DIR' ) || define( 'PAVOTHEMER_DIR', DIR_SYSTEM . basename( dirname( __FILE__ ) ) );
+defined( 'PAVOTHEMER_DIR' ) || define( 'PAVOTHEMER_DIR', dirname( __FILE__ ) );
 
 require_once PAVOTHEMER_DIR . '/helper/settings.php';
 require_once PAVOTHEMER_DIR . '/helper/theme.php';
