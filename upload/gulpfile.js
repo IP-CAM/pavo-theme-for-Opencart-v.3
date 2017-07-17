@@ -9,10 +9,11 @@ const path = require( 'path' );
 const rename = require( 'gulp-rename' );
 const glob = require( 'glob' );
 const browserify = require( 'browserify' );
+const through2 = require( 'through2' );
 
 const scriptSources = [
-	'admin/view/javascript/pavothemer/classes/class-lx-*.js',
-	'catalog/view/theme/**/javascript/classes/class-lx-*.js'
+	'admin/view/javascript/pavothemer/classes/class-*.js',
+	'catalog/view/theme/**/javascript/classes/class-*.js'
 ];
 
 const scripts = [];
@@ -36,38 +37,22 @@ for ( let theme of themes ) {
 
 // scripts convert es6 to es5
 gulp.task( 'scripts', () => {
-	// console.log( 'gulp task scripts is running' );
-
-	// return browserify( { entries: scripts, debug: true, extensions: [ 'es6' ] } )
-	// 		.transform( 'babelify' )
-	// 		.bundle()
-	// 		.pipe( uglify() )
-	// 		.pipe( sourcemaps.write( 'maps', {
-	// 			mapFile: ( mapFilePath ) => {
-	// 				return mapFilePath.replace( 'classes', 'maps' );
-	// 			}
-	// 		} ) )
-	// 		.pipe( rename( ( path ) => {
-	// 			path.basename = path.basename.replace( 'class-lx-', '' );
-	// 			path.dirname = path.dirname.replace( '/classes', '' );
-	// 		}) )
-	// 		.on( 'error', ( e ) => {
-	// 			console.log( 'ERROR: ' + e );
-	// 		} )
-	// 		.pipe( gulp.dest( ( file ) => {
-	// 			var regex = /admin\/view/i;
-
-	// 			// check admin scripts
-	// 			if ( regex.test( file.base ) ) {
-	// 				return file.base.replace( 'classes', '' );
-	// 			} else {
-	// 				return file.base;
-	// 			}
-	// 			return file.base;
-	// 		} ) );
+	console.log( 'gulp task scripts is running' );
 
 	return gulp.src( scriptSources )
 		.pipe( sourcemaps.init() )
+		// this section is required for compile export function
+		.pipe(through2.obj(function (file, enc, next) {
+            browserify(file.path, { debug: process.env.NODE_ENV === 'development' })
+                .transform(require('babelify'))
+                .bundle(function (err, res) {
+                    if (err) { return next(err); }
+
+                    file.contents = res;
+                    next(null, file);
+                });
+        }))
+        // end this section is required for compile export function
 		.pipe( babel() )
 		.pipe( uglify() )
 		.pipe( sourcemaps.write( 'maps', {
@@ -76,7 +61,7 @@ gulp.task( 'scripts', () => {
 			}
 		} ) )
 		.pipe( rename( ( path ) => {
-			path.basename = path.basename.replace( 'class-lx-', '' );
+			path.basename = path.basename.replace( 'class-', '' );
 			path.dirname = path.dirname.replace( '/classes', '' );
 		}) )
 		.on( 'error', ( e ) => {
@@ -123,5 +108,5 @@ gulp.task( 'default', () => {
 gulp.task( 'watch', () => {
 	console.log( 'gulp is watching changes' )
 	gulp.watch( scriptSources, ['scripts'] );
-	// gulp.watch( styles, ['sass'] );
+	gulp.watch( styles, ['sass'] );
 } );
