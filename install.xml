@@ -43,7 +43,7 @@
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/export' ) ) {
                     $tools[] = array(
                         'name'     => $this->language->get('menu_tool_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], true),
+                        'href'     => $this->url->link('extension/module/pavothemer/export', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
                     );
                 }

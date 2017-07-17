@@ -106,7 +106,7 @@ gulp.task( 'sass', () => {
 				return mapFilePath.replace( '/sass', '/maps' );
 			}
 		} ) )
-        .pipe( gulp.dest( function( file ) {
+        .pipe( gulp.dest( ( file ) => {
         	if ( path.basename( file.base ) === 'sass' ) {
         		return path.dirname( file.base ) + '/stylesheet';
         	}
