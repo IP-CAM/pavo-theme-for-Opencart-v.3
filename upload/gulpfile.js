@@ -52,7 +52,7 @@ gulp.task( 'scripts', () => {
                     next(null, file);
                 });
         }))
-        // end this section is required for compile export function
+        // end section is required for compile export function
 		.pipe( babel() )
 		.pipe( uglify() )
 		.pipe( sourcemaps.write( 'maps', {

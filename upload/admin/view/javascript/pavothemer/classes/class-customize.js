@@ -11,7 +11,7 @@ export default class PavoThemeCustomize {
 		const Customize = new PavoThemeCustomize();
 		var windowHeight = $( window ).height();
 		var topHeight = $( '#top-panel' ).height();
-		$( '#main-preview' ).height( windowHeight - topHeight );
+		// $( '#main-preview' ).height( windowHeight - topHeight );
 	});
 
 })(jQuery);
