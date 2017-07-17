@@ -117,7 +117,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @since 1.0.0
 	 */
 	public function export() {
-
+		var_dump(2); die();
 	}
 
 	/**
@@ -263,7 +263,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	/**
-	 * 
+	 * Uninstall action
+	 * @since 1.0.0
 	 */
 	public function uninstall() {
 
