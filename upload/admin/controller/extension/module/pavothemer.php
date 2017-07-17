@@ -247,10 +247,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				}
 			}
 		}
-		// $settings['lx_config'] = $defaultOptions;
 
 		// insert default option values
-		// $this->model_setting_setting->editSetting( 'lx_config', $settings, $this->config->get( 'config_store_id' ) );
 		$this->model_setting_setting->editSetting( 'lx_config', $defaultOptions, $this->config->get( 'config_store_id' ) );
 	}
 
