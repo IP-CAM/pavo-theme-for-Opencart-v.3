@@ -267,7 +267,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @since 1.0.0
 	 */
 	public function uninstall() {
-
+		
 	}
 
 }
