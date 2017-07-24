@@ -12,8 +12,8 @@ const browserify = require( 'browserify' );
 const through2 = require( 'through2' );
 
 const scriptSources = [
-	'admin/view/javascript/pavothemer/es6/class-*.js',
-	'catalog/view/theme/**/javascript/es6/class-*.js'
+	'admin/view/javascript/pavothemer/es6/*.es6.js',
+	'catalog/view/theme/**/javascript/es6/*.es6.js'
 ];
 
 const scripts = [];
