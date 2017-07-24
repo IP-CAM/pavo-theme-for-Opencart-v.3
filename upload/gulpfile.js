@@ -12,8 +12,8 @@ const browserify = require( 'browserify' );
 const through2 = require( 'through2' );
 
 const scriptSources = [
-	'admin/view/javascript/pavothemer/classes/class-*.js',
-	'catalog/view/theme/**/javascript/classes/class-*.js'
+	'admin/view/javascript/pavothemer/es6/class-*.js',
+	'catalog/view/theme/**/javascript/es6/class-*.js'
 ];
 
 const scripts = [];
@@ -57,12 +57,12 @@ gulp.task( 'scripts', () => {
 		.pipe( uglify() )
 		.pipe( sourcemaps.write( 'maps', {
 			mapFile: ( mapFilePath ) => {
-				return mapFilePath.replace( 'classes', 'maps' );
+				return mapFilePath.replace( 'es6', 'maps' );
 			}
 		} ) )
 		.pipe( rename( ( path ) => {
-			path.basename = path.basename.replace( 'class-', '' );
-			path.dirname = path.dirname.replace( '/classes', '' );
+			path.basename = path.basename.replace( '.es6', '' );
+			path.dirname = path.dirname.replace( '/es6', '' );
 		}) )
 		.on( 'error', ( e ) => {
 			console.log( 'ERROR: ' + e );
@@ -72,7 +72,7 @@ gulp.task( 'scripts', () => {
 
 			// check admin scripts
 			if ( regex.test( file.base ) ) {
-				return file.base.replace( 'classes', '' );
+				return file.base.replace( 'es6', '' );
 			} else {
 				return file.base;
 			}

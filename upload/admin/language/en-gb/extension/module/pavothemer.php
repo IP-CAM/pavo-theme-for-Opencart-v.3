@@ -1,6 +1,6 @@
 <?php
 // Heading
-$_['heading_title']       = 'PavoThemer';
+$_['heading_title']       	= 'PavoThemer';
 
 // Menus
 $_['menu_settings_text'] 	= 'Settings';
@@ -10,7 +10,11 @@ $_['menu_import_text'] 		= 'Import';
 $_['menu_export_text'] 		= 'Export';
 
 // Text
-$_['text_save'] = 'Save';
+$_['text_back'] 			= 'Back';
+$_['text_save'] 			= 'Save';
+
+
+
 $_['text_saveandstay'] = 'Save and Stay';
 $_['text_store_theme'] = 'Theme';
 $_['text_default_store'] = 'Store:';
@@ -189,7 +193,7 @@ $_['text_contact_html'] = 'Custom HTML';
 $_['text_auto'] = 'Auto';
 $_['text_support_info'] = 'Support Info';
 
-$_['text_back'] = 'Back';
+// $_['text_back'] = 'Back';
 $_['text_live_edit'] = 'Live Customzing Theme';
 $_['text_no_select'] = 'Select A Custom Theme';
 $_['text_heading_customize_bg'] = '<b>Customize Body Background</b>';

@@ -86,7 +86,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// just an other warning
 		// $this->addMessage( 'Just an other notice', 'warning' );
 		// render admin theme control template
-		parent::index();
+		$this->render();
 	}
 
 	/**
@@ -100,8 +100,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->document->addStyle( 'view/stylesheet/pavothemer/customize.css' );
 
 		$this->data['iframeURI'] = HTTPS_CATALOG;
+		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );
 		$this->template = 'extension/module/pavothemer/customize';
-		parent::index();
+		$this->render();
 	}
 
 	/**
@@ -127,7 +128,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function validate() {
 
-		$has_permision = $this->hasPermission();
+		$has_permision = $this->user->hasPermission( 'modify', 'extension/module/pavothemer' );
 		if ( ! $has_permision ) {
 			$this->errors['warning'] = $this->language->get( 'error_permision' );
 		} else {
@@ -142,17 +143,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			}
 		}
 		return ! $this->errors;
-	}
-
-	/**
-	 *
-	 * Check current user has permision modify controller
-	 *
-	 * @since 1.0.0
-	 * @return boolean
-	 */
-	private function hasPermission() {
-		return $this->user->hasPermission( 'modify', 'extension/module/pavothemer' );
 	}
 
 	/**
@@ -211,14 +201,13 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				break;
 		}
 
-		$item['name'] = strpos( $item['id'], 'lx_config_' ) == false ? 'lx_config_' . $item['id'] : $item['id'];
+		$item['name'] = strpos( $item['id'], 'pavothemer_' ) == false ? 'pavothemer_' . $item['id'] : $item['id'];
 		$item['class'] = 'form-control' . ( isset( $item['class'] ) ? ' ' .trim( $item['class'] ) : '' );
 		// return html
 		return $this->load->view( 'extension/module/pavothemer/fields/' . $type, array( 'item' => $item ) );
 	}
 
 	/**
-	 *
 	 * Insert default pavothemer values to setting table
 	 *
 	 * @since 1.0.0
@@ -228,17 +217,17 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// START ADD USER PERMISSION
 		$this->load->model('user/user_group');
 		// access - modify pavothemer edit
-		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/edit');
-		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/edit');
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavothemer/edit' );
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/edit' );
 		// access - modify pavothemer customize
-		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/customize');
-		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/customize');
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavothemer/customize' );
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/customize' );
 		// access - modify pavothemer sampledata
-		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/import');
-		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/import');
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavothemer/import' );
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/import' );
 		// export
-		$this->model_user_user_group->addPermission($this->user->getId(), 'access', 'extension/module/pavothemer/export');
-		$this->model_user_user_group->addPermission($this->user->getId(), 'modify', 'extension/module/pavothemer/export');
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavothemer/export' );
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/export' );
 		// END ADD USER PERMISSION
 
 		$settingFields = LxSettingHelper::getSettings( $this->config->get('config_theme') );
@@ -252,14 +241,14 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			foreach ( $fields['item'] as $item ) {
 				if ( ! isset( $item['id'], $item['default'] ) ) continue;
 				// get default options
-				if ( ! $this->config->get( 'lx_config_' . $item['id'] ) ) {
-					$defaultOptions[ 'lx_config_' . $item['id'] ] = $item['default'];
+				if ( ! $this->config->get( 'pavothemer_' . $item['id'] ) ) {
+					$defaultOptions[ 'pavothemer_' . $item['id'] ] = $item['default'];
 				}
 			}
 		}
 
 		// insert default option values
-		$this->model_setting_setting->editSetting( 'lx_config', $defaultOptions, $this->config->get( 'config_store_id' ) );
+		$this->model_setting_setting->editSetting( 'pavothemer', $defaultOptions, $this->config->get( 'config_store_id' ) );
 	}
 
 	/**
@@ -267,7 +256,21 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @since 1.0.0
 	 */
 	public function uninstall() {
-		
+		// START REMOVE USER PERMISSION
+		$this->load->model('user/user_group');
+		// access - modify pavothemer edit
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/edit' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/edit' );
+		// access - modify pavothemer customize
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/customize' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/customize' );
+		// access - modify pavothemer sampledata
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/import' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/import' );
+		// export
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/export' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/export' );
+		// END REMOVE USER PERMISSION
 	}
 
 }

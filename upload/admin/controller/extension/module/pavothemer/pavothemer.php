@@ -88,6 +88,11 @@ if ( ! class_exists( 'PavoThemerController' ) ) :
 			}
 		}
 
+		/**
+		 * Add message notice
+		 * @since 1.0.0
+		 * @return mixed
+		 */
 		public function addMessage( $message = '', $type = 'warning' ) {
 			$this->data['notices'][] = $this->load->view( 'extension/module/pavothemer/notice', array( 'type' => $type, 'message' => $message ) );
 		}

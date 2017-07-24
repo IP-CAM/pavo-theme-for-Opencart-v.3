@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<customizes>
+	<author>pavotheme</author>
+	<name>Fonts Customize</name>
+	<id>general</id>
+	<item>
+		<id>default_theme</id>
+		<group>Global</group>
+		<label>Default Theme</label>
+		<type>select</type>
+		<wrapper_class>xxx</wrapper_class>
+		<default>0</default>
+		<multiple>0</multiple>
+		<required>0</required>
+		<option>
+			<text>Enable</text>
+			<value>1</value>
+		</option>
+		<option>
+			<text>Disable</text>
+			<value>0</value>
+		</option>
+	</item>
+</customizes>

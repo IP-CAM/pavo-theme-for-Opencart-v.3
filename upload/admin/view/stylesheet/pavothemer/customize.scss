@@ -12,15 +12,6 @@ html > body{
 #header{
 	display: none;
 }
-#main-control{
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 18%;
-    min-width: 300px;
-    max-width: 600px;
-}
 #main-preview{
 	position: absolute;
     left: 0;
@@ -30,12 +21,82 @@ html > body{
 }
 #pavo-iframe{
     width: 100%;
-    margin: 0;
+    margin: 0 auto;
     border: 0;
     position: absolute;
-    top: 25px;
+    top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     height: 100%;
+}
+
+#main-control{
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 18%;
+    min-width: 300px;
+    max-width: 600px;
+    background: #eee;
+    border-right: 1px solid #ddd;
+
+    .panel-header{
+        display: table;
+        header{
+            display: table-row;
+            width: 100%;
+            table-layout: fixed;
+
+            > * {
+                display: table-cell;
+            }
+            .back,
+            .save{
+                width: 13%;
+                border-radius: 0;
+            }
+            .theme-name{
+                text-transform: capitalize;
+                font-size: 20px;
+                font-weight: 200;
+                line-height: 26px;
+                display: block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+            }
+        }
+    }
+
+    .panel,
+    .panel-header{
+        cursor: default;
+        background: #fff;
+        color: #555d66;
+        border-bottom: 1px solid #ddd;
+        border-left: none;
+        margin-top: 0;
+    }
+
+    .panel-control{
+        margin: 20px 0;
+        .panel-body{
+            font-size: 14px;
+            font-weight: 600;
+            border-left: 4px solid #fff;
+            transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            &:hover{
+                cursor: pointer;
+                color: #e3503e;
+                background-color: #f3f3f5;
+                border-left-color: #e3503e;
+            }
+        }
+    }
 }

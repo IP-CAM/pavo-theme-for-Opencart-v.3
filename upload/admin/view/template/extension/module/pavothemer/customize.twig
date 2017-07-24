@@ -2,14 +2,20 @@
 <div id="pavotheme-customize-wrapper">
 
 	<div role="navigation" id="main-control">
-		<header>
-			<a href="#" class="btn">Back</a>
-			<h4>Theme Name</h4>
-			<a href="#" class="btn btn-primary">Save</a>
-		</header>
+		<div class="panel-header">
+			<header>
+				<a href="#" class="btn btn-danger back">{{ text_back }}</a>
+				<h4 class="btn theme-name">{{ themeName }}</h4>
+				<a href="#" class="btn btn-primary save">{{ text_save }}</a>
+			</header>
+		</div>
 
 		<div class="panel-control">
-			
+
+			<div class="panel panel-default">
+			    <div class="panel-body">A Basic Panel</div>
+		  	</div>
+
 		</div>
 	</div>
 	<iframe id="pavo-iframe" src="{{ iframeURI }}"></iframe>
