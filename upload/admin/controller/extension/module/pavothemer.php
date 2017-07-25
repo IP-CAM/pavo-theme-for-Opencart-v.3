@@ -54,14 +54,14 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		if ( $this->request->server['REQUEST_METHOD'] === 'POST' ) {
 			$validated = $this->validate();
 			if ( $validated ) {
-				$this->model_setting_setting->editSetting( 'lx_config', $this->request->post, $this->config->get( 'config_store_id' ) );
+				$this->model_setting_setting->editSetting( 'pavothemer', $this->request->post, $this->config->get( 'config_store_id' ) );
 			}
 		}
 
 		foreach ( $this->data['settings'] as $k => $fields ) {
 			if ( isset( $fields['item'] ) ) foreach( $fields['item'] as $k2 => $item ) {
 				if ( isset( $item['id'] ) ) {
-					$name = 'lx_config_' . $item['id'];
+					$name = 'pavothemer_' . $item['id'];
 					$value = isset( $this->request->post[ $name ] ) ? $this->request->post[ $name ] : $this->config->get( $name );
 					// $value = $value ? $value : ( isset( $item['default'] ) ? $item['default'] : '' );
 
@@ -101,6 +101,14 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		$this->data['iframeURI'] = HTTPS_CATALOG;
 		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );
+
+		$this->data['fields'] = $this->parseCustomizeOptions( LxThemeHelper::getCustomizes() );
+		var_dump($this->data['fields']['1-font-customize']['item']); die();
+		// load setting model
+		$this->load->model( 'setting/setting' );
+		$customizeOptions = $this->model_setting_setting->getSetting( 'pavothemer_customize', $this->config->get( 'store_id' ) );
+
+		$this->data['PavoCustomizeParams'] = json_encode( $customizeOptions );
 		$this->template = 'extension/module/pavothemer/customize';
 		$this->render();
 	}
@@ -156,11 +164,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		$type = 'input';
 		switch ( $item['type'] ) {
-			case 'select-theme':
+			case 'select_theme':
 				# code...
 				break;
 
-			case 'select-store':
+			case 'select_store':
 				# code...
 				break;
 			case 'text':
@@ -195,6 +203,24 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					$url = $this->url->link('extension/module/pavothemer/customize', 'user_token=' . $this->session->data['user_token'], 'SSL');
 					$item['url'] = $url;
 				break;
+			case 'select_font':
+					$item['options'] = array(
+							array(
+									'text'	=> 'xxx',
+									'value'		=> 'xxx'
+								),
+							array(
+									'text'	=> 'yyy',
+									'value'		=> 'yyy'
+								),
+							array(
+									'text'	=> 'zzz',
+									'value'		=> 'zzz'
+								)
+						);
+					$item['url'] = $url;
+				break;
+
 			default:
 				# code...
 					$type = $item['type'];
@@ -205,6 +231,25 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$item['class'] = 'form-control' . ( isset( $item['class'] ) ? ' ' .trim( $item['class'] ) : '' );
 		// return html
 		return $this->load->view( 'extension/module/pavothemer/fields/' . $type, array( 'item' => $item ) );
+	}
+
+	public function parseCustomizeOptions( $fields = array() ) {
+		foreach ( $fields as $file => $field ) {
+			foreach ( $field['item'] as $k => $item ) {
+				if ( ! isset( $item['id'] ) ) continue;
+				if ( isset( $item['item'] ) ) {
+					$value = $this->config->get( 'pavothemer_customize_' . $item['id'] );
+					$item['value'] = $value ? $value : ( isset( $item['default'] ) ? $item['default'] : '' );
+					$item['output'] = $this->renderFieldControl( $item );
+				}
+				if ( isset( $name['items'] ) ) {
+					$item = $this->parseCustomizeOptions( $item );
+				}
+				$fields[$file]['item'][$k] = $item;
+			}
+		}
+
+		return $fields;
 	}
 
 	/**

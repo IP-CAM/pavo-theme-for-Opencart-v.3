@@ -91,7 +91,7 @@ class LxSettingHelper {
 	 * @param xml
 	 * @return array
 	 */
-	private static function getXmlDomContent( $xml = null ) {
+	public static function getXmlDomContent( $xml = null ) {
 		if ( ! $xml ) return $xml;
 		if ( is_string( $xml ) ) {
 			return $xml;
@@ -101,8 +101,9 @@ class LxSettingHelper {
 		}
 		$data = array();
 		foreach ( $xml as $k => $notes ) {
+			$subData = array();
 			if ( $notes instanceof SimpleXMLElement ) {
-				$notes = get_object_vars( $notes );
+				$notes = self::getXmlDomContent( $notes );
 			}
 			if ( is_array( $notes ) ) {
 				$subData = array();

@@ -10,6 +10,10 @@ const Pavo = {
 	}
 }
 
-Pavo.customize( 'xxx', ( value ) => {
-	console.debug( value );
+Pavo.customize( 'xxx', ( customize, value ) => {
+
+	// refresh
+	customize.update( ( value ) => {
+		
+	} );
 } );

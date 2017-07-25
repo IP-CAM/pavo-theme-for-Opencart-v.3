@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<customizes>
+	<author>pavotheme</author>
+	<label>Layout Selectors</label>
+	<id>layout_selectors</id>
+
+	<item>
+		<id>header</id>
+		<label>Header</label>
+		<items>
+			<item>
+				<id>topbar</id>
+				<label>Topbar</label>
+				<items>
+					<item>
+						<label>Font Family</label>
+						<id>font_family</id>
+						<type>select_font</type>
+					</item>
+					<item>
+						<label>Font Size</label>
+						<id>font_size</id>
+						<type>select_font_size</type>
+					</item>
+					<item>
+						<label>Link color</label>
+						<id>link_color</id>
+						<type>select_color</type>
+					</item>
+				</items>
+			</item>
+			<item>
+				<id>menu</id>
+				<label>Menu</label>
+				<items>
+					<item>
+						<label>Font Family</label>
+						<id>font_family</id>
+						<type>select_font</type>
+					</item>
+					<item>
+						<label>Font Size</label>
+						<id>font_size</id>
+						<type>select_font_size</type>
+					</item>
+					<item>
+						<label>Link color</label>
+						<id>link_color</id>
+						<type>select_color</type>
+					</item>
+				</items>
+			</item>
+		</items>
+	</item>
+	<item>
+		<label>Body</label>
+		<id>body</id>
+		<items>
+			<item>
+				<label>Background Color</label>
+				<id>background_color</id>
+				<type>select_color</type>
+			</item>
+			<item>
+				<label>Background Image</label>
+				<id>background_image</id>
+				<type>select_background_image</type>
+			</item>
+			<item>
+				<label>Font Family</label>
+				<id>font_family</id>
+				<type>select_font</type>
+			</item>
+			<item>
+				<label>Font Size</label>
+				<id>font_size</id>
+				<type>select_font_size</type>
+			</item>
+			<item>
+				<label>Link color</label>
+				<id>link_color</id>
+				<type>select_color</type>
+			</item>
+		</items>
+	</item>
+	<item>
+		<label>Footer</label>
+		<id>footer</id>
+		<items>
+			<item>
+				<label>Font Family</label>
+				<id>font_family</id>
+				<type>select_font</type>
+			</item>
+			<item>
+				<label>Font Size</label>
+				<id>font_size</id>
+				<type>select_font_size</type>
+			</item>
+			<item>
+				<label>Link color</label>
+				<id>link_color</id>
+				<type>select_color</type>
+			</item>
+		</items>
+	</item>
+</customizes>

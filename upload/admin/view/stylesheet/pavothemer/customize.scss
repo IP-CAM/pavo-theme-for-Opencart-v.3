@@ -36,7 +36,7 @@ html > body{
     left: 0;
     top: 0;
     bottom: 0;
-    width: 18%;
+    width: 15%;
     min-width: 300px;
     max-width: 600px;
     background: #eee;
@@ -59,10 +59,9 @@ html > body{
             }
             .theme-name{
                 text-transform: capitalize;
-                font-size: 20px;
+                font-size: 16px;
                 font-weight: 200;
                 line-height: 26px;
-                display: block;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;
@@ -75,13 +74,21 @@ html > body{
         cursor: default;
         background: #fff;
         color: #555d66;
+        border: none;
         border-bottom: 1px solid #ddd;
         border-left: none;
-        margin-top: 0;
+        margin: 0;
     }
 
     .panel-control{
-        margin: 20px 0;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 45px;
+        overflow-x: hidden;
+        overflow-y: scroll;
+        padding-top: 20px;
         .panel-body{
             font-size: 14px;
             font-weight: 600;
@@ -98,5 +105,11 @@ html > body{
                 border-left-color: #e3503e;
             }
         }
+    }
+    .panel-heading{
+        padding: 0;
+        border-bottom: none;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
     }
 }

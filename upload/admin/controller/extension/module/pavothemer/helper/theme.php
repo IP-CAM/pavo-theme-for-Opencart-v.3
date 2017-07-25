@@ -3,6 +3,8 @@ if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
 class LxThemeHelper {
 
+	private static $_customizes = array();
+
 	/**
 	 * Get Skins
 	 *
@@ -36,9 +38,9 @@ class LxThemeHelper {
 	 */
 	public static function getCssProfiles( $theme = 'default' ) {
 		$cssProfiles = array();
-		$path = DIR_CATALOG . 'view/theme/'.$theme.'/stylesheet/customize';
+		$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize';
 		$files = glob( $path . '/*.css' );
-		if ( is_readable( $path ) &&! empty( $files ) ) {
+		if ( is_readable( $path ) && !empty( $files ) ) {
 			foreach ( $files as $file ) {
 				$fileInfo = pathinfo( $file );
 				if ( ! empty( $fileInfo['filename'] ) ) {
@@ -48,6 +50,26 @@ class LxThemeHelper {
 		}
 
 		return $cssProfiles;
+	}
+
+	public static function getCustomizes( $theme = 'default' ) {
+		// setting files
+		$files = self::getCustomizeFiles( $theme );
+		if ( $files ) {
+			foreach ( $files as $file ) {
+				$fileInfo = pathinfo( $file );
+				self::$_customizes[ $fileInfo['filename'] ] = LxSettingHelper::getSettingFile( $file );
+			}
+		}
+
+		return self::$_customizes;
+	}
+
+	/**
+	 * Get customize files
+	 */
+	public static function getCustomizeFiles( $theme = 'default' ) {
+		return glob( DIR_CATALOG . 'view/theme/' . $theme . '/development/customizes/*.xml' );
 	}
 
 }
