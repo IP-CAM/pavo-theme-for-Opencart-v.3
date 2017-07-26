@@ -1,3 +1,4 @@
+select font
 <select name="{{ item.name }}{{ item.multiple ? '[]' : '' }}" id="{{ item.id }}" class="{{ item.class }}"{{ item.multiple ? ' multiple' : '  ' }}>
 	{% for option in item.option %}
 	  {% if ( item.multiple ) %}

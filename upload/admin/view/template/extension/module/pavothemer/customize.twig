@@ -21,9 +21,34 @@
 							</a>
 						</div>
 						<div id="{{ key }}-collapse-body" class="accordion-body collapse{{ i == 0 ? ' in' : '' }}">
-							{% for k, item in field.item %}
+							{% for key2, item in field.item %}
 
-								{{ item.output }}
+								{% if ( item.item ) %}
+									<div class="accordion-group panel panel-default" data-panel="{{ key }}-{{ key2 }}">
+										<div class="accordion-heading panel-heading">
+											<a href="#{{ key }}-{{ key2 }}-collapse-body" class="accordion-toggle" data-toggle="collapse" data-parent="accordion-main" aria-expanded="true">
+												<div class="panel-body">{{ item.label }}</div>
+											</a>
+										</div>
+										<div id="{{ key }}-{{ key2 }}-collapse-body" class="accordion-body collapse">
+											{% for k, subitem in item.item %}
+												<div class="form-group">
+													<label class="control-label">
+														{{ subitem.label }}
+													</label>
+													{{ subitem.output }}
+												</div>
+											{% endfor %}
+										</div>
+									</div>
+								{% else %}
+									<div class="form-group">
+										<label class="control-label">
+											{{ item.label }}
+										</label>
+										{{ item.output }}
+									</div>
+								{% endif %}
 
 							{% endfor %}
 						</div>

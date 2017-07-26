@@ -17,6 +17,10 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public $template = 'extension/module/pavothemer/themecontrol';
 
+	public function index() {
+		$this->edit();
+	}
+
 	/**
 	 * Render theme control admin layout
 	 *
@@ -102,8 +106,17 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->data['iframeURI'] = HTTPS_CATALOG;
 		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );
 
-		$this->data['fields'] = $this->parseCustomizeOptions( LxThemeHelper::getCustomizes() );
-		var_dump($this->data['fields']['1-font-customize']['item']); die();
+		// $this->data['fields'] = $this->parseCustomizeOptions( LxThemeHelper::getCustomizes() );
+		$customizes = LxThemeHelper::getCustomizes();
+		foreach ( $customizes as $file => $customize ) {
+			$this->data['fields'][$file] = $this->parseCustomizeOptions( $customize );
+		}
+		// foreach( $this->data['fields'] as $file => $fields ) {
+		// 	foreach ( $fields['item'] as $k => $item ) {
+		// 		var_dump($item);
+		// 	}
+		// } die();
+
 		// load setting model
 		$this->load->model( 'setting/setting' );
 		$customizeOptions = $this->model_setting_setting->getSetting( 'pavothemer_customize', $this->config->get( 'store_id' ) );
@@ -218,7 +231,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 									'value'		=> 'zzz'
 								)
 						);
-					$item['url'] = $url;
 				break;
 
 			default:
@@ -234,18 +246,20 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	public function parseCustomizeOptions( $fields = array() ) {
-		foreach ( $fields as $file => $field ) {
-			foreach ( $field['item'] as $k => $item ) {
-				if ( ! isset( $item['id'] ) ) continue;
-				if ( isset( $item['item'] ) ) {
+		if ( empty( $fields['item'] ) ) {
+			$fields['output'] = $this->renderFieldControl( $fields );
+		} else {
+			foreach ( $fields['item'] as $k => $item ) {
+				if ( empty( $item['id'] ) ) continue;
+				if ( ! empty( $item['item'] ) ) {
+					$item = $this->parseCustomizeOptions( $item );
+					$fields['item'][$k] = $item;
+				} else {
 					$value = $this->config->get( 'pavothemer_customize_' . $item['id'] );
 					$item['value'] = $value ? $value : ( isset( $item['default'] ) ? $item['default'] : '' );
 					$item['output'] = $this->renderFieldControl( $item );
 				}
-				if ( isset( $name['items'] ) ) {
-					$item = $this->parseCustomizeOptions( $item );
-				}
-				$fields[$file]['item'][$k] = $item;
+				$fields['item'][$k] = $item;
 			}
 		}
 

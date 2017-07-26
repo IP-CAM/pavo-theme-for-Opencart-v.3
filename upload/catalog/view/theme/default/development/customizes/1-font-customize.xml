@@ -21,17 +21,15 @@
 	<item>
 		<id>body_font_settings</id>
 		<label>Body Font</label>
-		<items>
-			<item>
-				<type>select_font</type>
-				<id>body_font</id>
-				<label>Select Font</label>
-			</item>
-			<item>
-				<type>select_font_weight</type>
-				<id>font_weight</id>
-				<label>Font Weight</label>
-			</item>
-		</items>
+		<item>
+			<type>select_font</type>
+			<id>body_font</id>
+			<label>Select Font</label>
+		</item>
+		<item>
+			<type>select_font_weight</type>
+			<id>font_weight</id>
+			<label>Font Weight</label>
+		</item>
 	</item>
 </customizes>

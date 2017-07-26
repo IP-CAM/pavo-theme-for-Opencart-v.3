@@ -5,39 +5,37 @@
 	<id>elements</id>
 
 	<item>
-		<label>Products</label>
 		<id>products</id>
-		<items>
-			<item>
-				<label>Product Name</label>
-				<id>product_name_color</id>
-				<type>select_color</type>
-			</item>
-			<item>
-				<label>Product Price Color</label>
-				<id>product_price_color</id>
-				<type>select_color</type>
-			</item>
-			<item>
-				<label>Product Price Discount Color</label>
-				<id>product_price_discount_color</id>
-				<type>select_color</type>
-			</item>
-			<item>
-				<label>Product Sale Background</label>
-				<id>product_sale_background_color</id>
-				<type>select_background_color</type>
-			</item>
-			<item>
-				<label>Product Sale Color</label>
-				<id>product_sale_color</id>
-				<type>select_color</type>
-			</item>
-			<item>
-				<label>Product Rating</label>
-				<id>product_rating_color</id>
-				<type>select_color</type>
-			</item>
-		</items>
+		<label>Products</label>
+		<item>
+			<label>Product Name</label>
+			<id>product_name_color</id>
+			<type>select_color</type>
+		</item>
+		<item>
+			<label>Product Price Color</label>
+			<id>product_price_color</id>
+			<type>select_color</type>
+		</item>
+		<item>
+			<label>Product Price Discount Color</label>
+			<id>product_price_discount_color</id>
+			<type>select_color</type>
+		</item>
+		<item>
+			<label>Product Sale Background</label>
+			<id>product_sale_background_color</id>
+			<type>select_background_color</type>
+		</item>
+		<item>
+			<label>Product Sale Color</label>
+			<id>product_sale_color</id>
+			<type>select_color</type>
+		</item>
+		<item>
+			<label>Product Rating</label>
+			<id>product_rating_color</id>
+			<type>select_color</type>
+		</item>
 	</item>
 </customizes>
