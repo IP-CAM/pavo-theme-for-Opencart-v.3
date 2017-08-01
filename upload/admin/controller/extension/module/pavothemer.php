@@ -127,6 +127,14 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	/**
+	 * update customize
+	 * @since 1.0.0
+	 */
+	public function updateCustomize() {
+
+	}
+
+	/**
 	 * Import
 	 * @since 1.0.0
 	 */
@@ -156,7 +164,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			foreach ( $this->data['settings'] as $k => $fields ) {
 				if ( isset( $fields['item'] ) ) foreach( $fields['item'] as $k2 => $item ) {
 					if ( isset( $item['id'] ) ) {
-						if ( isset( $item['required'] ) && $item['required'] && empty( $this->request->post[ $item['id'] ] ) ) {
+						if ( isset( $item['required'] ) && $item['required'] && empty( $this->request->post[ 'pavothemer_' . $item['id'] ] ) ) {
 							$this->errors[ $item['id'] ] = $this->language->get( 'error_' . $item['id'] );
 						}
 					}
@@ -174,7 +182,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	private function renderFieldControl( $item = array() ) {
 		if ( empty( $item['type'] ) ) return;
-
+		$theme = $this->config->get( 'config_theme' );
 		$type = 'input';
 		switch ( $item['type'] ) {
 			case 'select_theme':
@@ -183,6 +191,26 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 			case 'select_store':
 				# code...
+				break;
+
+			case 'select_header':
+				$item['option'] = LxThemeHelper::getHeaders( $theme );
+				$type = 'select';
+				break;
+
+			case 'select_footer':
+				$item['option'] = LxThemeHelper::getFooters( $theme );
+				$type = 'select';
+				break;
+
+			case 'select_product_layout':
+				$item['option'] = LxThemeHelper::getProductDefailLayouts( $theme );
+				$type = 'select';
+				break;
+
+			case 'select_category_layout':
+				$item['option']= LxThemeHelper::getProductCategoryLayouts( $theme );
+				$type = 'select';
 				break;
 			case 'text':
 			case 'email':
@@ -199,7 +227,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				break;
 			case 'style_profile':
 					$type = 'select';
-					$styleProfiles = LxThemeHelper::getCssProfiles( $this->config->get( 'config_theme' ) );
+					$styleProfiles = LxThemeHelper::getCssProfiles( $theme );
 					$item['option'][] = array(
 							'text'	=> 'None',
 							'value' => ''

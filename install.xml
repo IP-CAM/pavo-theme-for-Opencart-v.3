@@ -9,7 +9,7 @@
         <operation>
             <search><![CDATA[// Catalog]]></search>
             <add position="before"><![CDATA[
-                // pavothemer langauge file
+                // pavothemer language file
                 $this->load->language('extension/module/pavothemer');
 
                 // PavoThemer Settings menu
@@ -35,14 +35,14 @@
                 $tools = array();
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/import' ) ) {
                     $tools[] = array(
-                        'name'     => $this->language->get('menu_tool_text'),
+                        'name'     => $this->language->get('menu_import_text'),
                         'href'     => $this->url->link('extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
                     );
                 }
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/export' ) ) {
                     $tools[] = array(
-                        'name'     => $this->language->get('menu_tool_text'),
+                        'name'     => $this->language->get('menu_export_text'),
                         'href'     => $this->url->link('extension/module/pavothemer/export', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
                     );
@@ -67,6 +67,74 @@
                     );
                 }
                 // End PavoThemer Settings menu
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[return $this->load->view('common/header', $data);]]></search>
+            <add position="replace"><![CDATA[
+                // pavothemer header layout file
+                $data['pavothemer_theme_width'] = $this->config->get( 'pavothemer_theme_width' );
+                $data['pavothemer_layout']      = $this->config->get( 'pavothemer_layout' );
+                $header = $this->config->get( 'pavothemer_header_layout' );
+                if ( ! $header ) {
+                    return $this->load->view('common/header', $data);
+                } else {
+                    return $this->load->view('common/' . $header, $data);
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/common/footer.php">
+        <operation>
+            <search><![CDATA[return $this->load->view('common/footer', $data);]]></search>
+            <add position="replace"><![CDATA[
+                // pavothemer footer layout file
+                $footer = $this->config->get( 'pavothemer_footer_layout' );
+                if ( ! $footer ) {
+                    return $this->load->view('common/footer', $data);
+                } else {
+                    return $this->load->view('common/' . $footer, $data);
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/product.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('product/product', $data));]]></search>
+            <add position="replace"><![CDATA[
+                // pavothemer product layout file
+                $layout = $this->config->get( 'pavothemer_product_layout' );
+                if ( ! $layout ) {
+                    $this->response->setOutput($this->load->view('product/product', $data));
+                } else {
+                    $this->response->setOutput($this->load->view('product/' . $layout, $data));
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/product/category.php">
+        <operation>
+            <search><![CDATA[$this->response->setOutput($this->load->view('product/category', $data));]]></search>
+            <add position="replace"><![CDATA[
+                // pavothemer category layout file
+                $layout = $this->config->get( 'pavothemer_category_layout' );
+                if ( ! $layout ) {
+                    $this->response->setOutput($this->load->view('product/category', $data));
+                } else {
+                    $this->response->setOutput($this->load->view('product/' . $layout, $data));
+                }
+            ]]></add>
+        </operation>
+    </file>
+    <file path="catalog/view/theme/*/template/common/header*.twig">
+        <operation>
+            <search><![CDATA[</head>]]></search>
+            <add position="before"><![CDATA[
+                {% if ( pavothemer_product_layout && pavothemer_product_layout != 'auto' ) %}
+                    <style>.container{max-width:{{ pavothemer_product_layout }}; width:auto;}</style>
+                {% endif %}
             ]]></add>
         </operation>
     </file>

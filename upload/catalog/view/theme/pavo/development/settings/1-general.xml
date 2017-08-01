@@ -85,85 +85,28 @@
 		</option>
 	</item>
 	<item>
-		<label>Background</label>
-		<id>background</id>
-		<type>select</type>
-		<group>Other Settings</group>
-		<default>bg-default</default>
-		<option>
-			<text>Default</text>
-			<value>bg-default</value>
-		</option>
-		<option>
-			<text>Home2</text>
-			<value>bg-home2</value>
-		</option>
-		<option>
-			<text>Home6</text>
-			<value>bg-home6</value>
-		</option>
-	</item>
-	<item>
-		<label>Layout Header</label>
+		<label>Header Layout</label>
 		<id>header_layout</id>
-		<type>select</type>
+		<type>select_header</type>
 		<group>Other Settings</group>
-		<default>headerv1</default>
-		<option>
-			<text>Header version 1</text>
-			<value>headerv1</value>
-		</option>
-		<option>
-			<text>Header version 2</text>
-			<value>headerv2</value>
-		</option>
-		<option>
-			<text>Header version 3</text>
-			<value>headerv3</value>
-		</option>
-		<option>
-			<text>Header version 4</text>
-			<value>headerv4</value>
-		</option>
-		<option>
-			<text>Header version 5</text>
-			<value>headerv5</value>
-		</option>
-		<option>
-			<text>Header version 6</text>
-			<value>headerv6</value>
-		</option>
-		</item>
+	</item>
 	<item>
 		<label>Footer Layout</label>
 		<id>footer_layout</id>
-		<type>select</type>
+		<type>select_footer</type>
 		<group>Other Settings</group>
-		<default>footerv1</default>
-		<option>
-			<text>Footer default</text>
-			<value>footer</value>
-		</option>
-		<option>
-			<text>Footer version 1</text>
-			<value>footerv1</value>
-		</option>
-		<option>
-			<text>Footer version 2</text>
-			<value>footerv2</value>
-		</option>
-		<option>
-			<text>Footer version 3</text>
-			<value>footerv3</value>
-		</option>
-		<option>
-			<text>Footer version 4</text>
-			<value>footerv4</value>
-		</option>
-		<option>
-			<text>Footer version 5</text>
-			<value>footerv5</value>
-		</option>
+	</item>
+	<item>
+		<label>Category Layout</label>
+		<id>category_layout</id>
+		<type>select_category_layout</type>
+		<group>Other Settings</group>
+	</item>
+	<item>
+		<label>Product Layout</label>
+		<id>product_layout</id>
+		<type>select_product_layout</type>
+		<group>Other Settings</group>
 	</item>
 	<item>
 		<label>Offcanvas menu</label>
