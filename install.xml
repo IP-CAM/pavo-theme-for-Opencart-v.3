@@ -132,7 +132,7 @@
         <operation>
             <search><![CDATA[</head>]]></search>
             <add position="before"><![CDATA[
-                {% if ( pavothemer_product_layout && pavothemer_product_layout != 'auto' ) %}
+                {% if ( pavothemer_product_layout and pavothemer_product_layout != 'auto' ) %}
                     <style>.container{max-width:{{ pavothemer_product_layout }}; width:auto;}</style>
                 {% endif %}
             ]]></add>
