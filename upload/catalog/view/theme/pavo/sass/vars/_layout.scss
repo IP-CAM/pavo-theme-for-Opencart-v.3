@@ -1,0 +1,82 @@
+// Topbar
+
+$topbar-bg-v1                                   : #1e1e1e !default;
+$topbar-v1-border-color                         : #2b2b2b !default;
+
+$topbar-bg-v2                                   : #0ba045 !default;
+$topbar-v2-border-color                         : #0cb64e !default;
+
+$topbar-bg-v4                                   : transparent !default;
+$topbar-v4-border-color                         : #2b2b2b !default;
+
+$topbar-bg-v5                                   : #fff !default;
+$topbar-v5-border-color                         : $border-color !default;
+
+$topbar-bg-v6                                   : transparent !default;
+$topbar-v6-border-color                         : #393939 !default;
+
+// Header
+$header-bg-v1                                   : #1e1e1e !default;
+$header-menu-v1                                 : #292929 !default;
+$header-v1-border-color                         : #1e1e1e !default;
+$header-menu-v1-link                            : $white !default;
+$header-menu-v1-link-hover                      : $theme-color !default;
+
+$header-bg-v2                                   : #0aa948 !default;
+$header-menu-v2                                 : $theme-color !default;
+$header-v2-border-color                         : #cba807 !default;
+$header-menu-v2-link                            : #1e1e1e !default;
+$header-menu-v2-link-hover                      : #1e1e1e !default;
+
+$header-menu-v3                                 : $white !default;
+$header-v3-border-color                         : $border-color !default;
+$header-menu-v3-link                            : #272727 !default;
+
+$header-bg-v4                                   : transparent !default;
+$header-menu-v4                                 : #fff !default;
+$header-v4-border-color                         : #d2d2d2 !default;
+$header-menu-v4-link                            : #272727 !default;
+$header-menu-v4-link-hover                      : $theme-color !default;
+
+$header-bg-v5                                   : #fff !default;
+$header-menu-v5                                 : #fff !default;
+$header-v5-border-color                         : $border-color !default;
+$header-menu-v5-link                            : #363636 !default;
+$header-menu-v5-link-hover                      : $theme-color !default;
+
+$header-bg-v6                                   : transparent !default;
+$header-menu-v6                                 : transparent !default;
+$header-v6-border-color                         : #393939 !default;
+$header-menu-v6-link                            : #fff !default;
+$header-menu-v6-link-hover                      : $theme-color !default;
+
+
+// Footer
+
+$footer-bg                                      : #ffffff !default;
+$footer-color                                   : #666666 !default;
+$footer-font-size                               : 14px !default;
+$footer-padding                             	: 50px 0px !default;
+$footer-link-font-size							: 14px !default;
+$footer-link-color                              : #a3a3a3 !default;
+$footer-link-hover-color                        : $theme-color !default;
+$footer-heading-font-size                       : 20px !default;
+$footer-heading-color                           : #d1d1d1 !default;
+$footer-heading-family                         	: $font-family-second !default;
+$footer-heading-transform						: uppercase !default;
+
+
+$footer-top-bg 									: #f3f6f8 !default;
+$footer-top-padding                             : 70px 0 !default;
+
+$footer-center-color 							: #999 !default;
+$footer-center-bg 								: #282828 !default;
+$footer-center-padding                          : 55px 0 50px !default;
+$footer-center-title-color 						: #fff !default;
+// Copyright
+
+$copyright-bg                                   : #252525 !default;
+$copyright-color                                : #b9b9b9 !default;
+$copyright-link-color                           : #b9b9b9 !default;
+$copyright-padding                          	: 35px 0 !default;
+$copyright-font-size							: 16px !default;

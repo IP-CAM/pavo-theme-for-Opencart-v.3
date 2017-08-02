@@ -1,0 +1,171 @@
+.tabs-deal {
+    margin-top: 35px;
+    margin-bottom: 25px;
+    ul {
+        padding: 0px;
+        margin-bottom: 0px;
+    }
+    a {
+        font-family: $font-family-base;
+        font-size: 20px;
+        padding: 0px;
+        padding-bottom: 13px;
+        display: inline-block;
+        margin-bottom: -1px;
+        line-height: 1;
+        height: 36px;
+    }
+    li {
+        @include rtl-margin-right(40px);
+        @include rtl-float-left();
+        &.active {
+            a {
+                font-family: $font-family-base-bold;
+                border-bottom: 3px solid $theme-color;
+            }
+        }
+    }
+}
+@media (min-width: $screen-sm){
+    .product-list {
+        .product-deals {
+            .product-img {
+                width: 380px;
+            }
+            .product-meta {
+                width: calc(100% - 410px);
+            }
+            .footer-deals {
+                // margin-top: 25px;
+                ul {
+                    margin: 0px;
+                    width: 270px;
+                    @include rtl-float-left();
+                }
+            }
+        }
+    }
+}
+
+.footer-deals {
+    margin-bottom: 20px;
+    ul {
+        font-size: 13px;
+        // background: $theme-color;
+        color: $link-color;
+        margin-bottom: 0px;
+        li {
+            text-align: center;
+            width: 25%;
+            @include rtl-float-left();
+            @include rtl-border-left(1px solid #ffd924);
+            font-family: $font-family-base-bold;
+            font-size: 12px;
+            padding: 3px 0px;
+            background: $theme-color;
+            .countdown_num {
+                font-family: $font-family-base-black;
+                font-size: 20px;
+                border-bottom: 1px solid #ffd924;
+                margin-bottom: 3px;
+                position: relative;
+                &:after {
+                    content: "";
+                    width: 20px;
+                    height: 20px;
+                    background: url("#{$image-theme-path}deal-footer.png") no-repeat;
+                    position: absolute;
+                    z-index: 2;
+                    @include rtl-right(-11px);
+                    bottom: -11px;
+                }
+            }
+            &:last-child {
+                .countdown_num {
+                    &:after {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+/*-------------widget-product-deals-------------------*/
+.widget-product-deals {
+    .product-deals {
+        .product-img {
+            width: 50%;
+        }
+        .product-meta {
+            width: 50%;
+        }
+    }
+    .rating {
+        display: none;
+    }
+    &.style1 {
+        .product-meta {
+            padding-top: 35px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .description {
+            p {
+                max-height: 45px;
+                overflow: hidden;
+                font-size: 16px;
+                font-family: $font-family-base-light;
+            }
+        }
+        .product-block {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            .name {
+                font-size: 37px;
+                // min-height: 60px;
+                overflow: hidden;
+            }
+        }
+        .footer-deals {
+            ul {
+                width: 360px;
+                li {
+                    // font-size: 12px;
+                    .countdown_num {
+                        font-size: 28px;
+                    }
+                }
+            }
+        }
+    }
+    &.style2 {
+        .panel-heading {
+            text-align: center;
+        }
+        &.product-list {
+            .product-meta {
+                @include rtl-padding-left(15px);
+                .description{
+                    display: none;
+                }
+                .group-action {
+                    margin-left: 0;
+                    margin-right: 0;
+                    margin-top: 12px;
+                }
+            } 
+        }
+        .product-block {
+            padding: 30px 20px;
+            margin-bottom: 0px;
+            .name {
+                font-size: 25px;
+                overflow: hidden;
+            }
+        }
+    }
+}
+
+/*END*/

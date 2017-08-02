@@ -1,0 +1,52 @@
+.box-newsletter {
+    .email {
+        height: 48px;
+        @include box-shadow(none);
+        display: inline-block;
+        border-radius: 30px!important;
+        -o-border-radius: 30px!important;
+        -moz-border-radius: 30px!important;
+        -webkit-border-radius: 30px!important;
+        display: table-cell;
+        width: calc(100% - 210px);
+    }
+    .btn-newsletter{
+        background: $theme-color;
+        @include border-radius(30px);
+        color: #363636;
+        padding: 0;
+        text-transform: uppercase;
+        font-family: $font-family-base-bold;
+        font-size: 14px;
+        height: 47px;
+        width: 200px;
+        @include rtl-margin-left(10px);
+        @include transition(all 0.5s ease 0s);
+        &:hover{
+            background: $link-color;
+            color: $white;
+        }
+    }
+    .form-email {
+        display: table;
+        position: relative;
+    }
+    .valid {
+        position: absolute;
+        top: 100%;
+        width: 100%;
+        z-index: 10;
+        @include rtl-left(0);
+        .alert {
+            width: auto;
+            margin-top: 20px;
+            @include rtl-text-align-left();
+        }
+    }
+    .custom{
+        margin-top: 45px;
+        a{
+            display: inline-block;
+        }
+    }
+}

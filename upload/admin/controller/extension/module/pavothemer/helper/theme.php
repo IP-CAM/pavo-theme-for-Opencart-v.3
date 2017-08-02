@@ -76,39 +76,35 @@ class LxThemeHelper {
 	 * Get headers layouts
 	 */
 	public static function getHeaders( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/header-*.twig' ) );
+		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/header*.twig' ), 'header' );
 	}
 
 	/**
 	 * Get footers layouts
 	 */
 	public static function getFooters( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/footer-*.twig' ) );
+		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/footer*.twig' ), 'footer' );
 	}
 
 	/**
 	 * Get Product Detail Layouts
 	 */
 	public static function getProductDefailLayouts( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/product-*.twig' ) );
+		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/product*.twig' ), 'product' );
 	}
 
 	/**
 	 * Get Product Detail Layouts
 	 */
 	public static function getProductCategoryLayouts( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/category-*.twig' ) );
+		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/category*.twig' ), 'category' );
 	}
 
-	public static function files2Options( $files = array() ) {
+	public static function files2Options( $files = array(), $prefix = '' ) {
 		$options = array();
-		$options[] = array(
-				'text'		=> 'Default',
-				'value'		=> ''
-			);
 		if ( $files ) foreach ( $files as $file ) {
 					$options[] = array(
-							'text'	=> implode( ' ', array_map( 'ucfirst', explode( '-', str_replace( '.twig', '', basename( $file ) ) ) ) ),
+							'text'	=> implode( ' ', array_map( 'ucfirst', array_merge( array( $prefix ), array( str_replace( $prefix, '', str_replace( '.twig', '', basename( $file ) ) ) ) ) ) ),
 							'value'	=> str_replace( '.twig', '', basename( $file ) )
 						);
 				}

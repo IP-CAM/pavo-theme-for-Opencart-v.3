@@ -1,0 +1,126 @@
+.search_block {
+    height: 40px;
+    width: calc(100% - 60px);
+    form {
+        border-radius: 30px;
+    }
+    .dropdown-menu {
+        transform: none;
+        visibility: visible;
+        opacity: 1;
+        width: calc(100% - 60px);
+        min-width: auto;
+        padding: 0px 15px;
+        max-height: 443px;
+        overflow: auto;
+        li.media {
+            margin-top: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed $border-color;
+            &:last-child {
+                margin-bottom: 15px;
+                padding-bottom: 0px;
+                border-bottom: none;
+            }
+            .media-left {
+                padding: 0px;
+                @include rtl-float-left();
+            }
+            .media-body {
+                @include rtl-float-right();
+                width: calc(100% - 90px);
+                display: inline-block;
+                a {
+                    font-size: 14px;
+                    font-family: $font-family-base-bold;
+                    max-height: 41px;
+                    overflow: hidden;
+                    display: block;
+                }
+                div {
+                    font-family: $font-family-base-bold;
+                    font-size: 16px;
+                    margin-top: 5px;
+                    color: $theme-color;
+                    span, br {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+    .category_filter {
+        position: relative;
+        background: #f7f7f7;
+        width: 145px;
+        font-size: 13px;
+        border-bottom-left-radius: 30px;
+        border-top-left-radius: 30px;
+        &:before {
+            content: "\f107";
+            position: absolute;
+            @include rtl-right(20px);
+            top: 50%;
+            margin-top: -5px;
+            font-size: 13px;
+            line-height: 1;
+            color: $text-color;
+            font-family: 'FontAwesome', Verdana;
+            pointer-events: none;
+        }
+        select {
+            @include rtl-padding(0px, 35px, 0px, 20px);
+            height: 40px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            border: none;
+            background: none;
+            color: $text-color;
+            width: 100%;
+            option {
+                background: $white;
+            }
+        }
+    }
+    .search {
+        width: calc(100% - 145px);
+        position: relative;
+        input {
+            padding: 0px 15px;
+            height: 40px;
+            border: none;
+            color: #cccccc !important;
+            width: calc(100% - 60px);
+        }
+        button {
+            border: none;
+            background: $white;
+            position: absolute;
+            height: 40px;
+            width: 60px;
+            color: #000000;
+            @include rtl-right(0px);
+            top: 0px;
+            border-bottom-right-radius: 30px;
+            border-top-right-radius: 30px;
+        }
+    }
+}
+
+.rtl .search_block {
+    .category_filter {
+        border-bottom-right-radius: 30px;
+        border-top-right-radius: 30px;
+        border-bottom-left-radius: 0px;
+        border-top-left-radius: 0px;
+    }
+    .search {
+        button {
+            border-bottom-left-radius: 30px;
+            border-top-left-radius: 30px;
+            border-bottom-right-radius: 0px;
+            border-top-right-radius: 0px;
+        }
+    }
+}

@@ -1,0 +1,41 @@
+@import url(https://fonts.googleapis.com/css?family=Heebo:100,300,400,500,700,800,900);
+@import url(https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700);
+@import url(https://fonts.googleapis.com/css?family=Old+Standard+TT);
+
+@font-face {
+  font-family: 'Heebo-Bold';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Bold.ttf");
+}
+@font-face {
+  font-family: 'Heebo-Light';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Light.ttf");
+}
+@font-face {
+  font-family: 'Heebo-Regular';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Regular.ttf");
+}
+@font-face {
+  font-family: 'Heebo-Medium';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Medium.ttf");
+}
+@font-face {
+  font-family: 'Heebo-Thin';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Thin.ttf");
+}
+@font-face {
+  font-family: 'Heebo-ExtraBold';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-ExtraBold.ttf");
+}
+@font-face {
+  font-family: 'Heebo-Black';
+  font-style: normal;
+  src: url("#{$theme-font-path}Heebo-Black.ttf");
+}
+
+

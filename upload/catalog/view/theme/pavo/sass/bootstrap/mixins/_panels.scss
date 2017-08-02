@@ -1,0 +1,32 @@
+// Panels
+
+@mixin panel-variant($border, $heading-text-color, $heading-bg-color, $heading-border) {
+/*  border-color: $border; */
+
+  & > .panel-heading {
+    color: #222222; // $heading-text-color;
+    position: relative;
+    // padding-left: 30px;
+    // border-bottom: solid 1px $heading-border;
+    //text-transform: uppercase;
+    &:before{
+
+    }
+   /* background-color: $heading-bg-color; */
+   /* border-color: $heading-border; */
+
+    + .panel-collapse > .panel-body {
+      border-top-color: $heading-bg-color;
+      margin-top: 10px;
+    }
+    .badge {
+      color: $heading-bg-color;
+      background-color: $heading-text-color;
+    }
+  }
+  & > .panel-footer {
+    + .panel-collapse > .panel-body {
+      border-bottom-color: $border;
+    }
+  }
+}

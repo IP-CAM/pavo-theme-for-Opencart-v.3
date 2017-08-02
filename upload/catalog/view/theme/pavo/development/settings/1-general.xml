@@ -51,8 +51,8 @@
 		<id>copyright_text</id>
 		<group>Global</group>
 		<label>Copyright</label>
-		<type>summernote</type>
-		<default><![CDATA[Copyright 2013 ThemeLexus.Com]]></default>
+		<type>textarea</type>
+		<default><![CDATA[Copyright 2017 pavothemes.com]]></default>
 	</item>
 	<item>
 		<label>Enable Quickview</label>
@@ -121,21 +121,6 @@
 		<option>
 			<text>Megamenu</text>
 			<value>megamenu</value>
-		</option>
-	</item>
-	<item>
-		<label>Main Content Home FullWidth</label>
-		<id>home_container_full</id>
-		<type>radio</type>
-		<group>Other Settings</group>
-		<default>0</default>
-		<option>
-			<text>No</text>
-			<value>0</value>
-		</option>
-		<option>
-			<text>Yes</text>
-			<value>1</value>
 		</option>
 	</item>
 	<item>

@@ -1,0 +1,77 @@
+/***** Breadcrumb page theme *****/
+
+div.breadcrumb {
+    padding: 15px 0px;
+    position: relative;
+    margin-bottom: 50px;
+    border-bottom: 1px solid $border-color;
+    a {
+        font-family: $font-family-base;
+        font-size: 16px;
+        color: $breadcrumb-color;
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+    ul {
+        padding: 0px;
+        margin: 0px;
+        li {
+            display: inline-block;
+            position: relative;
+            color: $breadcrumb-color;
+            margin-right: 30px;
+            + li:before {
+                content: "\f105";
+                position: absolute;
+                left: -20px;
+                font-family: 'FontAwesome';
+            }
+            &:last-child {
+                a {
+                    color: $theme-color;
+                    &:hover {
+                        color: $link-hover-color;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/***** Breadcrumb page default *****/
+
+ul.breadcrumb {
+    padding: 15px 0px;
+    position: relative;
+    margin-bottom: 50px;
+    border-bottom: 1px solid $border-color;
+    a {
+        font-family: $font-family-base-light;
+        font-size: 16px;
+        color: $breadcrumb-color;
+        &:hover {
+            color: $link-hover-color;
+        }
+    }
+    li {
+        display: inline-block;
+        position: relative;
+        color: $breadcrumb-color;
+        margin-right: 30px;
+            + li:before {
+                content: "\f105";
+                position: absolute;
+                left: -20px;
+                font-family: 'FontAwesome';
+            }
+        &:last-child {
+            a {
+                color: $theme-color;
+                &:hover {
+                    color: $link-hover-color;
+                }
+            }
+        }
+    }
+}

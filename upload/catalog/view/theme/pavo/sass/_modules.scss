@@ -1,0 +1,101 @@
+
+
+/* slidelayer */
+.bannercontainer.banner-fullwidth{
+    .tp-leftarrow {
+        left:-80px !important;
+    }
+    .tp-rightarrow {
+        right:-80px !important;
+    }
+}
+.bannercontainer.banner-boxed{
+    overflow: hidden;
+    .tp-leftarrow {
+        left:-100px !important;
+    }
+    .tp-rightarrow {
+        right:-100px !important;
+    }
+    &:hover{
+        .tp-rightarrow {
+            right: 80px !important;
+        }       
+        .tp-leftarrow{
+            left: 80px !important;
+        }
+    }
+}
+.tparrows {
+    position:absolute;
+    top:50% !important;
+    z-index:9999;
+    cursor:pointer;
+    display: block;
+    @include size(45px,45px);
+    @include transition(all 0.4s ease-in-out 0s);
+    font-size: 0;
+    &:before {
+        color: $headings-color;
+        background: $white;
+        @include border-radius(100%);
+        display: inline-block;
+        font: 32px/45px FontAwesome;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        top: 0;
+        @include size(45px,45px);
+        z-index: 12;
+        @include transition(all 0.2s ease-in-out 0s);
+    }
+    &.tp-rightarrow {
+        &:before {
+            content: "\f105";
+        }
+    }
+    &.tp-leftarrow {
+        &:before {
+            content: "\f104";
+        }
+    }
+    &:hover {
+        &:before {
+            color: $white;
+            background: $headings-color;
+        }
+    }
+}
+.tp-bullets{
+    bottom: 0!important;
+    z-index:25; 
+    position:absolute;
+    @include transition(all 0.2s ease-out 0s);
+    height: 36px;
+    padding: 30px;
+}
+.tp-bullets.simplebullets.round .bullet {
+    background: $theme-color;
+    border: 2px solid transparent;
+    @include border-radius(100%);
+    cursor: pointer;
+    float: left;
+    height: 8px;
+    margin: 0 5px;
+    position: relative;
+    width: 8px;
+    @include transition(all 0.2s ease-out 0s);
+    // &:hover{
+    //     background: $theme-color;
+    // }
+}
+.tp-bullets.simplebullets.round .bullet.selected{
+    background: $white;
+    border-color: $theme-color;
+    height: 16px;
+    margin-top: -4px;
+    width: 16px;
+    &:hover{
+        background: $theme-color;
+    }
+}

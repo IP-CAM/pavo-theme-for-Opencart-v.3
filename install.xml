@@ -72,17 +72,70 @@
     </file>
     <file path="catalog/controller/common/header.php">
         <operation>
-            <search><![CDATA[return $this->load->view('common/header', $data);]]></search>
+            <search><![CDATA[return $this->load->view('common/header', $data);
+    }]]></search>
             <add position="replace"><![CDATA[
-                // pavothemer header layout file
-                $data['pavothemer_theme_width'] = $this->config->get( 'pavothemer_theme_width' );
-                $data['pavothemer_layout']      = $this->config->get( 'pavothemer_layout' );
-                $header = $this->config->get( 'pavothemer_header_layout' );
-                if ( ! $header ) {
-                    return $this->load->view('common/header', $data);
-                } else {
-                    return $this->load->view('common/' . $header, $data);
-                }
+                $data['body_class'] = $this->getBodyClass();
+        // pavothemer header layout file
+        $data['pavothemer_theme_width'] = $this->config->get( 'pavothemer_theme_width' );
+        $data['pavothemer_layout']      = $this->config->get( 'pavothemer_layout' );
+        $header = $this->config->get( 'pavothemer_header_layout' );
+        if ( ! $header ) {
+            return $this->load->view('common/header', $data);
+        } else {
+            return $this->load->view('common/' . $header, $data);
+        }
+            
+    }
+
+    /**
+     * Get body class
+     */
+    public function getBodyClass() {
+        $route = ! empty( $this->request->get['route'] ) ? $this->request->get['route'] : 'common/home';
+        $layout_id = $this->config->get('config_layout_id');
+
+        $classes = array(
+                implode( '-', explode( '/', $route ) )
+            );
+        
+        // categories
+        if ( $route === 'product/category' && ! empty( $this->request->get['path'] ) ) {
+            $category_ids = explode( '_', $this->request->get['path'] );
+            $category_id = ! empty( $category_ids ) ? end( $category_ids ) : 0;
+
+            if ( $category_id ) {
+                // load catalog category model
+                $this->load->model( 'catalog/category' );
+                $layout_id = $this->model_catalog_category->getCategoryLayoutId( $category_id );
+
+                $classes[] = 'category';
+                $classes[] = 'category-' . $category_id;
+            }
+        }
+
+        // product details
+        if ( $route === 'product/product' && ! empty( $this->request->get['product_id'] ) ) {
+            // load model
+            $this->load->model( 'catalog/product' );
+            $layout_id = $this->model_catalog_product->getProductLayoutId( $this->request->get['product_id'] );
+
+            $classes[] = 'product';
+            $classes[] = 'product-' . $this->request->get['product_id'];
+        }
+
+        // information
+        if ( $route === 'information/information' && ! empty( $this->request->get['information_id'] ) ) {
+            // load model
+            $this->load->model('catalog/information');
+            $layout_id = $this->model_catalog_information->getInformationLayoutId($this->request->get['information_id']);
+            $classes = 'information';   
+        }
+
+        $classes[] = 'layout-' . $layout_id;
+
+        return implode( ' ', $classes );
+    }
             ]]></add>
         </operation>
     </file>
@@ -92,6 +145,8 @@
             <add position="replace"><![CDATA[
                 // pavothemer footer layout file
                 $footer = $this->config->get( 'pavothemer_footer_layout' );
+                $data['enable_copyright'] = $this->config->get( 'pavothemer_enable_custom_copyright' );
+                $data['powered'] = $this->config->get( 'pavothemer_copyright_text' );
                 if ( ! $footer ) {
                     return $this->load->view('common/footer', $data);
                 } else {
@@ -125,16 +180,6 @@
                 } else {
                     $this->response->setOutput($this->load->view('product/' . $layout, $data));
                 }
-            ]]></add>
-        </operation>
-    </file>
-    <file path="catalog/view/theme/*/template/common/header*.twig">
-        <operation>
-            <search><![CDATA[</head>]]></search>
-            <add position="before"><![CDATA[
-                {% if ( pavothemer_product_layout and pavothemer_product_layout != 'auto' ) %}
-                    <style>.container{max-width:{{ pavothemer_product_layout }}; width:auto;}</style>
-                {% endif %}
             ]]></add>
         </operation>
     </file>

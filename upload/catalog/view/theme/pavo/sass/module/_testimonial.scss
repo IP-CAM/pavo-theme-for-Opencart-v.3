@@ -1,0 +1,105 @@
+.panel-testimonial{
+    .panel-headings {
+        text-align: center;
+    }
+    .pavtestimonial{
+        .owl-carousel.owl-theme {
+            padding-bottom: 50px;
+        }
+    }
+}
+.home4{
+    .panel-testimonial{
+        .panel-headings {
+            text-align: center;
+            .panel-title {
+                color: #fff;
+            }
+        }
+        .pavtestimonial{
+            margin-top: 50px;
+            text-align: center;
+        }
+        .testimonial-item{
+            max-width: 840px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .profile{
+            margin: 27px 0;
+            font-size: 18px;
+            color: #fff;
+            font-family: $font-family-base-light;
+            line-height: 28px;
+            font-style: italic;
+            position: relative;
+            text-indent: 20px;
+            &:before{
+                position: absolute;
+                top: 0px;
+                left: -20px;
+                font-size: 15px;
+                color: $theme-color;
+                font-family: FontAwesome;
+                content: "\f10d";
+            }
+        }
+        .testimonial-author{
+            font-size: 14px;
+            color: #fff;
+            span{
+                color: $theme-color;
+                font-family: $font-family-base;
+            }
+        }
+    }
+}
+
+.home5{
+    .panel-testimonial{
+        .panel-headings {
+            .panel-title {
+                color: #363636;
+            }
+        }
+        .pavtestimonial{
+            margin-top: 65px;
+        }
+        .t-avatar {
+            @include rtl-float-left();
+        }
+        .testimonial-info.clearfix {
+            overflow: hidden;
+            padding: 0 30px;
+        }
+        .profile{
+            color: #666666;
+            font-size: 16px;
+            font-family: $font-family-base;
+            line-height: 28px;
+            font-style: italic;
+            text-indent: 20px;
+            position: relative;
+            margin-bottom: 23px;
+            &:before{
+                position: absolute;
+                left: -20px;
+                top: 0px;
+                font-size: 15px;
+                color: $theme-color;
+                font-family: FontAwesome;
+                content: "\f10d";
+            }
+        }
+        .testimonial-author{
+            font-size: 14px;
+            color: #999999;
+            font-style: italic;
+            span{
+                color: $theme-color;
+                font-family: $font-family-base-medium;
+                font-style: normal;
+            }
+        }
+    }
+}

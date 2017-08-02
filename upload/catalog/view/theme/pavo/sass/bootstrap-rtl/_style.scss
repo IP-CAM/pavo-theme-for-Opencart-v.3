@@ -1,0 +1,136 @@
+.rtl {
+    body {
+        text-align: right;
+    }
+    .carousel-controls-v3 {
+        .carousel-control.left {
+            left: -33px;
+        }
+        .carousel-control.right {
+            right: -33px;
+        }
+    }
+    /* Carousel style element */
+
+        .carousel-style {
+            .left {
+                .rtl {
+                    display: inline-block;
+                }
+                .ltr {
+                    display: none;
+                }
+            }
+            .right {
+                .rtl {
+                    display: inline-block;
+                }
+                .ltr {
+                    display: none;
+                }
+            }
+        }
+
+    /* Product Detail Page */
+
+        .detail-container .rating span {
+            margin-left: 0px !important;
+        }
+        .zoomWindow {
+            right: 100% !important;
+        }
+        .addthis_default_style .addthis_separator, .addthis_default_style .at4-icon,
+        .addthis_default_style .at300b, .addthis_default_style .at300bo,
+        .addthis_default_style .at300bs, .addthis_default_style .at300m {
+            float: right;
+        }
+        .search_block .category_filter {
+            padding-right: 15px;
+        }
+        .detail-container .form-group .button-calendar {
+            border-left: 1px solid #e5e5e5 !important;
+            border-right: 0px !important;
+        }
+
+    /* Breadcrumb page theme */
+
+        div.breadcrumb {
+            ul {
+                li {
+                    margin-left: 30px;
+                    margin-right: 0px;
+                    + li:before {
+                        content: "\f104";
+                        right: -20px;
+                    }
+                }
+            }
+        }
+
+    /* Breadcrumb page default */
+
+        ul.breadcrumb {
+            li {
+                margin-left: 30px;
+                margin-right: 0px;
+                + li:before {
+                    content: "\f104";
+                    right: -20px;
+                }
+            }
+        }
+
+    /* Review form */
+
+        .mfp-close {
+            left: 0px !important;
+            right: auto;
+        }
+        .review-form-width {
+            text-align: right;
+        }
+
+    /****************************** END BASE **************************/
+
+    /* Verticalmenu */
+
+        .verticalmenu .navbar-nav > li > a .caret:after {
+            content: "\f104";
+        }
+
+    /* Sidebar menu */
+
+        .sidebar .panel-default .list-group-item .accordion-heading span {
+            .fa-angle-right {
+                transform: rotate(180deg);
+            }
+            .fa-angle-dow {
+                transform: rotate(180deg);
+            }
+        }
+
+    /* Newsletter */
+        .footer-center .logo-footer {
+            background-position-x: 100%;
+        }
+        .widget-blogs-latest .viewmore i {
+            &.fa-angle-left {
+                display: inline-block;
+            }
+            &.fa-angle-right {
+                display: none;
+            }
+        }
+
+    /* Header */
+
+        #group-menu .megamenu-header {
+            margin-left: 0px;
+            margin-right: -15;
+            padding-left: 15px;
+            padding-right: 0px;
+        }
+    footer .footer-center .list-unstyled li a::before {
+        content: "\f2ff";
+    }
+}

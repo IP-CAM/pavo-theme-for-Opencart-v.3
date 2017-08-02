@@ -1,0 +1,187 @@
+#pav-verticalmenu {
+    .menu-heading {
+        border-top: 1px solid $border-color;
+        border-bottom: 1px solid $border-color;
+        position: relative;
+        h4 {
+            font-size: 20px;
+            line-height: 60px;
+            margin: 0px;
+            padding: 0px 30px;
+        }
+        i {
+            color: #333333;
+            position: absolute;
+            @include rtl-right(30px);
+            top: 25px;
+        }
+    }
+}
+.verticalmenu {
+    ul {
+        padding: 0px;
+    }
+    .dropdown {
+        display: block;
+        &:hover {
+            .dropdown-menu {
+                opacity: 1;
+                @include rtl-left(100%);
+                visibility: visible;
+                top: 0px;
+            }
+            .dropdown-toggle {
+                box-shadow: 250px 0px 0px 0px #f8f8f8 inset;
+                color: $link-color;
+            }
+        }
+    }
+    .dropdown-menu {
+        @include rtl-right(auto);
+        @include rtl-left(110%);
+        top: 0px;
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+        opacity: 0;
+        visibility: hidden;
+        padding: 30px;
+        li a {
+            padding: 5px 20px;
+            font-family: $font-family-base;
+            font-size: $font-size-base - 2;
+            line-height: $line-height-base;
+            display: block;
+        }
+        .dropdown-submenu {
+            position: relative;
+            .dropdown-menu{
+                @include rtl-right(auto);
+                @include rtl-left(110%);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+                opacity: 0;
+                visibility: hidden;
+            }
+            .dropdown-toggle {
+                color: $link-color;
+            }
+            &:hover{
+                >.dropdown-menu{
+                    opacity: 1;
+                    @include rtl-left(100%);
+                    visibility: visible;
+                }
+                >.dropdown-toggle {
+                    color: $theme-color;
+                }
+            }
+        }
+    }
+    .navbar-nav {
+        > li {
+            width: 100%;
+            &:after, &:before {
+                content: "";
+                position: absolute;
+                left: 20px;
+                height: 1px;
+                width: calc(100% - 40px);
+                background: $border-color;
+                transition: all ease 0.5s;
+            }
+            &:before {
+                top: -1px;
+            }
+            &:after {
+                bottom: 0px;
+            }
+            &:hover {
+                background: #f8f8f8;
+                &:after, &:before {
+                    width: 100%;
+                    left: 0px;
+                }
+            }
+            &:last-child {
+                border-bottom-right-radius: 5px;
+                border-bottom-left-radius: 5px;
+                &:after {
+                    display: none;
+                }
+            }
+            > a {
+                display: block;
+                padding: 14px 30px;
+                position: relative;
+                color: $text-color;
+                .caret {
+                    border: none;
+                    position: absolute;
+                    @include rtl-right(35px);
+                    top: 15px;
+                    &:after {
+                        content: "\f107";
+                        font-family: 'FontAwesome';
+                        font-size: 15px;
+                        font-weight: normal;
+                        color: #bbbbbb;
+                    }
+                }
+                &:hover {
+                    color: $link-color;
+                }
+            }
+        }
+    }
+
+    /***** Style widget on megamenu *****/
+
+    .dropdown-menu {
+        > .row {
+            margin: 0px;
+        }
+        .panel-heading .panel-title {
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            position: relative;
+            color: #222222;
+            font-size: $font-size-base;
+            &:before {
+                content: "";
+                width: 50px;
+                height: 1px;
+                background: $theme-color;
+                position: absolute;
+                bottom: 0;
+            }
+        }
+        .panel-body {
+            padding: 0px;
+        }
+        ul {
+            padding: 0px;
+            li {
+                list-style-type: none;
+                a {
+                    padding: 10px 0px;
+                    font-family: $font-family-base;
+                    font-size: $font-size-base;
+                    line-height: $line-height-base;
+                    display: block;
+                }
+            }
+        }
+
+        /* widget product-list */
+
+        .bg-carousel .panel-heading {
+            border: none;
+            padding: 0px;
+        }
+
+        /* widget video */
+
+        .widget-video iframe {
+            border: none;
+        }
+    }
+}

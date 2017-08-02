@@ -1,0 +1,45 @@
+.paging {
+    border-top: 1px solid #e5e5e5;
+    padding-top: 25px;
+    font-size: 14px;
+    .text-right {
+        padding-top: 5px;
+    }
+}
+.pagination {
+    padding: 0px;
+    margin-bottom: 0px;
+    li {
+        display: inline-block;
+        margin-right: 5px;
+        span, a {
+            width: 30px;
+            line-height: 30px;
+            border-radius: 100%;
+            text-align: center;
+            background: $pagination-bg;
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            transition: all ease 0.35s;
+        }
+        &.active {
+            span {
+                background: $theme-color;
+            }
+        }
+        &:hover {
+            a {
+                background: $theme-color;
+                color: $link-color;
+            }
+        }
+    }
+}
+.rtl {
+    .pagination {
+        li {
+            margin-left: 5px;
+        }
+    }
+}
