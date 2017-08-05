@@ -74,14 +74,14 @@ if ( ! class_exists( 'PavoThemerController' ) ) :
 		 */
 		public function render() {
 			if ( $this->template ) {
+				// set page document title
+				if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
+				$this->data['errors'] = $this->errors;
 				$this->data = array_merge( array(
 					'header'		=> $this->load->controller( 'common/header' ),
 					'column_left' 	=> $this->load->controller( 'common/column_left' ),
 					'footer'		=> $this->load->controller( 'common/footer' )
 				), $this->data );
-				// set page document title
-				if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
-				$this->data['errors'] = $this->errors;
 				$this->response->setOutput( $this->load->view( $this->template, $this->data ) );
 			} else {
 				trigger_error( 'Template not found' ); die();
