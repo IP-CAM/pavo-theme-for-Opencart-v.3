@@ -4,12 +4,12 @@ if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 /**
  *
  */
-class LxSettingHelper {
+class PavoThemerSettingHelper {
 
 	/**
 	 * instance instead of new ClassName
 	 *
-	 * @var LxSettingHelper
+	 * @var PavoThemerSettingHelper
 	 */
 	private static $_instance = null;
 

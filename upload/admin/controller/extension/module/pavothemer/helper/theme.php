@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
-class LxThemeHelper {
+class PavoThemerHelper {
 
 	private static $_customizes = array();
 
@@ -58,7 +58,7 @@ class LxThemeHelper {
 		if ( $files ) {
 			foreach ( $files as $file ) {
 				$fileInfo = pathinfo( $file );
-				self::$_customizes[ $fileInfo['filename'] ] = LxSettingHelper::getSettingFile( $file );
+				self::$_customizes[ $fileInfo['filename'] ] = PavoThemerSettingHelper::getSettingFile( $file );
 			}
 		}
 

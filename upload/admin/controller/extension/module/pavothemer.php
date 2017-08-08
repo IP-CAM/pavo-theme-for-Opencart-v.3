@@ -51,7 +51,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		$tab = isset( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : '';
 		// setting tabs
-		$this->data['settings'] = LxSettingHelper::getSettings( $this->config->get( 'config_theme' ) );
+		$this->data['settings'] = PavoThemerSettingHelper::getSettings( $this->config->get( 'config_theme' ) );
 		$this->data['current_tab'] = isset( $_REQUEST['current_tab'] ) ? $_REQUEST['current_tab'] : current( array_keys( $this->data['settings'] ) );
 
 		// validate and update settings
@@ -106,8 +106,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->data['iframeURI'] = HTTPS_CATALOG;
 		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );
 
-		// $this->data['fields'] = $this->parseCustomizeOptions( LxThemeHelper::getCustomizes() );
-		$customizes = LxThemeHelper::getCustomizes();
+		// $this->data['fields'] = $this->parseCustomizeOptions( PavoThemerHelper::getCustomizes() );
+		$customizes = PavoThemerHelper::getCustomizes();
 		foreach ( $customizes as $file => $customize ) {
 			$this->data['fields'][$file] = $this->parseCustomizeOptions( $customize );
 		}
@@ -139,7 +139,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @since 1.0.0
 	 */
 	public function import() {
-		var_dump(1); die();
+		var_dump(DIR_CATALOG); die();
 	}
 
 	/**
@@ -194,22 +194,22 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				break;
 
 			case 'select_header':
-				$item['option'] = LxThemeHelper::getHeaders( $theme );
+				$item['option'] = PavoThemerHelper::getHeaders( $theme );
 				$type = 'select';
 				break;
 
 			case 'select_footer':
-				$item['option'] = LxThemeHelper::getFooters( $theme );
+				$item['option'] = PavoThemerHelper::getFooters( $theme );
 				$type = 'select';
 				break;
 
 			case 'select_product_layout':
-				$item['option'] = LxThemeHelper::getProductDefailLayouts( $theme );
+				$item['option'] = PavoThemerHelper::getProductDefailLayouts( $theme );
 				$type = 'select';
 				break;
 
 			case 'select_category_layout':
-				$item['option']= LxThemeHelper::getProductCategoryLayouts( $theme );
+				$item['option']= PavoThemerHelper::getProductCategoryLayouts( $theme );
 				$type = 'select';
 				break;
 			case 'text':
@@ -227,7 +227,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				break;
 			case 'style_profile':
 					$type = 'select';
-					$styleProfiles = LxThemeHelper::getCssProfiles( $theme );
+					$styleProfiles = PavoThemerHelper::getCssProfiles( $theme );
 					$item['option'][] = array(
 							'text'	=> 'None',
 							'value' => ''
@@ -317,7 +317,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/export' );
 		// END ADD USER PERMISSION
 
-		$settingFields = LxSettingHelper::getSettings( $this->config->get('config_theme') );
+		$settingFields = PavoThemerSettingHelper::getSettings( $this->config->get('config_theme') );
 		$this->load->model( 'setting/setting' );
 		$settings = array();
 

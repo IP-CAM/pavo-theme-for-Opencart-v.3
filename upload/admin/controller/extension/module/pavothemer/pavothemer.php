@@ -18,7 +18,7 @@ if ( ! class_exists( 'PavoThemerController' ) ) :
 	class PavoThemerController extends Controller {
 
 		/**
-		 * static $_instance insteadof LxFrameworkCotronller class
+		 * static $_instance insteadof PavoThemerController class
 		 *
 		 * @var PavoThemerController
 		 * @since 1.0.0
