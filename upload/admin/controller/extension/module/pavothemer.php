@@ -163,63 +163,85 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		if ( $this->isAjax() ) {
 			// load model
 			$this->load->model( 'extension/pavothemer/sample' );
+			$this->load->language( 'extension/module/pavothemer' );
 			$response = array(
 					'status'	=> false
 				);
 
 			$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'create-directory';
 			$data = ! empty( $_REQUEST['data'] ) ? $_REQUEST['data'] : array();
+			$data = array_merge( $data, array( 'date' => false ) );
 			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
 
 			switch ( $action ) {
 				case 'create-directory':
 					// create backup folder
-					$response['data'] = $sampleHelper->makeDir();
-					$response['status'] = ! empty( $response['data'] );
-					$response['text'] = $this->language->get( 'entry_exporting_store_config' );
-					$response['next'] = str_replace(
+					$date = $sampleHelper->makeDir();
+					$response = array(
+							'status'	=> $date,
+							'data'		=> array(
+									'date' 	=> $date
+								),
+							'text'		=> $date ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': ' . DIR_CATALOG . 'view/theme',
+							'next'		=> str_replace(
 											'&amp;',
 											'&',
 											$this->url->link('extension/module/pavothemer/export', 'action=export-store-settings&user_token=' . $this->session->data['user_token'], true )
-										);
+										)
+						);
 					break;
 
 				case 'export-store-settings':
 					// get store settings
 					$storeSettings = $this->model_extension_pavothemer_sample->getStoreSettings();
-					$response['data'] = $sample->makeStoreSettings( $storeSettings );
-					$response['status'] = ! empty( $response['data'] );
-					$response['text'] = $this->language->get( 'entry_exporting_theme_config' );
-					$response['next'] = str_replace(
+					$status = $sampleHelper->makeStoreSettings( $storeSettings, $data['date'] );
+					$response = array(
+							'status'	=> $status,
+							'data'		=> array(
+									'date'	=> $data['date']
+								),
+							'text'		=> $this->language->get( 'entry_exporting_theme_config' ),
+							'next'		=> str_replace(
 											'&amp;',
 											'&',
 											$this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true )
-										);
+										)
+						);
 					break;
 
 				case 'export-theme-settings':
 					// export store settings
 					$themeSettings = $this->model_extension_pavothemer_sample->getThemeSettings();
-					$response['data'] = $sample->makeThemeSettings( $themeSettings );
-					$response['status'] = ! empty( $response['data'] );
-					$response['text'] = $this->language->get( 'entry_exporting_layout_text' );
-					$response['next'] = str_replace(
+					$status = $sampleHelper->makeThemeSettings( $themeSettings, $data['date'] );
+					$response = array(
+							'status'	=> $status,
+							'data'		=> array(
+									'date'	=> $data['date']
+								),
+							'text'		=> $this->language->get( 'entry_exporting_layout_text' ),
+							'next'		=> str_replace(
 											'&amp;',
 											'&',
 											$this->url->link('extension/module/pavothemer/export', 'action=export-layout-settings&user_token=' . $this->session->data['user_token'], true )
-										);
+										)
+						);
 					break;
 
 				case 'export-layout-settings':
 					$layoutSettings = $this->model_extension_pavothemer_sample->getLayoutSettings();
-					$response['data'] = $sample->makeLayoutSettings( $layoutSettings );
-					$response['status'] = ! empty( $response['data'] );
-					$response['text'] = $this->language->get( 'entry_exporting_table_text' );
-					$response['next'] = str_replace(
+					$status = $sampleHelper->makeLayoutSettings( $layoutSettings, $data['date'] );
+					$response = array(
+							'status'	=> $status,
+							'data'		=> array(
+									'date'	=> $data['date']
+								),
+							'text'		=> $this->language->get( 'entry_exporting_table_text' ),
+							'next'		=> str_replace(
 											'&amp;',
 											'&',
 											$this->url->link('extension/module/pavothemer/export', 'action=export-tables&user_token=' . $this->session->data['user_token'], true )
-										);
+										)
+						);
 					break;
 
 				case 'export-tables':

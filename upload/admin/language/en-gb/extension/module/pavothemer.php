@@ -70,35 +70,7 @@ $_['text_module_not_installed'] = '<b class="label red">This is not Installed</b
 $_['text_first_installation'] = 'Here is first installation, please click save or save and edit to store default configuration';
 $_['text_install_done'] = 'Installed Successful';
 
-
-$_['text_body_font_setting'] 		  = 'Body Font Setting';
-$_['text_pageheading_font_setting']   = 'Page Heading Font Setting';
-$_['text_moduleheading_font_setting'] = 'Module Heading Setting';
-$_['text_inherit']					  = 'No Use';
-$_['text_unhookmodules'] = 'Un Hook Modules';
 // Entry
-$_['entry_theme_width']    = 'Theme Layout Width';
-$_['entry_banner']        = 'Banner:';
-$_['entry_dimension']     = 'Dimension (W x H) and Resize Type:';
-$_['entry_layout']        = 'Layout:';
-$_['entry_enable_customfont']      = '<b>Enable Customize Font:</b>';
-$_['entry_status']        = 'Status:';
-$_['entry_enable_footer_center']    = 'Enable Footer Center:';
-$_['entry_responsive']    = 'Is Responsive:';
-$_['entry_enable_copyright'] = 'Enable Custom Copyright';
-$_['entry_body_selector']    = 'Body Selector:';
-$_['entry_body_google_url']    = 'Google URL:';
-$_['entry_normal_font']    = 'Normal Font:';
-$_['entry_font_setting']    = 'Custome Font Setting:';
-$_['entry_customize_background'] = 'Customize Background' ;
-$_['entry_use_custom_background'] = 'Use Custom Background';
-$_['text_css_background_repeat'] = "Repeat Mode : ";
-$_['text_css_background_position'] = "Position Mode : ";	
-$_['entry_enable_development_mode'] = 'Enable Development Mode';
-$_['text_explain_development_mode'] = 'Enable Development is option for developer and less is used to instead of css. !important, all css files will be replaced by new files which generate from less';
-$_['text_compile_export']		    = 'Compile Less And Export Css';
-$_['text_compile_only'] 		    = 'Compile Only';
-$_['text_template_layouts_setting'] = 'Other Setting';
 $_['entry_progress_text'] = 'Progress';
 $_['entry_import_text'] = 'Import';
 $_['entry_export_text'] = 'Export';
@@ -110,6 +82,7 @@ $_['entry_created_at_text'] = 'Created At';
 $_['entry_created_by_text'] = 'Created By';
 $_['entry_actions_text'] = 'Actions';
 $_['entry_delete_text']	= 'Delete';
+$_['entry_error_permission'] = 'Error Permission Denied';
 
 // Tab
 $_['tab_general']   = 'General';
@@ -128,37 +101,17 @@ $_['logo_system'] = 'Use System';
 $_['logo_text']   = 'Logo Text';
 $_['logo_image']  = 'Logo Image';
 $_['entry_enable_offsidebars'] = 'Enable OffCanvas Sidebars';
-// Error
-$_['error_permission']    = 'Warning: You do not have permission to modify module ThemControl!';
-$_['error_dimension']     = 'Width &amp; Height dimensions required!';
-$_['text_message_override_sample'] = 'Do you want to override data sample for this?';
-$_['text_message_install_sample'] = 'Do you want to Install New data sample for this?';
-$_['text_message_datasample_modules'] = '+ If you would like to install data sample for modules which will be taken look and feel like as demo on pavothemes. You click to Overrdie or Install link to start installing the sample of modules.<br><b>Please remember that you must to install below modules before using this tool</b>.<br> + If your moduled are ready installed, please backup data in any related table before installing our data sample' ;
-$_['text_install_datasample_store'] = 'Install Sample Configuration of Store ';
-$_['text_install_datasample_modules'] = 'Install Sample Configuration of Modules ';
-$_['text_install_sample'] = 'Install Sample';
-$_['text_override_sample'] = 'Override Sample';
-$_['text_install_store_sample'] = ' Install Store Configuration ';
-$_['text_install_store_sample_explain'] = 'Set this theme as default theme of store, configure images sizes...';
-$_['disable_expected_module_in_home_page'] = 'List Unexpected Modules On Home Page';
-$_['text_message_disable_expected_module_in_home_page'] = 'Following modules are appearing on home page which could not work perfect as the theme expected. 
-	So please disable them and enable above modules (2) ';
-
-$_['text_add_product_tab'] = 'Add Custom Tab';
-$_['entry_customtab_content'] = 'Custom Tab Content';
-$_['entry_customtab_name'] = 'Custom Tab Name: ';
-$_['text_product_related_column'] = '<b>Product Related Columns<b>';
-$_['text_explain_internal_modules'] = '* <span class="label">Internal Modules</span><i> supports by pavo framework and need not install, put on postions as opencart module</i>';
-
 
 // import - export - download text
 $_['entry_exporting_text']	= 'Exporting...';
-$_['entry_exporting_module'] = 'Exporting module';
-$_['entry_exporting_store_config'] = 'Exporting Store Settings';
-$_['entry_exporting_theme_config'] = 'Exporting Theme Settings';
-$_['entry_export_sql_text']		= 'Exporting Sql';
-$_['entry_exporting_module_config'] = 'Exporting Module Settings';
+$_['entry_exporting_module'] = 'Exporting module...';
+$_['entry_create_export_path'] = 'Creating Sample Directory...';
+$_['entry_exporting_store_config'] = 'Exporting Store Settings...';
+$_['entry_exporting_theme_config'] = 'Exporting Theme Settings...';
+$_['entry_export_sql_text']		= 'Exporting Sql...';
+$_['entry_exporting_module_config'] = 'Exporting Module Settings...';
+$_['entry_exporting_layout_text'] = 'Exporting Layout...';
 
-$_['entry_downloading_module'] 		= 'Downloading Module';
-$_['entry_importing_store_config'] 	= 'Importing Store Settings';
-$_['entry_importing_module_config'] = 'Importing Module Settings';
+$_['entry_downloading_module'] 		= 'Downloading Module...';
+$_['entry_importing_store_config'] 	= 'Importing Store Settings...';
+$_['entry_importing_module_config'] = 'Importing Module Settings...';

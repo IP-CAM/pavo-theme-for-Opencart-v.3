@@ -43,7 +43,7 @@ class PavoThemerSampleHelper {
 	 * get single sample profile
 	 */
 	public function getProfile( $key = '' ) {
-		$path = DIR_CATALOG . 'view/' . $this->theme . '/sample/' . $key . '/';
+		$path = DIR_CATALOG . 'view/theme/' . $this->theme . '/sample/' . $key . '/';
 		$infoFile = $path . 'data.json';
 		$modulesPath = $path . 'modules/';
 
@@ -69,19 +69,37 @@ class PavoThemerSampleHelper {
 	 * create directory
 	 */
 	public function makeDir() {
-		$date = date( 'Y-m-d H:i:s' );
+		$date = date( 'Y-m-d_H:i:s' );
+		$path = DIR_CATALOG . 'view/theme/' . $this->theme . '/sample/' . $date . '';
+		if ( is_dir( $path ) ) {
+			return $date;
+		}
+		if ( ! is_writable( dirname( $path ) ) ) return false;
+		return mkdir( $path, 0777 );
 	}
 
+	/**
+	 * create store profile
+	 */
 	public function makeStoreSettings() {
 
+		return true;
 	}
 
+	/**
+	 * create theme profile
+	 */
 	public function makeThemeSettings() {
 
+		return true;
 	}
 
+	/**
+	 * create layout settings
+	 */
 	public function makeLayoutSettings() {
 
+		return true;
 	}
 
 }
