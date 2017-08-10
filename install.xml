@@ -36,14 +36,14 @@
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/import' ) ) {
                     $tools[] = array(
                         'name'     => $this->language->get('menu_import_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], true),
+                        'href'     => $this->url->link('extension/module/pavothemer/import', 'tab=import&user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
                     );
                 }
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/export' ) ) {
                     $tools[] = array(
                         'name'     => $this->language->get('menu_export_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/export', 'user_token=' . $this->session->data['user_token'], true),
+                        'href'     => $this->url->link('extension/module/pavothemer/export', 'tab=export&user_token=' . $this->session->data['user_token'], true),
                         'children' => array()   
                     );
                 }

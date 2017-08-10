@@ -1,6 +1,9 @@
 <?php
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
-class PavoDownLoad {
+/**
+ * Process download sample data from Pavothemes.com
+ */
+class PavoThemerDownloadHelper {
 
 }

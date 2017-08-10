@@ -3,6 +3,7 @@
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
 require_once dirname( __FILE__ ) . '/pavothemer/pavothemer.php';
+require_once dirname( __FILE__ ) . '/pavothemer/helper/sample.php';
 
 /**
  * Theme Control Controller
@@ -37,16 +38,16 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->data['breadcrumbs'] = array();
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get( 'text_home' ),
-			'href' => $this->url->link( 'common/dashboard', 'token=' . $this->session->data['user_token'], true )
+			'href' => $this->url->link( 'common/dashboard', 'user_token=' . $this->session->data['user_token'], true )
 		);
 		$this->data['breadcrumbs'][] = array(
        		'text'      => $this->language->get( 'text_extension' ),
-			'href'      => $this->url->link( 'marketplace/extension', 'token=' . $this->session->data['user_token'].'&type=module', 'SSL' ),
+			'href'      => $this->url->link( 'marketplace/extension', 'user_token=' . $this->session->data['user_token'].'&type=module', 'SSL' ),
       		'separator' => ' :: '
    		);
 		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
-			'href' => $this->url->link('common/dashboard', 'token=' . $this->session->data['user_token'], true)
+			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
 		);
 
 		$tab = isset( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : '';
@@ -135,11 +136,23 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	}
 
 	/**
+	 * check is ajax request
+	 */
+	public function isAjax() {
+		return ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest';
+	}
+
+	/**
 	 * Import
 	 * @since 1.0.0
 	 */
 	public function import() {
-		var_dump(DIR_CATALOG); die();
+		if ( $this->isAjax() ) {
+			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+
+		} else {
+			$this->tools( 'import' );
+		}
 	}
 
 	/**
@@ -147,7 +160,130 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * @since 1.0.0
 	 */
 	public function export() {
-		var_dump(2); die();
+		if ( $this->isAjax() ) {
+			// load model
+			$this->load->model( 'extension/pavothemer/sample' );
+			$response = array(
+					'status'	=> false
+				);
+
+			$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'create-directory';
+			$data = ! empty( $_REQUEST['data'] ) ? $_REQUEST['data'] : array();
+			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+
+			switch ( $action ) {
+				case 'create-directory':
+					// create backup folder
+					$response['data'] = $sampleHelper->makeDir();
+					$response['status'] = ! empty( $response['data'] );
+					$response['text'] = $this->language->get( 'entry_exporting_store_config' );
+					$response['next'] = str_replace(
+											'&amp;',
+											'&',
+											$this->url->link('extension/module/pavothemer/export', 'action=export-store-settings&user_token=' . $this->session->data['user_token'], true )
+										);
+					break;
+
+				case 'export-store-settings':
+					// get store settings
+					$storeSettings = $this->model_extension_pavothemer_sample->getStoreSettings();
+					$response['data'] = $sample->makeStoreSettings( $storeSettings );
+					$response['status'] = ! empty( $response['data'] );
+					$response['text'] = $this->language->get( 'entry_exporting_theme_config' );
+					$response['next'] = str_replace(
+											'&amp;',
+											'&',
+											$this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true )
+										);
+					break;
+
+				case 'export-theme-settings':
+					// export store settings
+					$themeSettings = $this->model_extension_pavothemer_sample->getThemeSettings();
+					$response['data'] = $sample->makeThemeSettings( $themeSettings );
+					$response['status'] = ! empty( $response['data'] );
+					$response['text'] = $this->language->get( 'entry_exporting_layout_text' );
+					$response['next'] = str_replace(
+											'&amp;',
+											'&',
+											$this->url->link('extension/module/pavothemer/export', 'action=export-layout-settings&user_token=' . $this->session->data['user_token'], true )
+										);
+					break;
+
+				case 'export-layout-settings':
+					$layoutSettings = $this->model_extension_pavothemer_sample->getLayoutSettings();
+					$response['data'] = $sample->makeLayoutSettings( $layoutSettings );
+					$response['status'] = ! empty( $response['data'] );
+					$response['text'] = $this->language->get( 'entry_exporting_table_text' );
+					$response['next'] = str_replace(
+											'&amp;',
+											'&',
+											$this->url->link('extension/module/pavothemer/export', 'action=export-tables&user_token=' . $this->session->data['user_token'], true )
+										);
+					break;
+
+				case 'export-tables':
+					# code...
+					break;
+
+				default:
+					# code...
+					break;
+			}
+
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput( json_encode( $response ) );
+		} else {
+			$this->toolsForm( 'export' );
+		}
+	}
+
+	/**
+	 * tools
+	 */
+	public function tools() {
+		$this->toolsForm( ! empty( $_REQUEST['tab'] ) ? $_REQUEST['tab'] : 'import' );
+	}
+
+	public function toolsForm( $tab = 'import' ) {
+		// load language file
+		$this->load->language('extension/module/pavothemer');
+		// load setting model
+		$this->load->model( 'setting/setting' );
+		/**
+		 * breadcrumbs data
+		 */
+		$this->data['breadcrumbs'] = array();
+		$this->data['breadcrumbs'][] = array(
+			'text' => $this->language->get( 'text_home' ),
+			'href' => $this->url->link( 'common/dashboard', 'user_token=' . $this->session->data['user_token'], true )
+		);
+		$this->data['breadcrumbs'][] = array(
+       		'text'      => $this->language->get( 'menu_tool_text' ),
+			'href'      => $this->url->link( 'extension/module/pavothemer/edit', 'user_token=' . $this->session->data['user_token'], 'SSL' ),
+      		'separator' => ' :: '
+   		);
+		$this->data['current_tab'] = $tab;
+		$this->data['import_ajax_url'] = $this->url->link( 'extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], 'SSL' );
+		$this->data['export_ajax_url'] = $this->url->link( 'extension/module/pavothemer/export' ); //, 'user_token=' . $this->session->data['user_token'], 'SSL'
+		$this->data['token'] = $this->session->data['user_token'];
+
+		$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+		$samples = $sampleHelper->getProfiles();
+		$this->data['samples'] = array();
+		foreach ( $samples as $sample ) {
+			$this->data['samples'][] = array(
+					'name'			=> $sample,
+					'created_at' 	=> basename( $sample, '.php' ),
+					'created_by'	=> '',
+					'delete'		=> $this->url->link( 'extension/module/pavothemer/deleteProfile', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' ),
+					'download'		=> $this->url->link( 'extension/module/pavothemer/downloadProfile', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' ),
+					'import'		=> $this->url->link( 'extension/module/pavothemer/import', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' )
+				);
+		}
+
+		$this->template = 'extension/module/pavothemer/tool';
+		$this->render();
 	}
 
 	/**

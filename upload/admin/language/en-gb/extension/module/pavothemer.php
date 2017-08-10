@@ -13,8 +13,6 @@ $_['menu_export_text'] 		= 'Export';
 $_['text_back'] 			= 'Back';
 $_['text_save'] 			= 'Save';
 
-
-
 $_['text_saveandstay'] = 'Save and Stay';
 $_['text_store_theme'] = 'Theme';
 $_['text_default_store'] = 'Store:';
@@ -101,6 +99,18 @@ $_['text_explain_development_mode'] = 'Enable Development is option for develope
 $_['text_compile_export']		    = 'Compile Less And Export Css';
 $_['text_compile_only'] 		    = 'Compile Only';
 $_['text_template_layouts_setting'] = 'Other Setting';
+$_['entry_progress_text'] = 'Progress';
+$_['entry_import_text'] = 'Import';
+$_['entry_export_text'] = 'Export';
+$_['entry_download_text'] = 'Download';
+$_['entry_install_progress_text'] = 'Install Progress';
+$_['entry_import_export_text'] = 'Import & Export';
+$_['entry_export_history_text'] = 'Export Histories';
+$_['entry_created_at_text'] = 'Created At';
+$_['entry_created_by_text'] = 'Created By';
+$_['entry_actions_text'] = 'Actions';
+$_['entry_delete_text']	= 'Delete';
+
 // Tab
 $_['tab_general']   = 'General';
 $_['tab_layout']    = 'Layout Control';
@@ -139,113 +149,16 @@ $_['entry_customtab_content'] = 'Custom Tab Content';
 $_['entry_customtab_name'] = 'Custom Tab Name: ';
 $_['text_product_related_column'] = '<b>Product Related Columns<b>';
 $_['text_explain_internal_modules'] = '* <span class="label">Internal Modules</span><i> supports by pavo framework and need not install, put on postions as opencart module</i>';
-//general 
-$_['fontsize'] = 'Font Size';
-$_['copyright'] = 'Copyright';
-$_['yes'] = 'Yes';
-$_['no'] = 'No';
-
-/****/
-$_['tab_compression'] = 'Compression';
-$_['text_explain_compression']='Compression Feature allows to speed up webstore by merging, compressing js,css files. All cached files are stored  in folder <b>system/cache/pavo-assets/</b>.<br> To clear cached you click to button CLEAR appearning Right Of this Screen';
-$_['enable_compress_css'] = 'Enable Compress Css';
-$_['exclude_css_files'] = 'Exclude Css Files in Merge And Compress';
-$_['text_compress_select'] = 'Select A Compression Mode';
-$_['text_compress_only']  = 'Compress Only';
-$_['text_compress_merge']  = 'Merge And Compress';
-$_['text_exclude_compression_files'] = 'Put name of css files exclude to compress and merge with format file1,file2. Example: bootstrap.css, layout.css';
 
 
-$_['text_category_listing_page'] = 'Category - Listing Products';
-$_['text_product_page'] = 'Product';
-$_['text_contact_page'] = 'Contact';
-$_['text_browse'] = 'Browse';
-$_['text_clear'] = 'Clear';
-$_['tab_modules_pages'] = 'Pages';
-$_['text_product_display_mode'] = 'Display Product Modes';
-$_['entry_listing_products_columns'] = 'Product - Columns in Large Screen';
-$_['entry_listing_products_columns_small'] = 'Product - Columns In Small Screen';
-$_['entry_listing_products_columns_minismall'] = 'Product - Columns In Mini Small Screen';
+// import - export - download text
+$_['entry_exporting_text']	= 'Exporting...';
+$_['entry_exporting_module'] = 'Exporting module';
+$_['entry_exporting_store_config'] = 'Exporting Store Settings';
+$_['entry_exporting_theme_config'] = 'Exporting Theme Settings';
+$_['entry_export_sql_text']		= 'Exporting Sql';
+$_['entry_exporting_module_config'] = 'Exporting Module Settings';
 
-$_['text_max_product_row_small'] = 'Columns for small monitor';
-$_['text_max_product_row_mini'] = 'Columns for mini monitor';
-$_['text_show_saleicon'] = 'Enable Sale Icon';
-$_['text_show_product_zoom'] = 'Enable Product Popup Image';
-$_['text_grid'] = 'Grid';
-$_['text_list'] = 'List';
-
-$_['text_enable_productzoom'] = '<b>Enable Product Zoom</b>';
-$_['text_product_zoomgallery'] = 'Zoom Gallery Style';
-$_['text_slider_gallery_zoom'] = 'Slider - Main Zoom';
-$_['text_basic_zoom'] = 'Basic Zoom';
-$_['text_product_zoommode'] = 'Product Zoom Mode';
-$_['text_lens_zoom'] = 'Lens Zoom';
-$_['text_inner_zoom'] = 'Inner Zoom';
-
-$_['text_customhtml'] = 'Custom Tab';
-$_['text_product_zoomeasing'] = 'Enable Zoom Easing';
-$_['text_product_zoomlenssize'] = 'Lens Zoom Size';
-$_['text_product_zoomlensshapes'] = 'Lens Zoom Shapes';
-$_['text_len_zoom_round'] = 'Round';
-$_['text_len_zoom_basic'] = 'Basic'; 
-$_['text_show_swap_image'] = 'Enable Swap Image';
-$_['text_contact_html'] = 'Custom HTML';
-$_['text_auto'] = 'Auto';
-$_['text_support_info'] = 'Support Info';
-
-// $_['text_back'] = 'Back';
-$_['text_live_edit'] = 'Live Customzing Theme';
-$_['text_no_select'] = 'Select A Custom Theme';
-$_['text_heading_customize_bg'] = '<b>Customize Body Background</b>';
-$_['text_layout'] = 'Layout';
-$_['text_elements'] = 'Elements';
-$_['text_customize'] = 'Customize';
-$_['text_heading_customize_code'] = '<b>Add  Css, Javascript Code</b>';
-$_['text_body'] = 'Body';
-$_['text_background_color'] = 'Background Color';
-$_['text_text_color'] = 'Text Color';
-$_['text_link_color'] = 'Link Color';
-$_['text_link_hover_color'] = 'Link Hover Color';
-$_['text_header'] = 'Header';
-$_['text_footer'] = 'Footer';
-$_['text_button'] = 'Button';
-$_['text_mainnav'] = 'Main Navigation'; 
-$_['text_heading'] = 'Heading Text';
-$_['text_heading_page'] = 'Page Header';
-$_['text_heading_text'] = 'Heading Text';
-$_['text_theme'] = 'Theme';
-$_['text_background_image'] = 'Background Image';
-
-$_['text_submit'] = 'Submit';
-$_['text_delete'] = 'Delete';
-$_['text_selectors'] 	= 'Layout Selectors';
-$_['text_named_this'] 	= 'And Named This: ';
-$_['text_rename_this']  = 'And Rename To: ';
-$_['text_css_profiles'] = 'Css Profiles:';
-$_['text_install_now'] = 'Install This Extension Now';
-
-$_['text_module_name'] = 'Modules Name';
-$_['text_action']   = 'Action';
-$_['text_backup_data_now'] = 'Backup Data Now <br><i>keep current data of setting of bellow things</i>';
-$_['text_restore_setting'] = 'Restore Data';
-$_['text_sample_module_setting'] = 'Module Sample Data + Setting';
-$_['text_sample_module_setting_explain'] = "Click 'Intstall' or 'Override' will install/override setting of fllowing modules by sample Setting (Recommend)";
-$_['text_sample_module_query'] = 'Module SQL Data Queries';
-$_['text_sample_module_query_explain'] = 'This tools will delete all current data in tables of following modules then inserting new sampledata. This is not recommendation if existed data';
- 
-$_['text_uninstall_now'] = 'Un-Install This Exension Now';
-$_['text_message_restore_sample'] = 'Are you sure to restore data for this?';
-$_['warning_file_permssion_local_custom'] = 'Local Custom File Is not writeable';
-$_['warning_file_permssion_live_custom'] = 'Live Edit Custom Folder Is not writeable';
-$_['warning_file_permssion_development_folder'] = 'Folder stylesheet is not writeable for development';
-//start edit code
-$_['location_address'] = 'Location Address';
-$_['help_location_address'] = 'Place Autocomplete Address';
-$_['text_contact_googlemap'] = 'Googlemap Location';
-$_['location_latitude'] = 'Latitude Address';
-$_['location_longitude'] = 'Longitude Address';
-$_['text_location_address'] = 'Enter a Location';
-//end edit code
-
-$_['text_theme_information'] = 'Theme Information';
-$_['text_related_columns'] = 'Related Columns';
+$_['entry_downloading_module'] 		= 'Downloading Module';
+$_['entry_importing_store_config'] 	= 'Importing Store Settings';
+$_['entry_importing_module_config'] = 'Importing Module Settings';
