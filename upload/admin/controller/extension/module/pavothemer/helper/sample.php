@@ -79,6 +79,13 @@ class PavoThemerSampleHelper {
 	}
 
 	/**
+	 * download sample from pavothemes.com
+	 */
+	public function downloadSample() {
+		require_once dirname( __FILE__ ) . '/helper/download.php';
+	}
+
+	/**
 	 * create store profile
 	 */
 	public function makeStoreSettings() {

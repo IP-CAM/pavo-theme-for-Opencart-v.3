@@ -148,7 +148,50 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function import() {
 		if ( $this->isAjax() ) {
+			// load model
+			$this->load->model( 'extension/pavothemer/sample' );
+			$this->load->language( 'extension/module/pavothemer' );
+			$response = array(
+					'status'	=> false
+				);
+
+			$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'download';
+			$data = ! empty( $_REQUEST['data'] ) ? $_REQUEST['data'] : array();
+			$data = array_merge( $data, array( 'date' => false ) );
 			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+
+			switch ( $action ) {
+				case 'download':
+					
+					break;
+
+				case 'install-modules':
+					
+					break;
+
+				case 'import-store-settings':
+					
+					break;
+
+				case 'import-theme-settings':
+					
+					break;
+
+				case 'import-layout-settings':
+					
+					break;
+
+				case 'import-sql':
+					# code...
+					break;
+
+				default:
+					# code...
+					break;
+			}
+
+			$this->response->addHeader('Content-Type: application/json');
+			$this->response->setOutput( json_encode( $response ) );
 
 		} else {
 			$this->tools( 'import' );
@@ -182,7 +225,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 							'data'		=> array(
 									'date' 	=> $date
 								),
-							'text'		=> $date ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': ' . DIR_CATALOG . 'view/theme',
+							'text'		=> $date ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
 							'next'		=> str_replace(
 											'&amp;',
 											'&',
