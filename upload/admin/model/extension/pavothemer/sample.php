@@ -34,14 +34,27 @@ class ModelExtensionPavothemerSample extends Model {
 	 * get store settings for export
 	 */
 	public function getStoreSettings() {
+		$sql = 'SELECT * FROM ' . DB_PREFIX . 'setting WHERE code = "config"';
 
+		$query = $this->db->query( $sql );
+
+		return $query->rows;
 	}
 
 	/**
 	 * get theme settings for export
 	 */
-	public function getThemeSettings() {
+	public function getThemeSettings( $theme = '' ) {
+		if ( ! $theme ) {
+			$theme = $this->config->get( 'config_theme' );
+		}
 
+		$code = 'theme_' . $theme;
+		$sql = 'SELECT * FROM ' . DB_PREFIX . 'setting WHERE code = "'.$this->db->escape( $code ).'"';
+
+		$query = $this->db->query( $sql );
+
+		return $query->rows;
 	}
 
 	/**

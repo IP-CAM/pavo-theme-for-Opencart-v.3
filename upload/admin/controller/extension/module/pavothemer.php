@@ -213,19 +213,19 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 			$action = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : 'create-directory';
 			$data = ! empty( $_REQUEST['data'] ) ? $_REQUEST['data'] : array();
-			$data = array_merge( $data, array( 'date' => false ) );
-			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+			$data = array_merge( array( 'folder' => false, 'theme' => $this->config->get( 'config_theme' ) ), $data );
+			$store_id = $this->config->get( 'config_store_id' );
+			$sampleHelper = PavoThemerSampleHelper::instance( $data['theme'] );
 
 			switch ( $action ) {
+				// first step create new directory
 				case 'create-directory':
 					// create backup folder
-					$date = $sampleHelper->makeDir();
+					$folder = $sampleHelper->makeDir();
 					$response = array(
-							'status'	=> $date,
-							'data'		=> array(
-									'date' 	=> $date
-								),
-							'text'		=> $date ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
+							'status'	=> $folder ? true : false,
+							'data'		=> array_merge( $data, array( 'folder' => $folder ) ),
+							'text'		=> $folder ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
 							'next'		=> str_replace(
 											'&amp;',
 											'&',
@@ -237,13 +237,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				case 'export-store-settings':
 					// get store settings
 					$storeSettings = $this->model_extension_pavothemer_sample->getStoreSettings();
-					$status = $sampleHelper->makeStoreSettings( $storeSettings, $data['date'] );
+					$status = $sampleHelper->makeStoreSettings( $storeSettings, $data['folder'] );
 					$response = array(
 							'status'	=> $status,
-							'data'		=> array(
-									'date'	=> $data['date']
-								),
-							'text'		=> $this->language->get( 'entry_exporting_theme_config' ),
+							'data'		=> $data,
+							'text'		=> $status ? $this->language->get( 'entry_exporting_theme_config' ) : $this->language->get( 'entry_error_write_file' ) . ': <strong>stores.json</strong> file',
 							'next'		=> str_replace(
 											'&amp;',
 											'&',
@@ -254,13 +252,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 				case 'export-theme-settings':
 					// export store settings
-					$themeSettings = $this->model_extension_pavothemer_sample->getThemeSettings();
-					$status = $sampleHelper->makeThemeSettings( $themeSettings, $data['date'] );
+					$themeSettings = $this->model_extension_pavothemer_sample->getThemeSettings( $data['folder'] );
+					$status = $sampleHelper->makeThemeSettings( $themeSettings, $data['folder'] );
 					$response = array(
 							'status'	=> $status,
-							'data'		=> array(
-									'date'	=> $data['date']
-								),
+							'data'		=> $data,
 							'text'		=> $this->language->get( 'entry_exporting_layout_text' ),
 							'next'		=> str_replace(
 											'&amp;',
@@ -271,13 +267,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					break;
 
 				case 'export-layout-settings':
-					$layoutSettings = $this->model_extension_pavothemer_sample->getLayoutSettings();
-					$status = $sampleHelper->makeLayoutSettings( $layoutSettings, $data['date'] );
+					$layoutSettings = $this->model_extension_pavothemer_sample->getLayoutSettings( $data['folder'] );
+					$status = $sampleHelper->makeLayoutSettings( $layoutSettings, $data['folder'] );
 					$response = array(
 							'status'	=> $status,
-							'data'		=> array(
-									'date'	=> $data['date']
-								),
+							'data'		=> $data,
 							'text'		=> $this->language->get( 'entry_exporting_table_text' ),
 							'next'		=> str_replace(
 											'&amp;',
@@ -288,11 +282,19 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					break;
 
 				case 'export-tables':
-					# code...
+					$response = array(
+							'status'	=> true,
+							'table'		=> $this->sampleTable(),
+							'text'		=> $this->language->get( 'entry_export_success_text' )
+						);
 					break;
 
 				default:
-					# code...
+					$response = array(
+							'status'	=> true,
+							'table'		=> $this->sampleTable(),
+							'text'		=> $this->language->get( 'entry_export_success_text' )
+						);
 					break;
 			}
 
@@ -332,23 +334,33 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->data['import_ajax_url'] = $this->url->link( 'extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], 'SSL' );
 		$this->data['export_ajax_url'] = $this->url->link( 'extension/module/pavothemer/export' ); //, 'user_token=' . $this->session->data['user_token'], 'SSL'
 		$this->data['token'] = $this->session->data['user_token'];
+		$this->data['sample_histories_table'] = $this->sampleTable();
 
+		$this->template = 'extension/module/pavothemer/tool';
+		$this->render();
+	}
+
+	/**
+	 * print samples table
+	 */
+	private function sampleTable() {
 		$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
 		$samples = $sampleHelper->getProfiles();
-		$this->data['samples'] = array();
+		$data = array();
+		$data['samples'] = array();
+		$theme = $this->config->get( 'config_theme' );
 		foreach ( $samples as $sample ) {
-			$this->data['samples'][] = array(
+			$timestamp = str_replace( 'pavothemer_' . $theme . '_', '', $sample );
+			$data['samples'][] = array(
 					'name'			=> $sample,
-					'created_at' 	=> basename( $sample, '.php' ),
+					'created_at' 	=> date( 'Y-m-d H:i:s', $timestamp ),
 					'created_by'	=> '',
 					'delete'		=> $this->url->link( 'extension/module/pavothemer/deleteProfile', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' ),
 					'download'		=> $this->url->link( 'extension/module/pavothemer/downloadProfile', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' ),
 					'import'		=> $this->url->link( 'extension/module/pavothemer/import', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' )
 				);
 		}
-
-		$this->template = 'extension/module/pavothemer/tool';
-		$this->render();
+		return $this->load->view( 'extension/module/pavothemer/sampletable', $data );
 	}
 
 	/**

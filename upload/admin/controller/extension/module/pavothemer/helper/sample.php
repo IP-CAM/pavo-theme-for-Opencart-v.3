@@ -10,6 +10,7 @@ class PavoThemerSampleHelper {
 	public static $instance = array();
 
 	public $theme = null;
+	public $sampleDir = '';
 
 	public static function instance( $theme = '' ) {
 		if ( ! isset( self::$instance[ $theme ] ) ) {
@@ -21,13 +22,15 @@ class PavoThemerSampleHelper {
 
 	public function __construct( $theme = '' ) {
 		$this->theme = $theme;
+		$this->sampleDir = DIR_CATALOG . 'view/theme/' . $this->theme . '/sample/';
 	}
 
 	/**
 	 * get samples backup histories inside the theme
 	 */
 	public function getProfiles() {
-		$histories = glob( DIR_CATALOG . 'view/' . $this->theme . '/sample/*' );
+		$histories = glob( $this->sampleDir. '*' );
+
 		$sampleHistories = array();
 		foreach ( $histories as $history ) {
 			$history = basename( $history );
@@ -43,7 +46,7 @@ class PavoThemerSampleHelper {
 	 * get single sample profile
 	 */
 	public function getProfile( $key = '' ) {
-		$path = DIR_CATALOG . 'view/theme/' . $this->theme . '/sample/' . $key . '/';
+		$path = $this->sampleDir . $key . '/';
 		$infoFile = $path . 'data.json';
 		$modulesPath = $path . 'modules/';
 
@@ -69,17 +72,31 @@ class PavoThemerSampleHelper {
 	 * create directory
 	 */
 	public function makeDir() {
-		$date = date( 'Y-m-d_H:i:s' );
-		$path = DIR_CATALOG . 'view/theme/' . $this->theme . '/sample/' . $date . '';
+		// clearn folder
+		$profiles = $this->getProfiles();
+		if ( $profiles ) {
+			foreach ( $profiles as $profile ) {
+				$dir = $this->sampleDir . $profile . '/';
+				if ( ! is_writable( $dir ) ) {
+					chmod( $dir, 0777 );
+				}
+				if ( empty( glob( $dir . '*' ) ) ) {
+					rmdir( $dir );
+				}
+			}
+		}
+
+		$folder = 'pavothemer_' . $this->theme . '_' . time();
+		$path = $this->sampleDir . $folder . '';
 		if ( is_dir( $path ) ) {
-			return $date;
+			return $folder;
 		}
 		if ( ! is_writable( dirname( $path ) ) ) return false;
-		return mkdir( $path, 0777 );
+		return mkdir( $path, 0777 ) ? $folder : false;
 	}
 
 	/**
-	 * download sample from pavothemes.com
+	 * download sample data from pavothemes.com
 	 */
 	public function downloadSample() {
 		require_once dirname( __FILE__ ) . '/helper/download.php';
@@ -88,7 +105,14 @@ class PavoThemerSampleHelper {
 	/**
 	 * create store profile
 	 */
-	public function makeStoreSettings() {
+	public function makeStoreSettings( $settings = array(), $profile = '' ) {
+		if ( ! $profile ) return false;
+
+		$file = $this->sampleDir . $profile . '/stores.json';
+		if ( $fo = fopen( $file, 'w+' ) ) {
+			fwrite( $fo, json_encode( $settings ) );
+			return fclose( $fo );
+		}
 
 		return true;
 	}
@@ -96,8 +120,14 @@ class PavoThemerSampleHelper {
 	/**
 	 * create theme profile
 	 */
-	public function makeThemeSettings() {
+	public function makeThemeSettings( $settings = array(), $profile = '' ) {
+		if ( ! $profile ) return false;
 
+		$file = $this->sampleDir . $profile . '/themes.json';
+		if ( $fo = fopen( $file, 'w+' ) ) {
+			fwrite( $fo, json_encode( $settings ) );
+			return fclose( $fo );
+		}
 		return true;
 	}
 

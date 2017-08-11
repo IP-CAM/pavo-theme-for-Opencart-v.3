@@ -53,50 +53,7 @@
           <fieldset>
             <legend>{{ entry_export_history_text }}</legend>
             <div class="table-responsive">
-              <table class="table table-bordered table-hover">
-                <thead>
-                  <tr>
-                    <td style="width: 1px;" class="text-center"><input type="checkbox" onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
-                    <td class="text-center">
-                      {% if sort == 'date_added' %}
-                        <a href="{{ sort_date_added }}" class="{{ order|lower }}">{{ entry_created_at_text }}</a>
-                      {% else %}
-                        <a href="{{ sort_date_added }}">{{ entry_created_at_text }}</a>
-                      {% endif %}
-                    </td>
-                    <td class="text-center">
-                      {{ entry_created_by_text }}
-                    </td>
-                    <td class="text-center">{{ entry_actions_text }}</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% if samples %}
-                    {% for sample in samples %}
-                    <tr>
-                      <td class="text-center">
-                        {% if post.upload_id in selected %}
-                          <input type="checkbox" name="selected[]" value="{{ sample.name }}" checked="checked" />
-                        {% else %}
-                          <input type="checkbox" name="selected[]" value="{{ sample.name }}" />
-                        {% endif %}
-                      </td>
-                      <td class="text-center">{{ sample.date_added }}</td>
-                      <td class="text-center">{{ sample.created_by }}</td>
-                      <td class="text-center">
-                        <a href="{{ sample.download }}" data-toggle="tooltip" title="{{ button_download }}" class="btn btn-info"><i class="fa fa-download"></i> {{ entry_download_text }}</a>
-                        <a href="{{ sample.import }}" data-toggle="tooltip" title="{{ button_download }}" class="btn btn-info"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
-                        <a href="{{ sample.delete }}" data-toggle="tooltip" title="{{ button_download }}" class="btn btn-info"><i class="fa fa-upload"></i> {{ entry_delete_text }}</a>
-                      </td>
-                    </tr>
-                    {% endfor %}
-                  {% else %}
-                    <tr>
-                      <td class="text-center" colspan="6">{{ text_no_results }}</td>
-                    </tr>
-                  {% endif %}
-                </tbody>
-              </table>
+              {{ sample_histories_table }}
             </div>
           </fieldset>
         </div>
@@ -137,19 +94,21 @@
           if ( typeof res.status === 'undefined' ) return;
 
           // messages
-          if ( res.status === false ) {
-            $('#progress-bar').addClass('progress-bar-danger');
-            $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-          } else {
-            $('#progress-bar').addClass('progress-bar-success');
-            $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+          if ( typeof res.text !== 'undefined' ) {
+            if ( res.status === false ) {
+              $('#progress-bar').addClass('progress-bar-danger');
+              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
+            } else {
+              $('#progress-bar').addClass('progress-bar-success');
+              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+            }
           }
 
           if ( res.status === true && typeof res.next !== 'undefined' ) {
             next_request( res.next, typeof res.data !== 'undefined' ? res.data : {}, step );
           }
         }).fail(function( xhr, ajaxOptions, thrownError ){
-          alert( thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText );
+          $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
         });
 
         return false;
@@ -163,25 +122,34 @@
           type: 'POST',
           url: url,
           dataType: 'json',
-          data: data
+          data: {
+            data: data
+          }
         }).always(function(){
 
         }).done(function( res ){
 
           // messages
-          if ( res.status === false ) {
-            $('#progress-bar').addClass('progress-bar-danger');
-            $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-          } else {
-            $('#progress-bar').addClass('progress-bar-success');
-            $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+          if ( typeof res.text !== 'undefined' ) {
+            if ( res.status === false ) {
+              $('#progress-bar').addClass('progress-bar-danger');
+              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
+            } else {
+              $('#progress-bar').addClass('progress-bar-success');
+              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+            }
           }
 
           if ( res.status === true && typeof res.next !== 'undefined' ) {
             next_request( res.next, typeof res.data !== 'undefined' ? res.data : {}, step );
           }
+
+          if ( typeof res.table !== 'undefined' ) {
+            $( '#sample-histories-table' ).replaceWith( res.table );
+          }
         }).fail( function( xhr, ajaxOptions, thrownError ){
-          alert( thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText );
+          $('#progress-bar').addClass('progress-bar-danger');
+          $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
         });;
 
       }

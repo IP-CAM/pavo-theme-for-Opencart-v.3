@@ -82,7 +82,8 @@ $_['entry_created_at_text'] = 'Created At';
 $_['entry_created_by_text'] = 'Created By';
 $_['entry_actions_text'] = 'Actions';
 $_['entry_delete_text']	= 'Delete';
-$_['entry_error_permission'] = 'Error Permission Denied';
+$_['entry_error_permission'] = 'Error permission denied';
+$_['entry_error_write_file'] = 'Error can not backup store settings';
 
 // Tab
 $_['tab_general']   = 'General';
@@ -111,7 +112,12 @@ $_['entry_exporting_theme_config'] = 'Exporting Theme Settings...';
 $_['entry_export_sql_text']		= 'Exporting Sql...';
 $_['entry_exporting_module_config'] = 'Exporting Module Settings...';
 $_['entry_exporting_layout_text'] = 'Exporting Layout...';
+$_['entry_exporting_table_text'] = 'Exporting Tables...';
+$_['entry_export_success_text'] = 'Export successfully';
 
+$_['entry_importing_text']	= 'Importing...';
+$_['entry_downloading_text']	= 'Downloading...';
+$_['entry_deleting_text']	= 'Deleting...';
 $_['entry_downloading_module'] 		= 'Downloading Module...';
 $_['entry_importing_store_config'] 	= 'Importing Store Settings...';
 $_['entry_importing_module_config'] = 'Importing Module Settings...';
