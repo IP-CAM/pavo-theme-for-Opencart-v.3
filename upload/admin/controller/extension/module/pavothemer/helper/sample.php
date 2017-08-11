@@ -69,6 +69,35 @@ class PavoThemerSampleHelper {
 	}
 
 	/**
+	 * delete backup
+	 */
+	public function delete( $sample = '' ) {
+		if ( ! $sample ) return false;
+		$dir = $this->sampleDir . $sample . '/';
+		if ( $dir ) {
+			return $this->deleteDirectory( $dir );
+		}
+		return true;
+	}
+
+	/**
+	 * 
+	 */
+	public function deleteDirectory( $target = '' ) {
+	    if( is_dir( $target ) ){
+	        $files = glob( $target . '*', GLOB_MARK );
+
+	        foreach( $files as $file ) {
+	            $this->deleteDirectory( $file );
+	        }
+
+	        return rmdir( $target );
+	    } elseif( is_file( $target ) ) {
+	        return unlink( $target );
+	    }
+	}
+
+	/**
 	 * create directory
 	 */
 	public function makeDir() {

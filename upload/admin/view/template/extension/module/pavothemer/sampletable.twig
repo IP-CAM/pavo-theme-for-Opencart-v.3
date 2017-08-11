@@ -29,9 +29,9 @@
         <td class="text-center">{{ sample.created_at }}</td>
         <td class="text-center">{{ sample.created_by }}</td>
         <td class="text-center">
-          <a href="{{ sample.download }}" data-toggle="tooltip" title="{{ entry_downloading_text }}" class="btn btn-default"><i class="fa fa-download"></i> {{ entry_download_text }}</a>
-          <a href="{{ sample.import }}" data-toggle="tooltip" title="{{ entry_importing_text }}" class="btn btn-primary"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
-          <a href="{{ sample.delete }}" data-toggle="tooltip" title="{{ entry_deleting_text }}" class="btn btn-danger"><i class="fa fa-trash-o"></i> {{ entry_delete_text }}</a>
+          <a href="{{ sample.download }}" data-theme="{{ theme }}" data-sample="{{ sample.name }}" data-loading-text="{{ entry_downloading_text }}" class="btn btn-default pavothemer-download"><i class="fa fa-download"></i> {{ entry_download_text }}</a>
+          <a href="{{ sample.import }}" data-theme="{{ theme }}" data-sample="{{ sample.name }}" data-loading-text="{{ entry_importing_text }}" class="btn btn-primary pavothemer-import"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
+          <a href="{{ sample.delete }}" data-theme="{{ theme }}" data-sample="{{ sample.name }}" data-loading-text="{{ entry_deleting_text }}" class="btn btn-danger pavothemer-delete-export"><i class="fa fa-trash-o"></i> {{ entry_delete_text }}</a>
         </td>
       </tr>
       {% endfor %}

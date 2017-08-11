@@ -224,7 +224,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					$folder = $sampleHelper->makeDir();
 					$response = array(
 							'status'	=> $folder ? true : false,
-							'data'		=> array_merge( $data, array( 'folder' => $folder ) ),
+							'data'		=> array_merge( $data, array( 'folder' => $folder, 'steps' => 5 ) ),
 							'text'		=> $folder ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
 							'next'		=> str_replace(
 											'&amp;',
@@ -284,6 +284,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				case 'export-tables':
 					$response = array(
 							'status'	=> true,
+							'data'		=> $data,
 							'table'		=> $this->sampleTable(),
 							'text'		=> $this->language->get( 'entry_export_success_text' )
 						);
@@ -302,6 +303,39 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			$this->response->setOutput( json_encode( $response ) );
 		} else {
 			$this->toolsForm( 'export' );
+		}
+	}
+
+	/**
+	 * delete backup sample
+	 */
+	public function delete() {
+		$sample = ! empty( $_REQUEST['sample'] ) ? $_REQUEST['sample'] : '';
+		$theme = ! empty( $_REQUEST['theme'] ) ? $_REQUEST['theme'] : '';
+		$this->load->language( 'extension/module/pavothemer' );
+		$sampleHelper = PavoThemerSampleHelper::instance( $theme );
+
+		$status = $sampleHelper->delete( $sample );
+		$response = array(
+				'status'	=> $status,
+				'text'		=> $status ? $this->language->get( 'entry_delete_successfully' ) : $this->language->get( 'entry_error_permission' )
+			);
+
+		if ( $this->isAjax() ) {
+			$response['table'] = $this->sampleTable();
+			$this->response->addHeader( 'Content-Type: application/json' );
+			$this->response->setOutput( json_encode( $response ) );
+		} else {
+			if ( $status ) {
+				$this->addMessage( $this->language->get( 'entry_delete_successfully' ), 'success' );
+			} else {
+				$this->addMessage( $this->language->get( 'entry_error_permission' ), 'success' );
+			}
+			$this->response->redirect( str_replace(
+											'&amp;',
+											'&',
+											$this->url->link('extension/module/pavothemer/export', 'user_token=' . $this->session->data['user_token'], true )
+										) ); exit();
 		}
 	}
 
@@ -332,7 +366,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
    		);
 		$this->data['current_tab'] = $tab;
 		$this->data['import_ajax_url'] = $this->url->link( 'extension/module/pavothemer/import', 'user_token=' . $this->session->data['user_token'], 'SSL' );
-		$this->data['export_ajax_url'] = $this->url->link( 'extension/module/pavothemer/export' ); //, 'user_token=' . $this->session->data['user_token'], 'SSL'
+		$this->data['export_ajax_url'] = str_replace( '&amp;', '&', $this->url->link( 'extension/module/pavothemer/export', 'user_token=' . $this->session->data['user_token'], true ) ); //, 'user_token=' . $this->session->data['user_token'], 'SSL'
+		$this->data['delete_export_url'] = str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/delete', 'user_token=' . $this->session->data['user_token'], true ) );
 		$this->data['token'] = $this->session->data['user_token'];
 		$this->data['sample_histories_table'] = $this->sampleTable();
 
@@ -344,11 +379,11 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * print samples table
 	 */
 	private function sampleTable() {
-		$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+		$theme = $this->config->get( 'config_theme' );
+		$sampleHelper = PavoThemerSampleHelper::instance( $theme );
 		$samples = $sampleHelper->getProfiles();
 		$data = array();
 		$data['samples'] = array();
-		$theme = $this->config->get( 'config_theme' );
 		foreach ( $samples as $sample ) {
 			$timestamp = str_replace( 'pavothemer_' . $theme . '_', '', $sample );
 			$data['samples'][] = array(
@@ -360,6 +395,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					'import'		=> $this->url->link( 'extension/module/pavothemer/import', 'profile='.$sample.'&user_token=' . $this->session->data['user_token'], 'SSL' )
 				);
 		}
+		$data['theme'] = $theme;
 		return $this->load->view( 'extension/module/pavothemer/sampletable', $data );
 	}
 

@@ -106,18 +106,21 @@ $_['entry_enable_offsidebars'] = 'Enable OffCanvas Sidebars';
 // import - export - download text
 $_['entry_exporting_text']	= 'Exporting...';
 $_['entry_exporting_module'] = 'Exporting module...';
-$_['entry_create_export_path'] = 'Creating Sample Directory...';
-$_['entry_exporting_store_config'] = 'Exporting Store Settings...';
-$_['entry_exporting_theme_config'] = 'Exporting Theme Settings...';
-$_['entry_export_sql_text']		= 'Exporting Sql...';
-$_['entry_exporting_module_config'] = 'Exporting Module Settings...';
-$_['entry_exporting_layout_text'] = 'Exporting Layout...';
-$_['entry_exporting_table_text'] = 'Exporting Tables...';
+$_['entry_create_export_path'] = 'Creating directory...';
+$_['entry_exporting_store_config'] = 'Exporting store settings...';
+$_['entry_exporting_theme_config'] = 'Exporting theme settings...';
+$_['entry_export_sql_text']		= 'Exporting sql...';
+$_['entry_exporting_module_config'] = 'Exporting module settings...';
+$_['entry_exporting_layout_text'] = 'Exporting layouts...';
+$_['entry_exporting_table_text'] = 'Exporting tables...';
 $_['entry_export_success_text'] = 'Export successfully';
 
 $_['entry_importing_text']	= 'Importing...';
 $_['entry_downloading_text']	= 'Downloading...';
 $_['entry_deleting_text']	= 'Deleting...';
-$_['entry_downloading_module'] 		= 'Downloading Module...';
-$_['entry_importing_store_config'] 	= 'Importing Store Settings...';
-$_['entry_importing_module_config'] = 'Importing Module Settings...';
+$_['entry_downloading_module'] 		= 'Downloading module...';
+$_['entry_importing_store_config'] 	= 'Importing store settings...';
+$_['entry_importing_module_config'] = 'Importing module settings...';
+
+//
+$_['entry_delete_successfully'] = 'Delete backup successfully';
