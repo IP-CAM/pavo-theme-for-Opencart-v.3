@@ -84,6 +84,7 @@ $_['entry_actions_text'] = 'Actions';
 $_['entry_delete_text']	= 'Delete';
 $_['entry_error_permission'] = 'Error permission denied';
 $_['entry_error_write_file'] = 'Error can not backup store settings';
+$_['text_confirm_delete'] = 'Are you sure you want to delete the backup?';
 
 // Tab
 $_['tab_general']   = 'General';
@@ -121,6 +122,7 @@ $_['entry_deleting_text']	= 'Deleting...';
 $_['entry_downloading_module'] 		= 'Downloading module...';
 $_['entry_importing_store_config'] 	= 'Importing store settings...';
 $_['entry_importing_module_config'] = 'Importing module settings...';
+$_['entry_import_success_text']		= 'Import successfully';
 
 //
 $_['entry_delete_successfully'] = 'Delete backup successfully';

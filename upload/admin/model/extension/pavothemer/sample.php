@@ -5,14 +5,14 @@ class ModelExtensionPavothemerSample extends Model {
 	/**
 	 * import store configs
 	 */
-	public function importStoreSettings() {
+	public function importStoreSettings( $stores = array() ) {
 
 	}
 
 	/**
 	 * import theme settings
 	 */
-	public function importThemeSettings() {
+	public function importThemeSettings( $themes = array() ) {
 
 	}
 
@@ -28,6 +28,29 @@ class ModelExtensionPavothemerSample extends Model {
 	 */
 	public function _installModule() {
 
+	}
+
+	/**
+	 * import layouts
+	 */
+	public function importLayouts() {
+
+	}
+
+	/**
+	 * modules required
+	 */
+	public function installModulesRequired( $modules = array() ) {
+		$this->load->model( 'setting/extension' );
+		return true;
+	}
+
+	/**
+	 * install sql
+	 */
+	public function installSql() {
+
+		return true;
 	}
 
 	/**
@@ -61,7 +84,27 @@ class ModelExtensionPavothemerSample extends Model {
 	 * get layout settings
 	 */
 	public function getLayoutSettings() {
+		$data = array(
+				'modules'	=> array(),
+				'layouts'	=> array(),
+				'layout_module'	=> array()
+			);
+		$this->load->model( 'design/layout' );
+		$data['layouts'] = $this->model_design_layout->getLayouts();
 
+		$sql = 'SELECT * FROM ' . DB_PREFIX . 'layout_module';
+		$query = $this->db->query( $sql );
+		$data['layout_module'] = $query->rows ? $query->rows : array();
+
+		$sql = 'SELECT * FROM ' . DB_PREFIX . 'module';
+		$query = $this->db->query( $sql );
+		$data['modules'] = $query->rows ? $query->rows : array();
+
+		return $data;
+	}
+
+	public function exportTables() {
+		
 	}
 
 }

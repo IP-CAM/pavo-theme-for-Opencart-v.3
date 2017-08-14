@@ -45,7 +45,7 @@
               <div class="form-group">
                 <div class="col-sm-10 col-sm-offset-2">
                   <a href="#" id="pavothemer-import" class="btn btn-primary"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
-                  <a href="#" id="pavothemer-export" class="btn btn-default" data-start="{{ entry_create_export_path }}" data-loading-text="{{ entry_exporting_text }}"><i class="fa fa-download"></i> {{ entry_export_text }}</a>
+                  <a href="{{ export_ajax_url }}" id="pavothemer-export" class="btn btn-default" data-start="{{ entry_create_export_path }}" data-loading-text="{{ entry_exporting_text }}"><i class="fa fa-download"></i> {{ entry_export_text }}</a>
                 </div>
               </div>
             </fieldset>
@@ -74,7 +74,7 @@
         // make export ajax request
         $.ajax({
           type: 'POST',
-          url: '{{ export_ajax_url }}',
+          url: _that.attr( 'href' ),
           dataType: 'json',
           cache: false,
           contentType: false,
@@ -159,43 +159,74 @@
 
       }
 
-      // delete export
-      $( document ).on( 'click', '.pavothemer-delete-export', function(e){
+      $( document ).on( 'click', '.pavothemer-download', function(e){
         e.preventDefault();
-        var _that = $( this );
-        var sample = _that.data( 'sample' );
-        var theme = _that.data( 'theme' );
+        var button = $( this );
+        var profile = button.data( 'sample' );
 
         $.ajax({
-          url: '{{ delete_export_url }}',
-          data: {
-            sample: sample,
-            theme: theme
-          },
-          beforeSend: function() {
-            _that.button( 'loading' );
-            $('#progress-bar').removeClass('progress-bar-danger progress-bar-success');
-            $('#progress-bar').css( 'width', 0 );
+          url: button.attr( 'href' ),
+          type: 'POST',
+          beforeSend: function(){
+            button.button( 'loading' );
           }
         }).always(function(){
-          _that.button( 'reset' );
-        }).done(function( res ){
-          if ( typeof res.text !== 'undefined' ) {
-            if ( res.status === false ) {
-              $('#progress-bar').addClass('progress-bar-danger');
-              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-            } else {
-              $('#progress-bar').addClass('progress-bar-success');
-              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
-            }
+          button.button( 'reset' );
+          $('#progress-bar').removeClass('progress-bar-danger');
+          $('#progress-text').html('');
+        }).done(function( res ) {
+          if ( typeof res.url !== 'undefined' ) {
+            window.location.href = res.url;
           }
-          if ( typeof res.table !== 'undefined' ) {
-            $( '#sample-histories-table' ).replaceWith( res.table );
-          }
+
         }).fail(function( xhr, ajaxOptions, thrownError ){
           $('#progress-bar').addClass('progress-bar-danger');
           $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
         });
+
+        return false;
+      } );
+
+      // delete export
+      $( document ).on( 'click', '.pavothemer-delete-export', function(e){
+        e.preventDefault();
+        if ( confirm( '{{ text_confirm_delete }}' ) ) {
+          var _that = $( this );
+          var sample = _that.data( 'sample' );
+          var theme = _that.data( 'theme' );
+
+          $.ajax({
+            url: _that.attr( 'href' ),
+            type: 'POST',
+            data: {
+              sample: sample,
+              theme: theme
+            },
+            beforeSend: function() {
+              _that.button( 'loading' );
+              $('#progress-bar').removeClass('progress-bar-danger progress-bar-success');
+              $('#progress-bar').css( 'width', 0 );
+            }
+          }).always(function(){
+            _that.button( 'reset' );
+          }).done(function( res ){
+            if ( typeof res.text !== 'undefined' ) {
+              if ( res.status === false ) {
+                $('#progress-bar').addClass('progress-bar-danger');
+                $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
+              } else {
+                $('#progress-bar').addClass('progress-bar-success');
+                $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+              }
+            }
+            if ( typeof res.table !== 'undefined' ) {
+              $( '#sample-histories-table' ).replaceWith( res.table );
+            }
+          }).fail(function( xhr, ajaxOptions, thrownError ){
+            $('#progress-bar').addClass('progress-bar-danger');
+            $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
+          });
+        }
         return false;
       } );
 

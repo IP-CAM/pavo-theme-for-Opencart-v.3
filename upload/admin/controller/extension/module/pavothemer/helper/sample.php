@@ -46,26 +46,8 @@ class PavoThemerSampleHelper {
 	 * get single sample profile
 	 */
 	public function getProfile( $key = '' ) {
-		$path = $this->sampleDir . $key . '/';
-		$infoFile = $path . 'data.json';
-		$modulesPath = $path . 'modules/';
-
-		if ( ! is_dir( $path ) || ! file_exists( $infoFile ) ) return false;
-
-		$data = array(
-				'modules'	=> array(),
-				'settings'	=> array(),
-				'sql'		=> array()
-			);
-		$data['info'] = file_get_contents( $infoFile );
-		$data['modules'] = array();
-		$modules = array();
-		if ( is_dir( $modulesPath ) ) {
-			$modules = glob( $modulesPath . '*' );
-
-		}
-
-		$data['modules'] = $modules;
+		$file = $this->sampleDir . $key . '/profile.json';
+		return file_exists( $file ) ? json_decode( $file, true ) : array();
 	}
 
 	/**
@@ -81,7 +63,7 @@ class PavoThemerSampleHelper {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public function deleteDirectory( $target = '' ) {
 	    if( is_dir( $target ) ){
@@ -132,40 +114,113 @@ class PavoThemerSampleHelper {
 	}
 
 	/**
-	 * create store profile
+	 * write file
 	 */
-	public function makeStoreSettings( $settings = array(), $profile = '' ) {
+	public function write( $settings = array(), $profile = '', $type = '' ) {
 		if ( ! $profile ) return false;
+		$file = $this->sampleDir . $profile . '/profile.json';
+		$content = file_exists( $file ) ? file_get_contents( $file ) : array();
+		$content = $content ? json_decode( $content, true ) : array();
 
-		$file = $this->sampleDir . $profile . '/stores.json';
+		$content[$type] = $settings;
 		if ( $fo = fopen( $file, 'w+' ) ) {
-			fwrite( $fo, json_encode( $settings ) );
-			return fclose( $fo );
-		}
-
-		return true;
-	}
-
-	/**
-	 * create theme profile
-	 */
-	public function makeThemeSettings( $settings = array(), $profile = '' ) {
-		if ( ! $profile ) return false;
-
-		$file = $this->sampleDir . $profile . '/themes.json';
-		if ( $fo = fopen( $file, 'w+' ) ) {
-			fwrite( $fo, json_encode( $settings ) );
+			fwrite( $fo, json_encode( $content ) );
 			return fclose( $fo );
 		}
 		return true;
 	}
 
 	/**
-	 * create layout settings
+	 * tables need to export
 	 */
-	public function makeLayoutSettings() {
+	public function getTablesName() {
+
+		return array();
+	}
+
+	/**
+	 * export sql file
+	 */
+	public function exportSql( $sqlString = '', $profile = '' ) {
+		if ( ! $profile ) return false;
+		$file = $this->sampleDir . $profile . '/' . $this->theme . '.sql';
 
 		return true;
+	}
+
+	/**
+	 * load modules requireds
+	 */
+	public function getModulesRequired() {
+		$dir = dirname( $this->sampleDir ) . '/modules';
+		$modules = glob( $dir . '/*.ocmod.zip' );
+		$data = array();
+		if ( is_dir( $dir ) && ! empty( $modules ) ) {
+			foreach ( $modules as $module ) {
+				$name = basename( $module, '.ocmod.zip' );
+				$data[$name] = $module;
+			}
+		}
+		return $data;
+	}
+
+	/**
+	 * zip profile to download
+	 */
+	public function zipProfile( $profile = '' ) {
+		$folder = $this->sampleDir . $profile;
+		$filename = $profile . '.zip';
+		// backup before
+		if ( file_exists( DIR_DOWNLOAD . $filename ) ) {
+			// return DIR_DOWNLOAD . $filename;
+		}
+		$zip = $this->zip( $folder, DIR_DOWNLOAD . $filename );
+		if ( $zip ) {
+			return DIR_DOWNLOAD . $filename;
+		}
+
+		return false;
+	}
+
+	/**
+	 * create zip file
+	 */
+	public function zip( $source = '', $destination = '' ) {
+	    if ( ! extension_loaded( 'zip' ) || ! file_exists( $source ) ) {
+	        return false;
+	    }
+
+	    $zip = new ZipArchive();
+	    if ( ! $zip->open( $destination, ZipArchive::CREATE | ZipArchive::OVERWRITE ) ) {
+	        return false;
+	    }
+
+	    $source = str_replace( '\\', '/', realpath( $source ) );
+
+	    if ( is_dir( $source ) === true ) {
+	        $files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $source ), RecursiveIteratorIterator::SELF_FIRST );
+
+	        foreach ( $files as $file ) {
+	            $file = str_replace('\\', '/', $file);
+
+	            // Ignore "." and ".." folders
+	            if ( in_array( substr( $file, strrpos( $file, '/' ) + 1 ), array( '.', '..' ) ) ) {
+	                continue;
+	            }
+
+	            $file = realpath( $file );
+
+	            if ( is_dir( $file ) === true ) {
+	                $zip->addEmptyDir( str_replace( $source . '/', '', $file . '/' ) );
+	            } elseif ( is_file( $file ) === true ) {
+	                $zip->addFromString( str_replace( $source . '/', '', $file ), file_get_contents( $file ) );
+	            }
+	        }
+	    } elseif ( is_file( $source ) === true ) {
+	        $zip->addFromString( basename( $source ), file_get_contents( $source ) );
+	    }
+
+	    return $zip->close();
 	}
 
 }
