@@ -5,15 +5,24 @@ class ModelExtensionPavothemerSample extends Model {
 	/**
 	 * import store configs
 	 */
-	public function importStoreSettings( $stores = array() ) {
-
+	public function importStoreSettings( $profile = array() ) {
+		$this->load->model( 'setting/setting' );
+		// var_dump( $this->model_setting_setting->getSetting('config')); die();
+		$stores = ! empty( $profile['stores'] ) ? $profile['stores'] : array();
+		$newStores = array();
+		if ( $stores ) {
+			foreach ( $stores as $store ) {
+				var_dump($store); die();
+			}
+		}
 	}
 
 	/**
 	 * import theme settings
 	 */
 	public function importThemeSettings( $themes = array() ) {
-
+		$this->load->model( 'setting/setting' );
+		// $this->model_setting_setting->editSetting();
 	}
 
 	/**
@@ -57,11 +66,23 @@ class ModelExtensionPavothemerSample extends Model {
 	 * get store settings for export
 	 */
 	public function getStoreSettings() {
-		$sql = 'SELECT * FROM ' . DB_PREFIX . 'setting WHERE code = "config"';
+		$data = array(
+				'stores'			=> array(),
+				'stores_settings'	=> array()
+			);
+		$this->load->model( 'setting/store' );
+		$data['stores'] = $this->model_setting_store->getStores();
 
-		$query = $this->db->query( $sql );
+		if ( $data['stores'] ) {
+			$data['stores_settings'] = array(
+					$this->model_setting_setting->getSetting( 'config' )
+				);
+			foreach ( $data['stores'] as $store ) {
+				$data['stores_settings'][$store['store_id']] = $this->model_setting_setting->getSetting( 'config', $store['store_id'] );
+			}
+		}
 
-		return $query->rows;
+		return $data;
 	}
 
 	/**
@@ -104,7 +125,7 @@ class ModelExtensionPavothemerSample extends Model {
 	}
 
 	public function exportTables() {
-		
+
 	}
 
 }

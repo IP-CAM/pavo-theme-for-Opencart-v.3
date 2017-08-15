@@ -47,7 +47,7 @@ class PavoThemerSampleHelper {
 	 */
 	public function getProfile( $key = '' ) {
 		$file = $this->sampleDir . $key . '/profile.json';
-		return file_exists( $file ) ? json_decode( $file, true ) : array();
+		return file_exists( $file ) ? json_decode( file_get_contents( $file ), true ) : array();
 	}
 
 	/**

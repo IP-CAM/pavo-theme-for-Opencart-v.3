@@ -82,6 +82,7 @@ $_['entry_created_at_text'] = 'Created At';
 $_['entry_created_by_text'] = 'Created By';
 $_['entry_actions_text'] = 'Actions';
 $_['entry_delete_text']	= 'Delete';
+$_['entry_empty_select']	= 'Please select export';
 $_['entry_error_permission'] = 'Error permission denied';
 $_['entry_error_write_file'] = 'Error can not backup store settings';
 $_['text_confirm_delete'] = 'Are you sure you want to delete the backup?';
@@ -121,8 +122,13 @@ $_['entry_downloading_text']	= 'Downloading...';
 $_['entry_deleting_text']	= 'Deleting...';
 $_['entry_downloading_module'] 		= 'Downloading module...';
 $_['entry_importing_store_config'] 	= 'Importing store settings...';
+$_['entry_importing_theme_config'] 	= 'Importing theme settings...';
+$_['entry_installing_module'] = 'Installing module';
+$_['entry_installing_table'] = 'Importing tables';
 $_['entry_importing_module_config'] = 'Importing module settings...';
+$_['entry_importing_layout'] = 'Importing layout...';
 $_['entry_import_success_text']		= 'Import successfully';
 
 //
 $_['entry_delete_successfully'] = 'Delete backup successfully';
+$_['entry_successfully_text'] = 'successfully';

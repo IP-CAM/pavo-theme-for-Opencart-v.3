@@ -15,6 +15,10 @@
             <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
           {% endfor %}
         </ul>
+
+        <div class="pull-right">
+          <a href="#" id="pavothemer-delete-all-export" data-toggle="tooltip" title="" class="btn btn-danger" data-original-title="{{ entry_delete_text }}"><i class="fa fa-trash-o"></i></a>
+        </div>
       </div>
     </div>
 
@@ -84,8 +88,6 @@
             $('#progress-text').html( '' );
             $('#progress-bar').removeClass('progress-bar-danger');
             $('#progress-bar').css( 'width', 0 );
-
-            $('#progress-bar').addClass('progress-bar-success');
             $('#progress-text').html('<span class="text-success">' + _that.data( 'start' ) + '</span>');
           }
         }).always(function(){
@@ -169,6 +171,7 @@
           type: 'POST',
           beforeSend: function(){
             button.button( 'loading' );
+            $('#progress-text').html( '' );
           }
         }).always(function(){
           button.button( 'reset' );
@@ -204,8 +207,9 @@
             },
             beforeSend: function() {
               _that.button( 'loading' );
-              $('#progress-bar').removeClass('progress-bar-danger progress-bar-success');
               $('#progress-bar').css( 'width', 0 );
+              $('#progress-bar').removeClass('progress-bar-danger');
+              $('#progress-text').html( '' );
             }
           }).always(function(){
             _that.button( 'reset' );
@@ -229,6 +233,130 @@
         }
         return false;
       } );
+
+      // import event handler
+      $( document ).on( 'click', '.pavothemer-import', function(e){
+        e.preventDefault();
+        var button = $( this );
+
+        var data = {
+          folder: button.data('sample')
+        };
+        $.ajax({
+          url: button.attr('href'),
+          type: 'POST',
+          data: {
+            data: data
+          },
+          beforeSend: function() {
+            button.button('loading');
+            $('#progress-bar').removeClass('progress-bar-danger progress-bar-success');
+            $('#progress-text').html( '' );
+          }
+        }).always(function(){
+          button.button('reset');
+        }).done(function( res ){
+          // messages
+          if ( typeof res.text !== 'undefined' ) {
+            if ( res.status === false ) {
+              $('#progress-bar').addClass('progress-bar-danger');
+              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
+            } else {
+              step++;
+              $('#progress-bar').css( 'width', ( parseInt( step ) / res.data.steps ) * 100 + '%' );
+              $('#progress-bar').addClass('progress-bar-success');
+              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+            }
+          }
+
+          if ( res.status === true && typeof res.next !== 'undefined' ) {
+            next_request( res.next, typeof res.data !== 'undefined' ? res.data : {}, button, step );
+          }
+        }).fail(function( xhr, ajaxOptions, thrownError ){
+          $('#progress-bar').addClass('progress-bar-danger');
+          $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
+        });
+
+        return false;
+      } );
+
+      // delete selected backups
+      $( document ).on( 'click', '#pavothemer-delete-all-export', function(e){
+        e.preventDefault();
+        var button = $( this );
+        var totals = $( '#sample-histories-table input[name^="selected"]' ).serializeArray();
+        var data = [];
+
+        if ( totals.length == 0 ) {
+          alert( '{{ entry_empty_select }}' );
+        } else if ( confirm( '{{ text_confirm_delete }}' ) ) {
+          for ( var i = 0; i < totals.length; i++ ) {
+            data.push( totals[i].value );
+          }
+          $('#progress-text').removeClass( 'progress-bar-danger' ).html('');
+          if ( data.length > 0 ) {
+            var button = $( '#' + data[0] ).find( '.pavothemer-delete-export' );
+            next_delete( button, 0, totals.length, data );
+          }
+        }
+
+        return false;
+      } );
+
+      // delete next profile
+      function next_delete( button, step, totals, selecteds ) {
+
+        step++;
+        var tr = button.parents('tr:first');
+        var data = [];
+        data.push({
+          name: 'multiple',
+          value: true
+        });
+        data.push({
+          name: 'sample',
+          value: button.data('sample')
+        });
+        data.push({
+          name: 'theme',
+          value: button.data('theme')
+        });
+
+        $.ajax({
+          url: button.attr( 'href' ),
+          type: 'POST',
+          data: data,
+          beforeSend: function(){
+            button.button( 'loading' );
+            // $('#progress-text').removeClass( 'progress-bar-danger' ).html('');
+          }
+        }).always(function(){
+          button.button( 'reset' );
+        }).done(function( res ){
+          if ( typeof res.text !== 'undefined' ) {
+            $('#progress-bar').css( 'width', ( parseInt( step ) / totals ) * 100 + '%' );
+            $('#progress-bar').addClass('progress-bar-success');
+            $('#progress-text').append('<span class="text-success">' + res.text + '</span><hr />');
+          }
+
+          if ( step <= totals ) {
+            var nextItem = selecteds.slice( step, step + 1 );
+            var nextButton = typeof nextItem[0] !== 'undefined' ? $( '#' + nextItem[0] ).find( '.pavothemer-delete-export' ) : false;
+            if ( nextButton && nextButton.length === 1 ) {
+              next_delete( nextButton, step, totals, selecteds )
+            }
+          } else {
+            $('#sample-histories-table input[type="checkbox"]').prop( 'selected', false );
+          }
+          if ( typeof res.status !== 'undefined' && res.status === true ) {
+            tr.remove();
+          }
+        }).fail(function( xhr, ajaxOptions, thrownError ){
+          $('#progress-bar').addClass('progress-bar-danger');
+          $('#progress-text').append('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div><hr />');
+        });
+
+      }
 
     })(jQuery);
   </script>
