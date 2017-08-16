@@ -49,7 +49,7 @@ class ModelExtensionPavothemerSample extends Model {
 			// unset extension request
 			$this->request->get['extension'] = null;
 		}
-		// refresh to regenerate modification
+		// refresh to regenerate ocmod modification
 		// $this->load->controller( 'marketplace/modification/refresh' );
 	}
 
@@ -98,19 +98,41 @@ class ModelExtensionPavothemerSample extends Model {
 	 * #2 import layouts to DB_PREFIX . 'layout' table
 	 * #3 import layout modules to DB_PREFIX . 'layout_module' table
 	 * #4 mapping data
+	 * old backup layouts, extensions, layout_modules
 	 */
 	public function importLayouts( $profile = array() ) {
-		// old backup layouts, extensions, layout_module
-		$layouts = ! empty( $profile['layouts'] ) ? $profile['layouts'] : array();
-		$modules = isset( $profile['extensions'], $profile['extensions']['modules'] ) ? $profile['extensions']['modules'] : array();
-		$layout_modules = ! empty( $profile['layout_module'] ) ? $profile['layout_module'] : array();
-
 		$current = $this->getLayoutSettings();
-		$current_layouts = ! empty( $current['layouts'] ) ? $current['layouts'] : array();
-		$current_layout_module = ! empty( $current['layout_module'] ) ? $current['layout_module'] : array();
 
-// var_dump($layout_modules, $current_layout_module);die();
-// 		var_dump($layouts, $current_layouts);die();
+		#1 Import modules
+		$modules = isset( $profile['extensions'], $profile['extensions']['modules'] ) ? $profile['extensions']['modules'] : array();
+		$current_modules = $this->model_setting_module->getModules();
+
+		// each modules
+		foreach ( $modules as $module ) {
+			// each current modules
+			foreach ( $current_modules as $c_module ) {
+
+			}
+		}
+
+		#2 Import layouts
+		$layouts = ! empty( $profile['layouts'] ) ? $profile['layouts'] : array();
+		$current_layouts = ! empty( $current['layouts'] ) ? $current['layouts'] : array();
+		if ( $layouts ) {
+			$new_layouts = array();
+			// each backup layouts
+			foreach ( $layouts as $layout ) {
+				// each current layout
+				foreach ( $current_layouts as $c_layout ) {
+					
+				}
+
+			}
+		}
+
+		#3 Import layout modules
+		$layout_modules = ! empty( $profile['layout_modules'] ) ? $profile['layout_modules'] : array();
+		$current_layout_module = ! empty( $current['layout_modules'] ) ? $current['layout_modules'] : array();
 
 	}
 
@@ -140,14 +162,14 @@ class ModelExtensionPavothemerSample extends Model {
 	public function getLayoutSettings() {
 		$data = array(
 				'layouts'	=> array(),
-				'layout_module'	=> array()
+				'layout_modules'	=> array()
 			);
 		$this->load->model( 'design/layout' );
 		$data['layouts'] = $this->model_design_layout->getLayouts();
 
 		$sql = 'SELECT * FROM ' . DB_PREFIX . 'layout_module';
 		$query = $this->db->query( $sql );
-		$data['layout_module'] = $query->rows ? $query->rows : array();
+		$data['layout_modules'] = $query->rows ? $query->rows : array();
 
 		return $data;
 	}

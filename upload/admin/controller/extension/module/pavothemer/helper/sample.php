@@ -66,6 +66,9 @@ class PavoThemerSampleHelper {
 	 *
 	 */
 	public function deleteDirectory( $target = '' ) {
+		if ( ! is_writable( $target ) ) {
+			@chmod( $target, 0777 );
+		}
 	    if( is_dir( $target ) ){
 	        $files = glob( $target . '*', GLOB_MARK );
 
@@ -73,9 +76,9 @@ class PavoThemerSampleHelper {
 	            $this->deleteDirectory( $file );
 	        }
 
-	        return rmdir( $target );
+	        return @rmdir( $target );
 	    } elseif( is_file( $target ) ) {
-	        return unlink( $target );
+	        return @unlink( $target );
 	    }
 	}
 
@@ -89,7 +92,7 @@ class PavoThemerSampleHelper {
 			foreach ( $profiles as $profile ) {
 				$dir = $this->sampleDir . $profile . '/';
 				if ( ! is_writable( $dir ) ) {
-					chmod( $dir, 0777 );
+					chmod( dirname( $dir ), 0777 );
 				}
 				if ( empty( glob( $dir . '*' ) ) ) {
 					rmdir( $dir );
@@ -102,8 +105,10 @@ class PavoThemerSampleHelper {
 		if ( is_dir( $path ) ) {
 			return $folder;
 		}
-		if ( ! is_writable( dirname( $path ) ) ) return false;
-		return mkdir( $path, 0777 ) ? $folder : false;
+		if ( ! is_writable( $this->sampleDir ) ) {
+			@chmod( $this->sampleDir, 0777 );
+		}
+		return @mkdir( $path, 0777 ) ? $folder : false;
 	}
 
 	/**

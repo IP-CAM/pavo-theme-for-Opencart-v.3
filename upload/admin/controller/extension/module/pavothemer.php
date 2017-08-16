@@ -284,7 +284,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					break;
 
 				case 'import-layout-settings':
-					$status = $this->model_extension_pavothemer_sample->importLayouts( $profile['layouts'] );
+					$status = $this->model_extension_pavothemer_sample->importLayouts( $profile );
 					$response = array(
 							'status'	=> true, //$status,
 							'data'		=> $data,
@@ -325,7 +325,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 			$action = ! empty( $this->request->get['action'] ) ? $this->request->get['action'] : 'create-directory';
 			$data = ! empty( $this->request->post['data'] ) ? $this->request->post['data'] : array();
-			$data = array_merge( array( 'folder' => false, 'theme' => $this->config->get( 'config_theme' ) ), $data );
+			$theme = $this->config->get( 'config_theme' );
+			$data = array_merge( array( 'folder' => false, 'theme' => $theme ), $data );
 			$store_id = $this->config->get( 'config_store_id' );
 
 			$sampleHelper = PavoThemerSampleHelper::instance( $data['theme'] );
@@ -350,7 +351,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						$response = array(
 								'status'	=> $folder ? true : false,
 								'data'		=> array_merge( $data, array( 'folder' => $folder, 'steps' => 5 ) ),
-								'text'		=> $folder ? $this->language->get( 'entry_exporting_theme_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
+								'text'		=> $folder ? $this->language->get( 'entry_exporting_theme_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'</strong>',
 								'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true ) )
 							);
 						break;
@@ -369,8 +370,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 					case 'export-extensions':
 						// export store settings
-						$themeSettings = $this->model_extension_pavothemer_sample->getExtensionModules( $data['theme'] );
-						$status = $sampleHelper->write( $themeSettings, $data['folder'], 'extensions' );
+						$extensions = $this->model_extension_pavothemer_sample->getExtensionModules( $data['theme'] );
+						$status = $sampleHelper->write( $extensions, $data['folder'], 'extensions' );
 						$response = array(
 								'status'	=> $status,
 								'data'		=> $data,
@@ -438,7 +439,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$status = $sampleHelper->delete( $sample );
 		$response = array(
 				'status'	=> $status,
-				'text'		=> $status ? $this->language->get( 'entry_delete_text' ) . ' <strong>' . $sample . '</strong> ' . $this->language->get( 'entry_successfully_text' ) : $this->language->get( 'entry_error_permission' )
+				'text'		=> $status ? $this->language->get( 'entry_delete_text' ) . ' <strong>' . $sample . '</strong> ' . $this->language->get( 'entry_successfully_text' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'/sample</strong>'
 			);
 
 		if ( $this->isAjax() ) {
