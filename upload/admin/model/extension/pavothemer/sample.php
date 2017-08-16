@@ -49,21 +49,8 @@ class ModelExtensionPavothemerSample extends Model {
 			// unset extension request
 			$this->request->get['extension'] = null;
 		}
+		// refresh to regenerate modification
 		// $this->load->controller( 'marketplace/modification/refresh' );
-	}
-
-	/**
-	 * install module
-	 */
-	public function _installModule() {
-
-	}
-
-	/**
-	 * import layouts
-	 */
-	public function importLayouts() {
-
 	}
 
 	/**
@@ -75,51 +62,55 @@ class ModelExtensionPavothemerSample extends Model {
 		$this->session->data['install'] = token( 10 );
 		$destination = DIR_UPLOAD . $this->session->data['install'] . '.tmp';
 		if ( copy( $modulePath, $destination ) ) {
-			$this->load->controller( 'marketplace/install/unzip' );
-			ob_start();
-			$output = $this->response->output();
-			$result = json_decode( ob_get_clean(), true );
-			if ( empty( $result['error'] ) ) {
-				ob_start();
-				$this->load->controller( 'marketplace/install/move' );
-				ob_start();
-				$output = $this->response->output();
-				$result = json_decode( ob_get_clean(), true );
-			}
-
-			if ( empty( $result['error'] ) ) {
-				ob_start();
-				$this->load->controller( 'marketplace/install/xml' );
-				ob_start();
-				$output = $this->response->output();
-				$result = json_decode( ob_get_clean(), true );
-			}
-
-			if ( empty( $result['error'] ) ) {
-				ob_start();
-				$this->load->controller( 'marketplace/install/remove' );
-				ob_start();
-				$output = $this->response->output();
-				$result = json_decode( ob_get_clean(), true );
-			}
-
-			if ( empty( $result['error'] ) ) {
-				return true;
-			}
-
-			return $result;
-
+			return $this->_installModule();
 		}
 		return true;
 	}
 
 	/**
-	 * unzip modules required
-	 * @param $zip file
+	 * install module
 	 */
-	private function unzipModuleRequired( $zip = null ) {
-		if ( ! $zip ) return false;
+	public function _installModule() {
+		$steps = array(
+				'marketplace/install/unzip',
+				'marketplace/install/move',
+				'marketplace/install/xml',
+				'marketplace/install/remove'
+			);
 
+		foreach ( $steps as $step ) {
+			$this->load->controller( $step );
+			ob_start();
+			$output = $this->response->output();
+			$result = json_decode( ob_get_clean(), true );
+
+			if ( ! empty( $result['error'] ) ) {
+				return $result;
+			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * import layouts
+	 * #1 import modules to DB_PREFIX . 'module' table
+	 * #2 import layouts to DB_PREFIX . 'layout' table
+	 * #3 import layout modules to DB_PREFIX . 'layout_module' table
+	 * #4 mapping data
+	 */
+	public function importLayouts( $profile = array() ) {
+		// old backup layouts, extensions, layout_module
+		$layouts = ! empty( $profile['layouts'] ) ? $profile['layouts'] : array();
+		$modules = isset( $profile['extensions'], $profile['extensions']['modules'] ) ? $profile['extensions']['modules'] : array();
+		$layout_modules = ! empty( $profile['layout_module'] ) ? $profile['layout_module'] : array();
+
+		$current = $this->getLayoutSettings();
+		$current_layouts = ! empty( $current['layouts'] ) ? $current['layouts'] : array();
+		$current_layout_module = ! empty( $current['layout_module'] ) ? $current['layout_module'] : array();
+
+// var_dump($layout_modules, $current_layout_module);die();
+// 		var_dump($layouts, $current_layouts);die();
 
 	}
 
@@ -148,9 +139,8 @@ class ModelExtensionPavothemerSample extends Model {
 	 */
 	public function getLayoutSettings() {
 		$data = array(
-				'modules'	=> array(),
 				'layouts'	=> array(),
-				'layout_modules'	=> array()
+				'layout_module'	=> array()
 			);
 		$this->load->model( 'design/layout' );
 		$data['layouts'] = $this->model_design_layout->getLayouts();
