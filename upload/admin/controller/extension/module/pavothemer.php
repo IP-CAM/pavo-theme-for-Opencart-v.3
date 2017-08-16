@@ -7,6 +7,11 @@ require_once dirname( __FILE__ ) . '/pavothemer/helper/sample.php';
 
 /**
  * Theme Control Controller
+ * Exports:
+ * 			+ theme settings
+ * 			+ layouts
+ * 			+ tables
+ * 			+ layout module
  */
 class ControllerExtensionModulePavothemer extends PavoThemerController {
 
@@ -150,18 +155,66 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		if ( $this->isAjax() ) {
 			// load model
 			$this->load->model( 'extension/pavothemer/sample' );
+			$this->load->model( 'setting/extension' );
 			$this->load->language( 'extension/module/pavothemer' );
 			$response = array(
 					'status'	=> false
 				);
 
+			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+
+			// required modules
+			$moduleRequired = $sampleHelper->getModulesRequired();
+			$this->load->model( 'setting/extension' );
+			$installed_modules = $this->model_setting_extension->getInstalled( 'module' );
+			$module_names = array_keys( $moduleRequired );
+			$module_needed_install_count = 0;
+			$modules_need_to_install = array();
+			foreach ( $module_names as $name ) {
+				// install required modules if its not installed
+				if ( ! in_array( $name, $installed_modules ) ) {
+					$module_needed_install_count++;
+					$modules_need_to_install[ $name ] = $moduleRequired[ $name ];
+				}
+			}
+			// $this->session->data['installed_module'] = false; die();
+			$preInstalled = ! empty( $this->session->data['installed_module'] ) ? $this->session->data['installed_module'] : 0;
+			$module = false;
+			$lastest = false;
+			$next = '';
+
+			$module_names = array_keys( $modules_need_to_install );
+			if ( ! $preInstalled ) {
+				$module = current( $modules_need_to_install );
+				$next = $module_names[1];
+			} else {
+				$i = $z = 0;
+				foreach ( $modules_need_to_install as $key => $value ) {
+					$z++;
+					if ( $z == count( $modules_need_to_install ) ) {
+						$lastest = $value;
+					}
+
+					if ( $i == 1 ) {
+						$module = $value;
+						$i++;
+					} else if ( $i == 2 ) {
+						$next = $key;
+					}
+					if ( $preInstalled == $value ) {
+						$i++;
+					}
+				}
+			}
+
+			// action need to do
 			$action = ! empty( $this->request->get['action'] ) ? $this->request->get['action'] : 'download';
 			$folder = ! empty( $this->request->post['folder'] ) ? $this->request->post['folder'] : false;
 			$data = ! empty( $this->request->post['data'] ) ? $this->request->post['data'] : array();
-			$data = array_merge( array( 'folder' => $folder, 'steps' => 5, 'action' => $action ), $data );
-			$sampleHelper = PavoThemerSampleHelper::instance( $this->config->get( 'config_theme' ) );
+			$data = array_merge( array( 'folder' => $folder, 'steps' => 5 + $module_needed_install_count, 'action' => $action ), $data );
 
-			$profile = $data['folder'] ? $sampleHelper->getProfile( $data['folder'] ) : array( 'layouts' => array(), 'themes' => array(), 'stores' => array() );
+			// profile import
+			$profile = $data['folder'] ? $sampleHelper->getProfile( $data['folder'] ) : array( 'layouts' => array(), 'themes' => array() );
 
 			switch ( $action ) {
 				case 'download':
@@ -172,43 +225,56 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 					$response = array(
 							'status'	=> $status,
-							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-store-settings&user_token=' . $this->session->data['user_token'], true ) ),
-							'text'		=> $this->language->get( 'entry_importing_store_config' ),
-							'data'		=> $data
-						);
-					break;
-
-				case 'import-store-settings':
-
-					$response = array(
-							'status'	=>  $this->model_extension_pavothemer_sample->importStoreSettings( $profile ),
 							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-theme-settings&user_token=' . $this->session->data['user_token'], true ) ),
-							'text'		=> $this->language->get( 'entry_importing_theme_config' )
+							'text'		=> $this->language->get( 'entry_importing_theme_config' ),
+							'data'		=> $data
 						);
 					break;
 
 				case 'import-theme-settings':
 					$response = array(
-							'status'	=>  true, //$this->model_extension_pavothemer_sample->importThemeSettings( $profile['themes'] ),
-							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-sql&user_token=' . $this->session->data['user_token'], true ) ),
-							'data'		=> $data,
-							'text'		=> $this->language->get( 'entry_installing_table' )
-						);
-					break;
-
-				case 'import-sql':
-					$status =  true; //$this->model_extension_pavothemer_sample->installSql();
-					$response = array(
-							'status'	=> $status,
+							'status'	=> $this->model_extension_pavothemer_sample->importThemeSettings( $profile ),
 							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=install-modules&user_token=' . $this->session->data['user_token'], true ) ),
 							'data'		=> $data,
-							'text'		=> $this->language->get( 'entry_installing_module' )
+							'text'		=> $module ? $this->language->get( 'entry_installing_module' ) . ': <strong>' . ( ! empty( $module_names[0] ) ? $module_names[0] : '' ) . '</strong>' : $this->language->get( 'entry_installing_module' ),
 						);
 					break;
 
 				case 'install-modules':
-					$moduleRequired = $sampleHelper->getModulesRequired();
-					$status =  true; //$this->model_extension_pavothemer_sample->installModulesRequired( $moduleRequired );
+
+					$response = array(
+								'status'	=> true,
+								'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-sql&user_token=' . $this->session->data['user_token'], true ) ),
+								'data'		=> $data,
+								'text'		=> $this->language->get( 'entry_installing_table' )
+							);
+
+					$result = $this->model_extension_pavothemer_sample->installModuleRequired( $module );
+					if ( $module && $lastest !== $module ) {
+						if ( $result === true ) {
+							$status = true;
+						} else if ( is_array( $result ) ) {
+							$response['status'] = ! empty( $result['error'] ) ? false : true;
+							$response['status'] = ! empty( $result['success'] ) ? true : $response['status'];
+							$response['text']	= $response['status'] ? $result['success'] : $result['error'];
+							$response = array_merge( $response, $result );
+						}
+						$this->session->data['installed_module'] = $module;
+						$response['next'] = str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=install-modules&user_token=' . $this->session->data['user_token'], true ) );
+						$response['text'] = $module ? $this->language->get( 'entry_installing_module' ) . ': <strong>' . $next . '</strong>' : $this->language->get( 'entry_installing_module' );
+
+					}
+
+					if ( $lastest === $module || $response['status'] === false ) {
+						$this->session->data['installed_module'] = false;
+					}
+					if ( $lastest === $module ) {
+						$this->model_extension_pavothemer_sample->importModules( $profile );
+					}
+					break;
+
+				case 'import-sql':
+					$status =  true; //$this->model_extension_pavothemer_sample->installSql();
 					$response = array(
 							'status'	=> $status,
 							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-layout-settings&user_token=' . $this->session->data['user_token'], true ) ),
@@ -221,7 +287,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					$status = $this->model_extension_pavothemer_sample->importLayouts( $profile['layouts'] );
 					$response = array(
 							'status'	=> true, //$status,
-							// 'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-layout-settings&user_token=' . $this->session->data['user_token'], true ) ),
 							'data'		=> $data,
 							'text'		=> $this->language->get( 'entry_import_success_text' )
 						);
@@ -262,6 +327,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			$data = ! empty( $this->request->post['data'] ) ? $this->request->post['data'] : array();
 			$data = array_merge( array( 'folder' => false, 'theme' => $this->config->get( 'config_theme' ) ), $data );
 			$store_id = $this->config->get( 'config_store_id' );
+
 			$sampleHelper = PavoThemerSampleHelper::instance( $data['theme'] );
 
 			try {
@@ -274,42 +340,37 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						$this->load->model( 'user/user' );
 
 						$user = $this->model_user_user->getUser( $user_id );
-						$status = $folder ? $sampleHelper->write( array( 'email' => $user['email'] ), $folder, 'info' ) : false;
+						$infoData = array(
+								'email' 			=> $user['email'],
+								'theme' 			=> $data['theme'],
+								'store_id' 			=> $store_id,
+								// 'store_settings' 	=> $store_settings
+							);
+						$status = $folder ? $sampleHelper->write( $infoData, $folder, 'info' ) : false;
 						$response = array(
 								'status'	=> $folder ? true : false,
-								'data'		=> array_merge( $data, array( 'folder' => $folder, 'steps' => 4 ) ),
-								'text'		=> $folder ? $this->language->get( 'entry_exporting_store_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
-								'next'		=> str_replace(
-												'&amp;',
-												'&',
-												$this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true )
-											)
+								'data'		=> array_merge( $data, array( 'folder' => $folder, 'steps' => 5 ) ),
+								'text'		=> $folder ? $this->language->get( 'entry_exporting_theme_config' ) : $this->language->get( 'entry_error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme</strong>',
+								'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true ) )
 							);
 						break;
-
-					// case 'export-store-settings':
-					// 	// get store settings
-					// 	$storeSettings = $this->model_extension_pavothemer_sample->getStoreSettings();
-					// 	// write stores list
-					// 	$status = $sampleHelper->write( $storeSettings['stores'], $data['folder'], 'stores' );
-					// 	// write stores config
-					// 	$status = $status ? $sampleHelper->write( $storeSettings['stores_settings'], $data['folder'], 'stores_settings' ) : false;
-					// 	$response = array(
-					// 			'status'	=> $status,
-					// 			'data'		=> $data,
-					// 			'text'		=> $status ? $this->language->get( 'entry_exporting_theme_config' ) : $this->language->get( 'entry_error_write_file' ) . ': <strong>stores.json</strong> file',
-					// 			'next'		=> str_replace(
-					// 							'&amp;',
-					// 							'&',
-					// 							$this->url->link('extension/module/pavothemer/export', 'action=export-theme-settings&user_token=' . $this->session->data['user_token'], true )
-					// 						)
-					// 		);
-					// 	break;
 
 					case 'export-theme-settings':
 						// export store settings
 						$themeSettings = $this->model_extension_pavothemer_sample->getThemeSettings( $data['theme'] );
-						$status = $sampleHelper->write( $themeSettings, $data['folder'], 'themes' );
+						$status = $sampleHelper->write( $themeSettings, $data['folder'], 'theme_settings' );
+						$response = array(
+								'status'	=> $status,
+								'data'		=> $data,
+								'text'		=> $this->language->get( 'entry_extension_module_text' ),
+								'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/export', 'action=export-extensions&user_token=' . $this->session->data['user_token'], true ) )
+							);
+						break;
+
+					case 'export-extensions':
+						// export store settings
+						$themeSettings = $this->model_extension_pavothemer_sample->getExtensionModules( $data['theme'] );
+						$status = $sampleHelper->write( $themeSettings, $data['folder'], 'extensions' );
 						$response = array(
 								'status'	=> $status,
 								'data'		=> $data,

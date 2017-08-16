@@ -36,7 +36,7 @@
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/tools' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/tools' ) ) {
                     $settings[] = array(
                         'name'     => $this->language->get('menu_tool_text'),
-                        'href'     => '',
+                        'href'     => $this->url->link('extension/module/pavothemer/tools', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()
                     );
                 }

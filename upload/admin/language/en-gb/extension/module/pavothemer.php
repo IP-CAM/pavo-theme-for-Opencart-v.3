@@ -114,6 +114,7 @@ $_['entry_exporting_theme_config'] = 'Exporting theme settings...';
 $_['entry_export_sql_text']		= 'Exporting sql...';
 $_['entry_exporting_module_config'] = 'Exporting module settings...';
 $_['entry_exporting_layout_text'] = 'Exporting layouts...';
+$_['entry_extension_module_text'] = 'Exporting extension modules...';
 $_['entry_exporting_table_text'] = 'Exporting tables...';
 $_['entry_export_success_text'] = 'Export successfully';
 
@@ -123,7 +124,7 @@ $_['entry_deleting_text']	= 'Deleting...';
 $_['entry_downloading_module'] 		= 'Downloading module...';
 $_['entry_importing_store_config'] 	= 'Importing store settings...';
 $_['entry_importing_theme_config'] 	= 'Importing theme settings...';
-$_['entry_installing_module'] = 'Installing module';
+$_['entry_installing_module'] = 'Installing required modules';
 $_['entry_installing_table'] = 'Importing tables';
 $_['entry_importing_module_config'] = 'Importing module settings...';
 $_['entry_importing_layout'] = 'Importing layout...';

@@ -250,7 +250,7 @@
           },
           beforeSend: function() {
             button.button('loading');
-            $('#progress-bar').removeClass('progress-bar-danger progress-bar-success');
+            $('#progress-bar').removeClass('progress-bar-danger').css('width', 0);
             $('#progress-text').html( '' );
           }
         }).always(function(){
