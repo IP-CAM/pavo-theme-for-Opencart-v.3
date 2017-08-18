@@ -128,7 +128,7 @@ $_['entry_installing_module'] = 'Installing required modules';
 $_['entry_installing_table'] = 'Importing tables';
 $_['entry_importing_module_config'] = 'Importing module settings...';
 $_['entry_importing_layout'] = 'Importing layout...';
-$_['entry_import_success_text']		= 'Import successfully';
+$_['entry_import_success_text']		= 'Import successfully. Please go to Extensions -> Modifications -> Refresh to regenerate modifications.';
 
 //
 $_['entry_delete_successfully'] = 'Delete backup successfully';

@@ -381,8 +381,16 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						break;
 
 					case 'export-layout-settings':
-						$layoutSettings = $this->model_extension_pavothemer_sample->getLayoutSettings( $data['folder'] );
-						$status = $sampleHelper->write( $layoutSettings, $data['folder'], 'layouts' );
+						$this->load->model( 'design/layout' );
+						$layouts = $this->model_design_layout->getLayouts();
+						foreach ( $layouts as $k => $layout ) {
+							$layout['layout_modules'] = $this->model_design_layout->getLayoutModules( $layout['layout_id'] );
+							$layout['layout_routes'] = $this->model_design_layout->getLayoutRoutes( $layout['layout_id'] );
+							$layouts[$k] = $layout;
+						}
+
+						$status = $sampleHelper->write( $layouts, $data['folder'], 'layouts' );
+
 						$response = array(
 								'status'	=> $status,
 								'data'		=> $data,
