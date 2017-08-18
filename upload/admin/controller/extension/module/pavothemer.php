@@ -106,8 +106,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function customize() {
 		// add scripts
-		$this->document->addScript( 'view/javascript/pavothemer/customize.js' );
-		$this->document->addStyle( 'view/stylesheet/pavothemer/customize.css' );
+		$this->document->addScript( 'view/javascript/pavothemer/customize.min.js' );
+		$this->document->addStyle( 'view/stylesheet/pavothemer/customize.min.css' );
 
 		$this->data['iframeURI'] = HTTPS_CATALOG;
 		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );

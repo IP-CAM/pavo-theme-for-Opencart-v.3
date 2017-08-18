@@ -1,0 +1,36 @@
+{
+  "name": "pavothemer",
+  "version": "1.0.0",
+  "description": "Theme Lexus OpenCart Framework",
+  "main": "webpack.config.js",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.1",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "css-loader": "^0.28.5",
+    "extract-text-webpack-plugin": "^3.0.0",
+    "glob": "^7.1.2",
+    "node-sass": "^4.5.3",
+    "style-loader": "^0.18.2",
+    "url-loader": "^0.5.9",
+    "webpack": "^3.5.5"
+  },
+  "devDependencies": {
+    "sass-loader": "^6.0.6"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duchn/pavothemer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duchn/pavothemer/issues"
+  },
+  "homepage": "https://github.com/duchn/pavothemer#readme"
+}
