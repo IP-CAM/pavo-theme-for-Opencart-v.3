@@ -48,7 +48,7 @@
 
               <div class="form-group">
                 <div class="col-sm-10 col-sm-offset-2">
-                  <a href="#" id="pavothemer-import" class="btn btn-primary"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
+                  <a href="{{ import_zip_ajax_url }}" id="pavothemer-import" class="btn btn-primary" data-original-title="{{ entry_import_zip_file }}" data-toggle="tooltip" data-loading-text="{{ entry_importing_text }}"><i class="fa fa-upload"></i> {{ entry_import_text }}</a>
                   <a href="{{ export_ajax_url }}" id="pavothemer-export" class="btn btn-default" data-start="{{ entry_create_export_path }}" data-loading-text="{{ entry_exporting_text }}"><i class="fa fa-download"></i> {{ entry_export_text }}</a>
                 </div>
               </div>
@@ -70,6 +70,69 @@
   {# scripts #}
   <script type="text/javascript">
     (function($){
+      $('#pavothemer-import').on('click', function( e ) {
+        e.preventDefault();
+        var that = $( this );
+        var step = 1;
+        step++;
+        $('#form-upload').remove();
+
+        $('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="import" /></form>');
+
+        $('#form-upload input[name=\'import\']').trigger('click');
+
+        if (typeof timer != 'undefined') {
+          clearInterval(timer);
+        }
+
+        timer = setInterval(function() {
+          if ($('#form-upload input[name=\'import\']').val() != '') {
+            clearInterval(timer);
+
+            $('#progress-import .progress-bar').attr('aria-valuenow', 0);
+            $('#progress-import .progress-bar').css('width', '0%');
+
+            $.ajax({
+              url: that.attr( 'href' ),
+              type: 'post',
+              dataType: 'json',
+              data: new FormData($('#form-upload')[0]),
+              cache: false,
+              contentType: false,
+              processData: false,
+              beforeSend: function() {
+                that.button('loading');
+                $('#progress-bar').removeClass('progress-bar-danger');
+                $('#progress-text').html('');
+              }
+            }).always(function(){
+              that.button('reset');
+            }).done(function(res) {
+              if ( typeof res.status == 'undefined' ) return;
+              $('.alert-dismissible').remove();
+
+              if ( typeof res.error !== 'undefined' ) {
+                $('#progress-bar').addClass('progress-bar-danger');
+                $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+              } else if ( typeof res.success !== 'undefined' ) {
+                $('#progress-bar').addClass('progress-bar-success');
+                $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
+              }
+
+              if ( typeof res.table !== 'undefined' ) {
+                $( '#sample-histories-table' ).replaceWith( res.table );
+              }
+              if ( res.next ) {
+                $('#progress-bar').css( 'width', ( step / res.data.steps ) * 100 + '%' );
+                next_request( res.next, typeof res.data !== 'undefined' ? res.data : {}, that, step );
+              }
+            }).fail(function(xhr, ajaxOptions, thrownError) {
+              $('#progress-text').html('<div class="text-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div>');
+            });
+          }
+        }, 500);
+      });
+
       var step = 1;
       $( document ).on( 'click', '#pavothemer-export', function(e){
         e.preventDefault();
@@ -96,14 +159,12 @@
           if ( typeof res.status === 'undefined' ) return;
 
           // messages
-          if ( typeof res.text !== 'undefined' ) {
-            if ( res.status === false ) {
-              $('#progress-bar').addClass('progress-bar-danger');
-              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-            } else {
-              $('#progress-bar').addClass('progress-bar-success');
-              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
-            }
+          if ( typeof res.error !== 'undefined' ) {
+            $('#progress-bar').addClass('progress-bar-danger');
+            $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+          } else if ( typeof res.success !== 'undefined' ) {
+            $('#progress-bar').addClass('progress-bar-success');
+            $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
           }
 
           if ( res.status === true && typeof res.next !== 'undefined' ) {
@@ -134,16 +195,14 @@
         }).done(function( res ){
 
           // messages
-          if ( typeof res.text !== 'undefined' ) {
-            if ( res.status === false ) {
-              $('#progress-bar').addClass('progress-bar-danger');
-              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-            } else {
-              step++;
-              $('#progress-bar').css( 'width', ( parseInt( step ) / data.steps ) * 100 + '%' );
-              $('#progress-bar').addClass('progress-bar-success');
-              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
-            }
+          if ( typeof res.error !== 'undefined' ) {
+            $('#progress-bar').addClass('progress-bar-danger');
+            $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+          } else if ( typeof res.success !== 'undefined' ) {
+            step++;
+            $('#progress-bar').css( 'width', ( parseInt( step ) / data.steps ) * 100 + '%' );
+            $('#progress-bar').addClass('progress-bar-success');
+            $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
           }
 
           if ( res.status === true && typeof res.next !== 'undefined' ) {
@@ -152,6 +211,10 @@
 
           if ( typeof res.table !== 'undefined' ) {
             $( '#sample-histories-table' ).replaceWith( res.table );
+          }
+
+          if ( res.status === false ) {
+            step = 1;
           }
 
         }).fail( function( xhr, ajaxOptions, thrownError ){
@@ -215,12 +278,12 @@
             _that.button( 'reset' );
           }).done(function( res ){
             if ( typeof res.text !== 'undefined' ) {
-              if ( res.status === false ) {
+              if ( typeof res.error !== 'undefined' ) {
                 $('#progress-bar').addClass('progress-bar-danger');
-                $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-              } else {
+                $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+              } else if ( typeof res.success !== 'undefined' ) {
                 $('#progress-bar').addClass('progress-bar-success');
-                $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
+                $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
               }
             }
             if ( typeof res.table !== 'undefined' ) {
@@ -238,7 +301,7 @@
       $( document ).on( 'click', '.pavothemer-import', function(e){
         e.preventDefault();
         var button = $( this );
-
+        var step = 1;
         var data = {
           folder: button.data('sample')
         };
@@ -251,22 +314,20 @@
           beforeSend: function() {
             button.button('loading');
             $('#progress-bar').removeClass('progress-bar-danger').css('width', 0);
-            $('#progress-text').html( '' );
+            $('#progress-text').html( '<span class="text-success">' + button.data( 'loading-text' ) + '</span>' );
           }
         }).always(function(){
           button.button('reset');
         }).done(function( res ){
           // messages
-          if ( typeof res.text !== 'undefined' ) {
-            if ( res.status === false ) {
-              $('#progress-bar').addClass('progress-bar-danger');
-              $('#progress-text').html('<div class="text-danger">' + res.text + '</div>');
-            } else {
-              step++;
-              $('#progress-bar').css( 'width', ( parseInt( step ) / res.data.steps ) * 100 + '%' );
-              $('#progress-bar').addClass('progress-bar-success');
-              $('#progress-text').html('<span class="text-success">' + res.text + '</span>');
-            }
+          if ( typeof res.error !== 'undefined' ) {
+            $('#progress-bar').addClass('progress-bar-danger');
+            $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+          } else if ( typeof res.success !== 'undefined' ) {
+            step++;
+            $('#progress-bar').css( 'width', ( parseInt( step ) / res.data.steps ) * 100 + '%' );
+            $('#progress-bar').addClass('progress-bar-success');
+            $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
           }
 
           if ( res.status === true && typeof res.next !== 'undefined' ) {

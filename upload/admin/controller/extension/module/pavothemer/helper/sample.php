@@ -228,4 +228,40 @@ class PavoThemerSampleHelper {
 	    return $zip->close();
 	}
 
+	/**
+	 * upzip file
+	 * @return 0, 1, 2, 3
+	 */
+	public function extractProfile( $source = '' ) {
+		if ( ! $source ) return 0;
+
+		// rename tmp name -> zip
+		if ( ! strpos( $source, '.tmp' ) ) return 1;
+		$filename = basename( $source, '.tmp' );
+
+		preg_match( '/^pavothemer_(.*?)_([0-9]*?).zip$/i', $filename, $match );
+		if ( ! $match ) return 2;
+		if ( empty( $match[1] ) || $match[1] !== $this->theme ) return 3;
+
+		$file = dirname( $source ) . '/' . $filename;
+		// rename
+		rename( $source, $file );
+
+		$zip = new ZipArchive();
+		if ( $zip->open( $file ) === true ) {
+			$zipFile = $this->sampleDir . basename( $file, '.zip' );
+			if ( file_exists( $zipFile ) ) {
+		    	$zip->close();
+		    	return 4;
+			}
+		    $zip->extractTo( $zipFile );
+		    $zip->close();
+
+		    unlink( $file );
+		 	return $zipFile;   
+		}
+
+		return false;
+	}
+
 }

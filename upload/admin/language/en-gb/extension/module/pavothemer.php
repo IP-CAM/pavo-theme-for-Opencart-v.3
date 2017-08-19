@@ -56,19 +56,12 @@ $_['text_clear_jscss_cache']  = 'Clear JS,Css Cache';
 $_['text_complite_lesscss']  = 'Compile Less To Css';
 $_['text_explain_customization'] = 'The framework supports you two way to put your customization on theme.<ul><li>You create your css file(s) and put in PAV_YOURTHEME/stylesheet/local. All files will be loaded automatic</li><li>Or use tools at bellow</li></ul>';
 
-$_['text_installation_from_profile'] = 'Or Install Modules - Store Configurations From A Profile';
-$_['text_installation_profile'] = 'Profile Installation';
-$_['text_installation_profile_explain'] =  "Profile only applies configuration 's values for modules and images setting... not relating with SQL";
-
-$_['text_explain_massup'] = 'Will install sql, configuration samples for all module';
-$_['text_mass_install']   = 'Mass Active - Install Sample For Modules';
-
 $_['text_customjavascript'] = 'Custom Javascript';
 $_['text_explain_custom_js'] = 'Add javascript code. Please be carefull';
 $_['text_module_not_uploaded'] = '<b class="label">This is not uploaded</b>';
 $_['text_module_not_installed'] = '<b class="label red">This is not Installed</b>';
 $_['text_first_installation'] = 'Here is first installation, please click save or save and edit to store default configuration';
-$_['text_install_done'] = 'Installed Successful';
+$_['text_install_done'] = 'Installed Successfully';
 
 // Entry
 $_['entry_progress_text'] = 'Progress';
@@ -83,9 +76,9 @@ $_['entry_created_by_text'] = 'Created By';
 $_['entry_actions_text'] = 'Actions';
 $_['entry_delete_text']	= 'Delete';
 $_['entry_empty_select']	= 'Please select export';
-$_['entry_error_permission'] = 'Error permission denied';
-$_['entry_error_write_file'] = 'Error can not backup store settings';
+$_['error_write_file'] = 'ERROR: can not backup store settings';
 $_['text_confirm_delete'] = 'Are you sure you want to delete the backup?';
+$_['entry_import_zip_file'] = 'Upload export zip file download from Export History';
 
 // Tab
 $_['tab_general']   = 'General';
@@ -106,28 +99,57 @@ $_['logo_image']  = 'Logo Image';
 $_['entry_enable_offsidebars'] = 'Enable OffCanvas Sidebars';
 
 // import - export - download text
-$_['entry_exporting_text']	= 'Exporting...';
-$_['entry_exporting_module'] = 'Exporting module...';
-$_['entry_create_export_path'] = 'Creating directory...';
-$_['entry_exporting_store_config'] = 'Exporting store settings...';
-$_['entry_exporting_theme_config'] = 'Exporting theme settings...';
-$_['entry_export_sql_text']		= 'Exporting sql...';
+$_['entry_exporting_text']			= 'Exporting...';
+$_['entry_exporting_module'] 		= 'Exporting module...';
+$_['entry_create_export_path'] 		= 'Creating directory...';
+$_['entry_exporting_store_config'] 	= 'Exporting store settings...';
+$_['entry_exporting_theme_config'] 	= 'Exporting theme settings...';
+$_['entry_export_sql_text']			= 'Exporting sql...';
 $_['entry_exporting_module_config'] = 'Exporting module settings...';
-$_['entry_exporting_layout_text'] = 'Exporting layouts...';
-$_['entry_extension_module_text'] = 'Exporting extension modules...';
-$_['entry_exporting_table_text'] = 'Exporting tables...';
-$_['entry_export_success_text'] = 'Export successfully';
+$_['entry_exporting_layout_text'] 	= 'Exporting layouts...';
+$_['error_export_layout_text']		= 'ERROR: Export layouts...';
+$_['entry_extension_module_text'] 	= 'Exporting extension modules...';
+$_['error_export_module_text']		= 'ERROR: Export extension modules';
+$_['entry_exporting_table_text'] 	= 'Exporting tables...';
+$_['error_export_table_text'] 		= 'ERROR: Export tables...';
+$_['entry_export_success_text'] 	= 'Export successfully';
+$_['entry_upload_error_text'] 		= 'Counld not upload.';
+$_['error_upload_filename'] 		= 'ERROR: File name is invalid';
+$_['error_upload_invalid_filetype'] = 'ERROR: Invalid upload file type';
+$_['error_upload_1']                = 'ERROR: The uploaded file exceeds the upload_max_filesize directive in php.ini!';
+$_['error_upload_2']                = 'ERROR: The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form!';
+$_['error_upload_3']                = 'ERROR: The uploaded file was only partially uploaded!';
+$_['error_upload_4']                = 'ERROR: No file was uploaded!';
+$_['error_upload_6']                = 'ERROR: Missing a temporary folder!';
+$_['error_upload_7']                = 'ERROR: Failed to write file to disk!';
+$_['error_upload_8']                = 'ERROR: File upload stopped by extension!';
+$_['error_upload_999']              = 'ERROR: No error code available!';
+$_['error_curl']                    = 'CURL: Error Code(%s): %s';
+$_['error_find_not_found']          = 'ERROR: File not found';
+$_['error_export_already_exists']   = 'ERROR: Export profile is already exists.';
+$_['error_extract_0']				= 'ERROR: Source file is not exists';
+$_['error_extract_1']				= 'ERROR: Temp file is not exists';
+$_['error_extract_2']				= 'ERROR: Upload file name is invalid';
+$_['error_extract_3']				= 'ERROR: Export file and current theme doesn\'t match';
+$_['error_extract_4']				= 'ERROR: Export profile is already exists.';
+$_['error_permission'] 				= 'ERROR: permission denied';
 
-$_['entry_importing_text']	= 'Importing...';
-$_['entry_downloading_text']	= 'Downloading...';
-$_['entry_deleting_text']	= 'Deleting...';
+$_['entry_importing_text']			= 'Importing...';
+$_['entry_downloading_text']		= 'Downloading...';
+$_['error_download'] 			= 'ERROR: Download Sample Data';
+$_['entry_deleting_text']			= 'Deleting...';
 $_['entry_downloading_module'] 		= 'Downloading module...';
+$_['entry_upzip_export_text'] 		= 'Extracting zip file...';
 $_['entry_importing_store_config'] 	= 'Importing store settings...';
 $_['entry_importing_theme_config'] 	= 'Importing theme settings...';
-$_['entry_installing_module'] = 'Installing required modules';
-$_['entry_installing_table'] = 'Importing tables';
+$_['error_import_theme'] 		= 'ERROR: theme settings';
+$_['entry_installing_module'] 		= 'Installing required modules';
+$_['error_import_module'] 	= 'ERROR: Import Module';
+$_['entry_installing_table'] 		= 'Importing tables';
+$_['error_import_table'] 		= 'ERROR: Import tables';
 $_['entry_importing_module_config'] = 'Importing module settings...';
-$_['entry_importing_layout'] = 'Importing layout...';
+$_['entry_importing_layout'] 		= 'Importing layout...';
+$_['error_import_layout'] 	= 'ERROR: Import layout';
 $_['entry_import_success_text']		= 'Import successfully. Please go to Extensions -> Modifications -> Refresh to regenerate modifications.';
 
 //
