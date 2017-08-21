@@ -21,4 +21,11 @@ class PavoThemerDownloadHelper {
 		$this->theme = $theme;
 	}
 
+	/**
+	 * download
+	 */
+	public function download() {
+
+	}
+
 }

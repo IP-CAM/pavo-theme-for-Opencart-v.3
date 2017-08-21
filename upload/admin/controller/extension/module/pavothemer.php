@@ -57,14 +57,37 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		$tab = isset( $this->request->get['tab'] ) ? $this->request->get['tab'] : '';
 		// setting tabs
-		$this->data['settings'] = PavoThemerSettingHelper::getSettings( $this->config->get( 'config_theme' ) );
+		$theme = $this->config->get( 'config_theme' );
+		$this->data['settings'] = PavoThemerSettingHelper::getSettings( $theme );
 		$this->data['current_tab'] = isset( $this->request->get['current_tab'] ) ? $this->request->get['current_tab'] : current( array_keys( $this->data['settings'] ) );
 
 		// validate and update settings
 		if ( $this->request->server['REQUEST_METHOD'] === 'POST' ) {
 			$validated = $this->validate();
 			if ( $validated ) {
+				// update options
 				$this->model_setting_setting->editSetting( 'pavothemer', $this->request->post, $this->config->get( 'config_store_id' ) );
+				// update custom asset files
+
+				$themeHelper = PavoThemerHelper::instance( $this->config->get( 'config_theme' ) );
+
+				// css file
+				if ( isset( $this->request->post['pavothemer_custom_css'] ) ) {
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize.css';
+					$write = $themeHelper->writeFile( $file, $this->request->post['pavothemer_custom_css'] );
+					if ( ! $write ) {
+						$this->addMessage( $this->language->get( 'error_permission_in_directory' ) . ' <strong>' . dirname( $file ) . '</strong>' );
+					}
+				}
+
+				// js file
+				if ( isset( $this->request->post['pavothemer_custom_js'] ) ) {
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/customize.js';
+					$write = $themeHelper->writeFile( $file, $this->request->post['pavothemer_custom_js'] );
+					if ( ! $write ) {
+						$this->addMessage( $this->language->get( 'error_permission_in_directory' ) . ' <strong>' . dirname( $file ) . '</strong>' );
+					}
+				}
 			}
 		}
 
@@ -88,10 +111,18 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			}
 		}
 
+		$this->data['code_editor_get_content_url'] = str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/ajaxGetContent', 'user_token=' . $this->session->data['user_token'], true ) );
+
 		// enqueue scripts, stylesheet needed to display editor
 		$this->document->addScript( 'view/javascript/summernote/summernote.js' );
 		$this->document->addScript( 'view/javascript/summernote/opencart.js' );
 		$this->document->addStyle( 'view/javascript/summernote/summernote.css' );
+
+		$this->document->addScript( 'view/javascript/codemirror/lib/codemirror.js' );
+		$this->document->addScript( 'view/javascript/codemirror/lib/formatting.js' );
+		$this->document->addScript( 'view/javascript/codemirror/lib/xml.js' );
+		$this->document->addStyle( 'view/javascript/codemirror/lib/codemirror.css' );
+		$this->document->addStyle( 'view/javascript/codemirror/theme/monokai.css' );
 
 		// just an other warning
 		// $this->addMessage( 'Just an other notice', 'warning' );
@@ -113,7 +144,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->data['themeName'] = ucfirst( implode( ' ', explode( '-', implode( ' ', explode( '_', $this->config->get( 'config_theme' ) ) ) ) ) );
 
 		// $this->data['fields'] = $this->parseCustomizeOptions( PavoThemerHelper::getCustomizes() );
-		$customizes = PavoThemerHelper::getCustomizes();
+		$themeHelper = PavoThemerHelper::instance( $this->config->get( 'config_theme' ) );
+		$customizes = $themeHelper->getCustomizes();
 		foreach ( $customizes as $file => $customize ) {
 			$this->data['fields'][$file] = $this->parseCustomizeOptions( $customize );
 		}
@@ -724,6 +756,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	private function renderFieldControl( $item = array() ) {
 		if ( empty( $item['type'] ) ) return;
 		$theme = $this->config->get( 'config_theme' );
+		$themeHelper = PavoThemerHelper::instance( $theme );
 		$type = 'input';
 		switch ( $item['type'] ) {
 			case 'select_theme':
@@ -734,23 +767,34 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				# code...
 				break;
 
+			case 'select_skin':
+				$none = array(
+							array(
+								'text'	=> $this->language->get( 'text_none' ),
+								'value' => ''
+							)
+						);
+				$item['option'] = array_merge( $none, $themeHelper->getSkins() );
+				$type = 'select';
+				break;
+
 			case 'select_header':
-				$item['option'] = PavoThemerHelper::getHeaders( $theme );
+				$item['option'] = $themeHelper->getHeaders();
 				$type = 'select';
 				break;
 
 			case 'select_footer':
-				$item['option'] = PavoThemerHelper::getFooters( $theme );
+				$item['option'] = $themeHelper->getFooters();
 				$type = 'select';
 				break;
 
 			case 'select_product_layout':
-				$item['option'] = PavoThemerHelper::getProductDefailLayouts( $theme );
+				$item['option'] = $themeHelper->getProductDefailLayouts();
 				$type = 'select';
 				break;
 
 			case 'select_category_layout':
-				$item['option']= PavoThemerHelper::getProductCategoryLayouts( $theme );
+				$item['option'] = $themeHelper->getProductCategoryLayouts();
 				$type = 'select';
 				break;
 			case 'text':
@@ -759,8 +803,10 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			case 'password':
 					$type = 'input';
 				break;
-			case 'custom_css':
-			case 'custom_js':
+			case 'code_editor':
+					$type = 'code_editor';
+					$item['class'] = 'pavothemer-code-editor';
+				break;
 			case 'textarea':
 			case 'summernote':
 			case 'editor':
@@ -768,9 +814,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				break;
 			case 'style_profile':
 					$type = 'select';
-					$styleProfiles = PavoThemerHelper::getCssProfiles( $theme );
+					$styleProfiles = $themeHelper->getCssProfiles();
 					$item['option'][] = array(
-							'text'	=> 'None',
+							'text'	=> $this->language->get( 'text_none' ),
 							'value' => ''
 						);
 					if ( $styleProfiles ) foreach ( $styleProfiles as $profile ) {
@@ -833,6 +879,17 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		}
 
 		return $fields;
+	}
+
+	/**
+	 * 
+	 */
+	public function ajaxGetContent() {
+		$id = ! empty( $this->request->post['setting'] ) ? $this->request->post['setting'] : false;
+		$this->response->addHeader( 'Content-Type: application/json' );
+		$this->response->setOutput( json_encode(array(
+				'code'	=> htmlspecialchars_decode( $this->config->get( $id ) )
+			)) );
 	}
 
 	/**

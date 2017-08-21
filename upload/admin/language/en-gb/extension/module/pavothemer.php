@@ -12,33 +12,7 @@ $_['menu_export_text'] 		= 'Export';
 // Text
 $_['text_back'] 			= 'Back';
 $_['text_save'] 			= 'Save';
-
-$_['text_saveandstay'] = 'Save and Stay';
-$_['text_store_theme'] = 'Theme';
-$_['text_default_store'] = 'Store:';
-$_['text_module_setting'] = 'Quick Edit Module';
-$_['text_installation'] = 'Quick Tools - Active Modules, Install Configurations Supported By the Theme.';
-$_['text_installation_in_manually'] = 'Or Install Samples In Manually Way';
-$_['text_backup_current_setting'] = 'Backup Currenlty data and setting';
-$_['text_extension']         = 'Extensions';
-$_['text_module']         = 'Modules';
-$_['text_default_theme']         = 'Configure Option for Template ';
-$_['text_auto_active_profiles'] = 'Automatic Active Modules By Skin';
-$_['enable_explain_activeprofile'] = 'This option to allow <b>automatic set ACTIVE all modules</b> appearing on <b>HOME PAGE</b> which were configured by that skin. <br>Import!!!!. your <b>current data samples</b> will be <b>replaced</b> by new. Please click to <b>backup or export</b> profiles to backup yours in Data Sample Tab.';
-$_['text_success']        = 'Success: You have modified module ThemControl!';
-$_['text_content_top']    = 'Content Top';
-$_['text_content_bottom'] = 'Content Bottom';
-$_['alert_import_profile_success'] = 'Imported Profile Data Successfull';
-$_['text_column_left']    = 'Column Left';
-$_['text_column_right']   = 'Column Right';
-$_['text_column_right3']   = 'Column Center Center';
-$_['text_contact_googlemap'] = 'Contact Us Google Map';
-$_['text_show_module_onlayout'] = 'Show modules on Layout';
-$_['text_explain_footer_cols'] = 'This positions will automatic be splited many columns. Numbers of columns are equal number of pushed modules';
-$_['text_explain_footer_center'] = 'if put any modules in this position, all modules in default footer such as information, Customer Service, Extras, My Account are disabled. Automatic split columns';
-$_['text_explain_mainmenu']    = 'if put any module here, the default menu will be disabled automatic';
-$_['text_explain_unhookmodules_function'] = 'Drap and drop modules to Unhook Modules out of positions';
-$_['text_explain_modules_function'] = 'Drap and drop modules to Update Modules on expected Positions. And to sort theirs orders';
+$_['text_none']				= 'None';
 
 $_['text_explain_body_selector'] = 'Put CSS Selector such as body, h1, h3,h4, .box-title ';
 $_['text_explain_google_url'] = 'Example: http://fonts.googleapis.com/css?family=Jacques+Francois+Shadow|Pirata+One';
@@ -133,6 +107,7 @@ $_['error_extract_2']				= 'ERROR: Upload file name is invalid';
 $_['error_extract_3']				= 'ERROR: Export file and current theme doesn\'t match';
 $_['error_extract_4']				= 'ERROR: Export profile is already exists.';
 $_['error_permission'] 				= 'ERROR: permission denied';
+$_['error_permission_in_directory'] = 'ERROR: permission denied in';
 
 $_['entry_importing_text']			= 'Importing...';
 $_['entry_downloading_text']		= 'Downloading...';

@@ -3,7 +3,35 @@ if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
 class PavoThemerHelper {
 
-	private static $_customizes = array();
+	private $_customizes = array();
+
+	private static $instance = array();
+
+	public function __construct( $theme = 'default' ) {
+		$this->theme = $theme;
+	}
+
+	public static function instance( $theme = 'default' ) {
+		if ( empty( self::$instance[$theme] ) ) {
+			self::$instance[$theme] = new self( $theme );
+		}
+
+		return self::$instance[$theme];
+	}
+
+	/**
+	 * write file
+	 */
+	public function writeFile( $file = '', $content = '' ) {
+		if ( ! is_writable( dirname( $file ) ) ) return false;
+		$fopen = fopen( $file, 'w+' );
+		if ( $fopen ) {
+			fwrite( $fopen, $content );
+			return fclose( $fopen );
+		}
+
+		return false;
+	}
 
 	/**
 	 * Get Skins
@@ -11,21 +39,8 @@ class PavoThemerHelper {
 	 * @param $theme string
 	 * @return array skins
 	 */
-	public static function getSkins( $theme = 'default' ) {
-		$skins = array();
-		$path = DIR_CATALOG . 'view/theme/'.$theme.'/stylesheet/skins';
-		$files = glob( $path . '/*.css' );
-
-		if( is_readable( $path ) && ! empty( $files ) ){
-			foreach( $directories as $dir ){
-				$fileInfo = pathinfo( $file );
-				if ( ! empty( $fileInfo['filename'] ) ) {
-					$skins[] = $fileInfo['filename'];
-				}
-			}
-		}
-
-		return $skins;
+	public function getSkins() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/stylesheet/skins/*.css' ), '', '.min.css' );
 	}
 
 	/**
@@ -36,78 +51,71 @@ class PavoThemerHelper {
 	 * @return array css files 
 	 * @since 1.0.0
 	 */
-	public static function getCssProfiles( $theme = 'default' ) {
-		$cssProfiles = array();
-		$path = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize';
-		$files = glob( $path . '/*.css' );
-		if ( is_readable( $path ) && !empty( $files ) ) {
-			foreach ( $files as $file ) {
-				$fileInfo = pathinfo( $file );
-				if ( ! empty( $fileInfo['filename'] ) ) {
-					$cssProfiles[] = $fileInfo['filename'];
-				}
-			}
-		}
-
-		return $cssProfiles;
+	public function getCssProfiles() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/stylesheet/customizes/*.css' ), '', '.css' );
 	}
 
-	public static function getCustomizes( $theme = 'default' ) {
+	public function getCustomizes() {
 		// setting files
-		$files = self::getCustomizeFiles( $theme );
+		$files = $this->getCustomizeFiles( $this->theme );
 		if ( $files ) {
 			foreach ( $files as $file ) {
 				$fileInfo = pathinfo( $file );
-				self::$_customizes[ $fileInfo['filename'] ] = PavoThemerSettingHelper::getSettingFile( $file );
+				$this->$_customizes[ $fileInfo['filename'] ] = PavoThemerSettingHelper::getSettingFile( $file );
 			}
 		}
 
-		return self::$_customizes;
+		return $this->$_customizes;
 	}
 
 	/**
 	 * Get customize files
 	 */
-	public static function getCustomizeFiles( $theme = 'default' ) {
-		return glob( DIR_CATALOG . 'view/theme/' . $theme . '/development/customizes/*.xml' );
+	public function getCustomizeFiles() {
+		return glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/development/customizes/*.xml' );
 	}
 
 	/**
 	 * Get headers layouts
 	 */
-	public static function getHeaders( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/header*.twig' ), 'header' );
+	public function getHeaders() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/common/header*.twig' ), 'header' );
 	}
 
 	/**
 	 * Get footers layouts
 	 */
-	public static function getFooters( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/common/footer*.twig' ), 'footer' );
+	public function getFooters() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/common/footer*.twig' ), 'footer' );
 	}
 
 	/**
 	 * Get Product Detail Layouts
 	 */
-	public static function getProductDefailLayouts( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/product*.twig' ), 'product' );
+	public function getProductDefailLayouts() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/product/product*.twig' ), 'product' );
 	}
 
 	/**
 	 * Get Product Detail Layouts
 	 */
-	public static function getProductCategoryLayouts( $theme = 'default' ) {
-		return self::files2Options( glob( DIR_CATALOG . 'view/theme/' . $theme . '/template/product/category*.twig' ), 'category' );
+	public function getProductCategoryLayouts() {
+		return $this->files2Options( glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/product/category*.twig' ), 'category' );
 	}
 
-	public static function files2Options( $files = array(), $prefix = '' ) {
+	/**
+	 * file to select options
+	 */
+	public function files2Options( $files = array(), $prefix = '', $ext = '.twig' ) {
 		$options = array();
-		if ( $files ) foreach ( $files as $file ) {
-					$options[] = array(
-							'text'	=> implode( ' ', array_map( 'ucfirst', array_merge( array( $prefix ), array( str_replace( $prefix, '', str_replace( '.twig', '', basename( $file ) ) ) ) ) ) ),
-							'value'	=> str_replace( '.twig', '', basename( $file ) )
-						);
-				}
+		if ( $files ) {
+			foreach ( $files as $file ) {
+				$options[] = array(
+						'text'	=> implode( ' ', array_map( 'ucfirst', array_merge( array( $prefix ), array( str_replace( $prefix, '', str_replace( $ext, '', basename( $file ) ) ) ) ) ) ),
+						'value'	=> str_replace( $ext, '', basename( $file ) )
+					);
+			}
+		}
 		return $options;
 	}
 

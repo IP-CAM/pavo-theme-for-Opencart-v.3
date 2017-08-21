@@ -152,4 +152,57 @@
   </div>
   {# end lexus theme control #}
 
+  <script type="text/javascript">
+    (function($){
+      $( document ).ready(function(){
+        // Initialize codemirrror
+        if ( typeof CodeMirror == 'function' ) {
+
+          // ajax get setting code editor
+          var editors = document.getElementsByClassName( 'pavothemer-code-editor' );
+          for ( var i = 0; i < editors.length; i++ ) {
+
+            $.ajax({
+              url: '{{ code_editor_get_content_url }}',
+              type: 'POST',
+              data: {
+                setting: $( editors[i] ).attr( 'id' )
+              },
+              async: false
+            }).always(function(){
+
+            }).done(function( res ){
+
+              var code = '';
+              if ( typeof res.code !== 'undefined' ) {
+                code = res.code;
+              }
+
+              var editor = CodeMirror.fromTextArea( editors[i], {
+                mode: $( editors[i] ).data('mode'),
+                height: '500px',
+                lineNumbers: true,
+                autofocus: true,
+                theme: 'monokai'
+              } );
+              editor.setValue( code );
+              editor.refresh();
+            });
+          }
+        }
+
+        $( document ).on( 'submit', '#form-module', function(e){
+          var form = $( this );
+          var editors = form.find( '.pavothemer-code-editor' );
+          for ( var i = 0; i < editors.length; i++ ) {
+            var editor = $( editors[i] ).parent().find('.CodeMirror')[0].CodeMirror;
+            $( editors[i] ).val( editor.getValue() );
+          }
+          return true;
+        } );
+
+      });
+    })(jQuery);
+  </script>
+
 {{ footer }}
