@@ -69,7 +69,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				$this->model_setting_setting->editSetting( 'pavothemer', $this->request->post, $this->config->get( 'config_store_id' ) );
 				// update custom asset files
 
-				$themeHelper = PavoThemerHelper::instance( $this->config->get( 'config_theme' ) );
+				$themeHelper = PavoThemerHelper::instance( $theme );
 
 				// css file
 				if ( isset( $this->request->post['pavothemer_custom_css'] ) ) {

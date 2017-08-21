@@ -130,32 +130,34 @@ $(document).ready(function() {
     }
   });
 
-  // magnificPopup Product Zoom
-  $('.product-zoom').magnificPopup({
-    type: 'image',
-    closeOnContentClick: true,
-    image: { verticalFit: true }
-  });
+  if ( typeof $.fn.magnificPopup == 'function' ) {
+    // magnificPopup Product Zoom
+    $('.product-zoom').magnificPopup({
+      type: 'image',
+      closeOnContentClick: true,
+      image: { verticalFit: true }
+    });
 
-  $('.iframe-link').magnificPopup({
-    type:'iframe'
-  });
+    $('.iframe-link').magnificPopup({
+      type:'iframe'
+    });
 
-  // magnificPopup Form Contact, etc...
-  $('.popup-with-form').magnificPopup({
-    type: 'inline',
-    preloader: false,
-    focus: '#input-name',
-    callbacks: {
-      beforeOpen: function() {
-        if($(window).width() < 700) {
-          this.st.focus = false;
-        } else {
-          this.st.focus = '#input-name';
+    // magnificPopup Form Contact, etc...
+    $('.popup-with-form').magnificPopup({
+      type: 'inline',
+      preloader: false,
+      focus: '#input-name',
+      callbacks: {
+        beforeOpen: function() {
+          if($(window).width() < 700) {
+            this.st.focus = false;
+          } else {
+            this.st.focus = '#input-name';
+          }
         }
       }
-    }
-  });
+    });
+  }
 
   // scroll-to-top button show and hide
   jQuery(document).ready(function(){

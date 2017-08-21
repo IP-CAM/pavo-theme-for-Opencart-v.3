@@ -19,7 +19,7 @@
                     $settings[] = array(
                         'name'     => $this->language->get('menu_settings_text'),
                         'href'     => $this->url->link('extension/module/pavothemer/edit', 'user_token=' . $this->session->data['user_token'], true),
-                        'children' => array()   
+                        'children' => array()
                     );
                 }
 
@@ -28,7 +28,7 @@
                     $settings[] = array(
                         'name'     => $this->language->get('menu_customize_text'),
                         'href'     => $this->url->link('extension/module/pavothemer/customize', 'user_token=' . $this->session->data['user_token'], true),
-                        'children' => array()   
+                        'children' => array()
                     );
                 }
 
@@ -56,20 +56,86 @@
     </file>
     <file path="catalog/controller/common/header.php">
         <operation>
-            <search><![CDATA[return $this->load->view('common/header', $data);
-    }]]></search>
+            <search><![CDATA[$data['title'] = $this->document->getTitle();]]></search>
+            <add position="before"><![CDATA[
+        // theme
+        $theme = $this->config->get( 'config_theme' );
+        // skin
+        $skin = $this->config->get( 'pavothemer_default_skin' );
+        /**
+         * style files
+         *
+         * stylesheet file
+         * stylesheet-rtl file
+         * skin file
+         */
+        $styles = array(
+            'stylesheet',
+            $this->language->get( 'direction' ) === 'rtl' ? 'stylesheet-rtl' : '',
+            $skin ? 'skins/' . $skin : '',
+            'customize'
+        );
+
+        foreach ( $styles as $style ) {
+            if ( ! $style ) continue;
+            $style = DIR_TEMPLATE . $theme . '/stylesheet/' . $style;
+            $file = false;
+            if ( file_exists( $style . '.min.css' ) ) {
+                $file = $style . '.min.css';
+            } else if ( file_exists( $style . '.css' ) ) {
+                $file = $style . '.css';
+            }
+            if ( $file ) {
+                $file = str_replace( DIR_APPLICATION, basename( DIR_APPLICATION ) . '/', $file );
+                $this->document->addStyle( $file );
+            }
+        }
+
+        /**
+         * script files
+         *
+         * common script
+         * customize script
+         */
+        $scripts = array(
+            'common',
+            'customize'
+        );
+
+        foreach ( $scripts as $script ) {
+            $script = DIR_TEMPLATE . $theme . '/javascript/' . $script;
+            $file = false;
+
+            if ( file_exists( $script . '.min.js' ) ) {
+                $file = $script . '.min.js';
+            } else if ( file_exists( $script . '.js' ) ) {
+                $file = $script . '.js';
+            }
+
+            if ( $file ) {
+                $file = str_replace( DIR_APPLICATION, basename( DIR_APPLICATION ) . '/', $file );
+                $this->document->addScript( $file );
+            }
+        }]]></add>
+        </operation>
+    </file>
+    <file path="catalog/controller/common/header.php">
+        <operation>
+            <search><![CDATA[return $this->load->view('common/header', $data);]]></search>
             <add position="replace"><![CDATA[
-                $data['body_class'] = $this->getBodyClass();
+        $data['body_class'] = $this->getBodyClass();
         // pavothemer header layout file
         $data['pavothemer_theme_width'] = $this->config->get( 'pavothemer_theme_width' );
         $data['pavothemer_layout']      = $this->config->get( 'pavothemer_layout' );
         $header = $this->config->get( 'pavothemer_header_layout' );
-        if ( ! $header ) {
-            return $this->load->view('common/header', $data);
-        } else {
+
+        $file = DIR_TEMPLATE . $theme . '/template/common/' . $header . '.twig';
+        if ( $header && file_exists( $file ) ) {
             return $this->load->view('common/' . $header, $data);
+        } else {
+            return $this->load->view('common/header', $data);
         }
-            
+
     }
 
     /**
@@ -82,7 +148,7 @@
         $classes = array(
                 implode( '-', explode( '/', $route ) )
             );
-        
+
         // categories
         if ( $route === 'product/category' && ! empty( $this->request->get['path'] ) ) {
             $category_ids = explode( '_', $this->request->get['path'] );
@@ -113,13 +179,12 @@
             // load model
             $this->load->model('catalog/information');
             $layout_id = $this->model_catalog_information->getInformationLayoutId($this->request->get['information_id']);
-            $classes = 'information';   
+            $classes = 'information';
         }
 
         $classes[] = 'layout-' . $layout_id;
 
         return implode( ' ', $classes );
-    }
             ]]></add>
         </operation>
     </file>

@@ -82,7 +82,8 @@ module.exports = {
 	    new ExtractTextPlugin({
 		    filename: "[name].min.css",
 		    disable: process.env.NODE_ENV === 'development'
-		}),
+		})
+		,
 		// minify style files
 		new OptimizeCssAssetsPlugin({
 	      	cssProcessorOptions: { discardComments: {removeAll: true } },
