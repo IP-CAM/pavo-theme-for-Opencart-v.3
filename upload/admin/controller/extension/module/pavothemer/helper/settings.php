@@ -11,14 +11,27 @@ class PavoThemerSettingHelper {
 	 *
 	 * @var PavoThemerSettingHelper
 	 */
-	private static $_instance = null;
+	private static $_instance = array();
 
 	/**
 	 * setting files
 	 *
 	 * @since 1.0.0
 	 */
-	private static $_settings = array();
+	private $_settings = array();
+
+	public $theme = null;
+
+	public function __construct( $theme = 'default' ) {
+		$this->theme = $theme;
+	}
+
+	public static function instance( $theme = 'default' ) {
+		if ( empty( self::$_instance[$theme] ) ) {
+			self::$_instance[$theme] = new self( $theme );
+		}
+		return self::$_instance[$theme];
+	}
 
 	/**
 	 *
@@ -27,17 +40,17 @@ class PavoThemerSettingHelper {
 	 * @param $theme - themename
 	 * @return array settings page
 	 */
-	public static function getSettings( $theme = '' ) {
+	public function getSettings() {
 		// setting files
-		$files = self::getSettingFiles( $theme );
+		$files = $this->getSettingFiles();
 		if ( $files ) {
 			foreach ( $files as $file ) {
 				$fileInfo = pathinfo( $file );
-				self::$_settings[ $fileInfo['filename'] ] = self::getSettingFile( $file );
+				$this->_settings[ $fileInfo['filename'] ] = $this->getSettingFile( $file );
 			}
 		}
 
-		return self::$_settings;
+		return $this->_settings;
 	}
 
 	/**
@@ -48,8 +61,8 @@ class PavoThemerSettingHelper {
 	 * @param $theme string
 	 * @return array
 	 */
-	public static function getSettingFiles( $theme = '' ) {
-		return glob( DIR_CATALOG . 'view/theme/' . $theme . '/development/settings/*.xml' );
+	public function getSettingFiles() {
+		return glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/development/settings/*.xml' );
 	}
 
 	/**
@@ -59,7 +72,7 @@ class PavoThemerSettingHelper {
 	 * @return getXmlDomContent method as array
 	 * @since 1.0.0
 	 */
-	public static function getSettingFile( $file = '' ) {
+	public function getSettingFile( $file = '' ) {
 		if ( ! file_exists( $file ) || ! is_readable( $file ) ) {
 			return array();
 		}
@@ -70,7 +83,7 @@ class PavoThemerSettingHelper {
 		if ( $xml === false ) {
 			return $data;
 		}
-		$data = self::getXmlDomContent( $xml );
+		$data = $this->getXmlDomContent( $xml );
 		if ( ! empty( $data['item'] ) ) {
 			$group = array();
 			foreach ( $data['item'] as $item ) {
@@ -91,7 +104,7 @@ class PavoThemerSettingHelper {
 	 * @param xml
 	 * @return array
 	 */
-	public static function getXmlDomContent( $xml = null ) {
+	public function getXmlDomContent( $xml = null ) {
 		if ( ! $xml ) return $xml;
 		if ( is_string( $xml ) ) {
 			return $xml;
@@ -103,13 +116,13 @@ class PavoThemerSettingHelper {
 		foreach ( $xml as $k => $notes ) {
 			$subData = array();
 			if ( $notes instanceof SimpleXMLElement ) {
-				$notes = self::getXmlDomContent( $notes );
+				$notes = $this->getXmlDomContent( $notes );
 			}
 			if ( is_array( $notes ) ) {
 				$subData = array();
 				foreach ( $notes as $k2 => $note ) {
 					if ( $note instanceof SimpleXMLElement ) {
-						$subData[$k2] = self::getXmlDomContent( $note );
+						$subData[$k2] = $this->getXmlDomContent( $note );
 					} else {
 						$subData[$k2] = $note;
 					}

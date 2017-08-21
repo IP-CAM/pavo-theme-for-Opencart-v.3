@@ -58,7 +58,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$tab = isset( $this->request->get['tab'] ) ? $this->request->get['tab'] : '';
 		// setting tabs
 		$theme = $this->config->get( 'config_theme' );
-		$this->data['settings'] = PavoThemerSettingHelper::getSettings( $theme );
+		$this->data['settings'] = PavoThemerSettingHelper::instance( $theme )->getSettings();
 		$this->data['current_tab'] = isset( $this->request->get['current_tab'] ) ? $this->request->get['current_tab'] : current( array_keys( $this->data['settings'] ) );
 
 		// validate and update settings
@@ -886,9 +886,23 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function ajaxGetContent() {
 		$id = ! empty( $this->request->post['setting'] ) ? $this->request->post['setting'] : false;
+		$theme = $this->config->get( 'config_theme' );
+		switch ( $id ) {
+			case 'pavothemer_custom_css':
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize.css';
+				break;
+
+			case 'pavothemer_custom_js':
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/javascript/customize.js';
+				break;
+			
+			default:
+				# code...
+				break;
+		}
 		$this->response->addHeader( 'Content-Type: application/json' );
 		$this->response->setOutput( json_encode(array(
-				'code'	=> htmlspecialchars_decode( $this->config->get( $id ) )
+				'code'	=> htmlspecialchars_decode( is_readable( $file ) ? file_get_contents( $file ) : $this->config->get( $id ) )
 			)) );
 	}
 
@@ -914,7 +928,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/tools' );
 		// END ADD USER PERMISSION
 
-		$settingFields = PavoThemerSettingHelper::getSettings( $this->config->get('config_theme') );
+		$settingFields = PavoThemerSettingHelper::instance( $this->config->get('config_theme') )->getSettings();
 		$this->load->model( 'setting/setting' );
 		$settings = array();
 
