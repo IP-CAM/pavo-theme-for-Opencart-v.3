@@ -24,19 +24,28 @@
                 }
 
                 // access customize
-                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/customize' ) ) {
-                    $settings[] = array(
-                        'name'     => $this->language->get('menu_customize_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/customize', 'user_token=' . $this->session->data['user_token'], true),
-                        'children' => array()
-                    );
-                }
+                //if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/customize' ) ) {
+                //    $settings[] = array(
+                //        'name'     => $this->language->get('menu_customize_text'),
+                //        'href'     => $this->url->link('extension/module/pavothemer/customize', 'user_token=' . $this->session->data['user_token'], true),
+                //        'children' => array()
+                //    );
+                //}
 
                 // view settings panel
                 if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/tools' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/tools' ) ) {
                     $settings[] = array(
                         'name'     => $this->language->get('menu_tool_text'),
                         'href'     => $this->url->link('extension/module/pavothemer/tools', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()
+                    );
+                }
+
+                // theme management
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/themeManagement' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/themeManagement' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_theme_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/themeManagement', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()
                     );
                 }

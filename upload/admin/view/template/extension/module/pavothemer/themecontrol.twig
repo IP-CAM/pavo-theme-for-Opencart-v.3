@@ -9,10 +9,12 @@
 
     <div class="page-header">
       <div class="container-fluid">
-        <div class="pull-right">
-          <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
-          <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
-        </div>
+        {% if ( settings ) %}
+          <div class="pull-right">
+            <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+            <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+          </div>
+        {% endif %}
         <h1><b>{{ heading_title }}</b></h1>
         <ul class="breadcrumb">
           {% for breadcrumb in breadcrumbs %}
@@ -30,123 +32,127 @@
         {% endfor %}
       {% endif %}
 
-      <div class="panel panel-default">
-        <div class="panel-body">
-          <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" id="form-module">
-            {% if ( settings ) %}
-              <ul class="nav nav-tabs">
-                {% for i, setting in settings %}
-                  <li{{ current_tab == i ? ' class="active"' : '' }}>
-                    <a href="#setting-tab-{{ setting.id }}" data-toggle="tab" aria-expanded="true">
-                      {% if ( setting.icon ) %}
-                        <i class="{{ setting.icon }}"></i>
-                      {% endif %}
-                      {{ setting.name | capitalize }}
-                    </a>
-                  </li>
-                {% endfor %}
-              </ul>
-            {% endif %}
+      {% if ( settings ) %}
+        <div class="panel panel-default">
+          <div class="panel-body">
+              <form action="" method="post" enctype="multipart/form-data" class="form-horizontal" id="form-module">
+                {% if ( settings ) %}
+                  <ul class="nav nav-tabs">
+                    {% for i, setting in settings %}
+                      <li{{ current_tab == i ? ' class="active"' : '' }}>
+                        <a href="#setting-tab-{{ setting.id }}" data-toggle="tab" aria-expanded="true">
+                          {% if ( setting.icon ) %}
+                            <i class="{{ setting.icon }}"></i>
+                          {% endif %}
+                          {{ setting.name | capitalize }}
+                        </a>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                {% endif %}
 
-            <div class="tab-content">
-              {% for i, setting in settings %}
-                <div id="setting-tab-{{ setting.id }}" class="tab-pane{{ current_tab == i ? ' active' : '' }}">
+                <div class="tab-content">
+                  {% for i, setting in settings %}
+                    <div id="setting-tab-{{ setting.id }}" class="tab-pane{{ current_tab == i ? ' active' : '' }}">
 
-                  {% if ( setting.group ) %}
-                    <ul class="nav nav-tabs">
-                      {% set c = 0 %}
-                      {% for key, group in setting.group %}
-                        <li{{ c == 0 ? ' class="active"' : '' }}>
-                          <a href="#setting-group-i-{{ key }}" data-toggle="tab" aria-expanded="true">
-                            {{ group }}
-                          </a>
-                        </li>
-                      {% set c = c + 1 %}
-                      {% endfor %}
-                    </ul>
+                      {% if ( setting.group ) %}
+                        <ul class="nav nav-tabs">
+                          {% set c = 0 %}
+                          {% for key, group in setting.group %}
+                            <li{{ c == 0 ? ' class="active"' : '' }}>
+                              <a href="#setting-group-i-{{ key }}" data-toggle="tab" aria-expanded="true">
+                                {{ group }}
+                              </a>
+                            </li>
+                          {% set c = c + 1 %}
+                          {% endfor %}
+                        </ul>
 
-                    <div class="tab-content">
+                        <div class="tab-content">
 
-                      {% set c = 0 %}
-                        {% for key, group in setting.group %}
-                          <div id="setting-group-i-{{ key }}" class="tab-pane{{ c == 0 ? ' active' : '' }}">
-                            {% for item in setting.item %}
+                          {% set c = 0 %}
+                            {% for key, group in setting.group %}
+                              <div id="setting-group-i-{{ key }}" class="tab-pane{{ c == 0 ? ' active' : '' }}">
+                                {% for item in setting.item %}
 
-                              {# wrapper class #}
-                              {% set wrapper_class = 'form-group' %}
-                              {% set wrapper_class = item.wrapper_class ? [ wrapper_class, ' ', item.wrapper_class ] | join : wrapper_class %}
-                              {% set wrapper_class = item.required ? [ wrapper_class, ' ', 'required' ] | join : wrapper_class %}
-                              {% if item.id in errors | keys %}
-                                  {% set wrapper_class = [ wrapper_class, ' ', 'has-error' ] | join %}
-                              {% endif %}
-
-                              {% if ( item.group == group ) %}
-                                <div class="{{ wrapper_class }}">
-                                  {% if item.label %}
-                                    {% if ( item.desc ) %}
-                                      <label class="col-sm-2 control-label">
-                                        <span data-toggle="tooltip" data-original-title="{{ item.desc | escape }}">{{ item.label }}</span>
-                                      </label>
-                                    {% else %}
-                                      <label class="col-sm-2 control-label" for="{{ item.id }}">{{ item.label }}</label>
-                                    {% endif %}
-                                  {% else %}
-                                    <div class="col-sm-2"></div>
+                                  {# wrapper class #}
+                                  {% set wrapper_class = 'form-group' %}
+                                  {% set wrapper_class = item.wrapper_class ? [ wrapper_class, ' ', item.wrapper_class ] | join : wrapper_class %}
+                                  {% set wrapper_class = item.required ? [ wrapper_class, ' ', 'required' ] | join : wrapper_class %}
+                                  {% if item.id in errors | keys %}
+                                      {% set wrapper_class = [ wrapper_class, ' ', 'has-error' ] | join %}
                                   {% endif %}
-                                  <div class="col-sm-10">
-                                    {{ item.output }}
-                                    {% if item.id in errors | keys %}
-                                      <div class="text-danger">{{ errors[item.id] }}</div>
-                                    {% endif %}
-                                  </div>
-                                </div>
+
+                                  {% if ( item.group == group ) %}
+                                    <div class="{{ wrapper_class }}">
+                                      {% if item.label %}
+                                        {% if ( item.desc ) %}
+                                          <label class="col-sm-2 control-label">
+                                            <span data-toggle="tooltip" data-original-title="{{ item.desc | escape }}">{{ item.label }}</span>
+                                          </label>
+                                        {% else %}
+                                          <label class="col-sm-2 control-label" for="{{ item.id }}">{{ item.label }}</label>
+                                        {% endif %}
+                                      {% else %}
+                                        <div class="col-sm-2"></div>
+                                      {% endif %}
+                                      <div class="col-sm-10">
+                                        {{ item.output }}
+                                        {% if item.id in errors | keys %}
+                                          <div class="text-danger">{{ errors[item.id] }}</div>
+                                        {% endif %}
+                                      </div>
+                                    </div>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+                            {% set c = c + 1 %}
+                          {% endfor %}
+
+                        </div>
+
+                      {% else %}
+                        {% for item in setting.item %}
+
+                          {# wrapper class #}
+                          {% set wrapper_class = 'form-group' %}
+                          {% set wrapper_class = item.wrapper_class ? [ wrapper_class, ' ', item.wrapper_class ] | join : wrapper_class %}
+                          {% set wrapper_class = item.required ? [ wrapper_class, ' ', 'required' ] | join : wrapper_class %}
+                          {% if item.id in errors | keys %}
+                              {% set wrapper_class = [ wrapper_class, ' ', 'has-error' ] | join %}
+                          {% endif %}
+
+                          <div class="{{ wrapper_class }}">
+                            {% if item.label %}
+                              {% if ( item.desc ) %}
+                                <label class="col-sm-2 control-label">
+                                  <span data-toggle="tooltip" data-original-title="{{ item.desc | escape }}">{{ item.label }}</span>
+                                </label>
+                              {% else %}
+                                <label class="col-sm-2 control-label" for="{{ item.id }}">{{ item.label }}</label>
                               {% endif %}
-                            {% endfor %}
+                            {% else %}
+                              <div class="col-sm-2"></div>
+                            {% endif %}
+                            <div class="col-sm-10">
+                              {{ item.output }}
+                              {% if item.id in errors | keys %}
+                                <div class="text-danger">{{ errors[item.id] }}</div>
+                              {% endif %}
+                            </div>
                           </div>
-                        {% set c = c + 1 %}
-                      {% endfor %}
+                        {% endfor %}
+                      {% endif %}
 
                     </div>
-
-                  {% else %}
-                    {% for item in setting.item %}
-
-                      {# wrapper class #}
-                      {% set wrapper_class = 'form-group' %}
-                      {% set wrapper_class = item.wrapper_class ? [ wrapper_class, ' ', item.wrapper_class ] | join : wrapper_class %}
-                      {% set wrapper_class = item.required ? [ wrapper_class, ' ', 'required' ] | join : wrapper_class %}
-                      {% if item.id in errors | keys %}
-                          {% set wrapper_class = [ wrapper_class, ' ', 'has-error' ] | join %}
-                      {% endif %}
-
-                      <div class="{{ wrapper_class }}">
-                        {% if item.label %}
-                          {% if ( item.desc ) %}
-                            <label class="col-sm-2 control-label">
-                              <span data-toggle="tooltip" data-original-title="{{ item.desc | escape }}">{{ item.label }}</span>
-                            </label>
-                          {% else %}
-                            <label class="col-sm-2 control-label" for="{{ item.id }}">{{ item.label }}</label>
-                          {% endif %}
-                        {% else %}
-                          <div class="col-sm-2"></div>
-                        {% endif %}
-                        <div class="col-sm-10">
-                          {{ item.output }}
-                          {% if item.id in errors | keys %}
-                            <div class="text-danger">{{ errors[item.id] }}</div>
-                          {% endif %}
-                        </div>
-                      </div>
-                    {% endfor %}
-                  {% endif %}
-
+                  {% endfor %}
                 </div>
-              {% endfor %}
-            </div>
-          </form>
+              </form>
+          </div>
         </div>
-      </div>
+      {% else %}
+        <div class="alert alert-info">{{ theme_management_notices }}</div>
+      {% endif %}
 
     </div>
   </div>

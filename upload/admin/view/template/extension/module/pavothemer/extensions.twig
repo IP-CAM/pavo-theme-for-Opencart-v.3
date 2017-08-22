@@ -1,0 +1,30 @@
+<div class="row">
+	{% for extension in extensions %}
+		<div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+			<section>
+				<div class="extension-preview">
+					<a href="{{ extension.url }}">
+						<img src="{{ extension.image }}" class="img-responsive" />
+					</a>
+				</div>
+				<div class="extension-name">
+					<h4><a href="{{ extension.url }}">{{ extension.name }}</a></h4>
+					<span class="price">{{ extension.currency_symbol }} {{ extension.price }}</span>
+				</div>
+				<div class="extension-rate">
+					<div class="row">
+						<div class="col-xs-6">
+							{% for i in extension.rating %}
+								{% if ( i <= rating ) %}
+									<i class="fa fa-star"></i>
+								{% else %}
+									<i class="fa fa-star-empty"></i>
+								{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	{% endfor %}
+</div>

@@ -53,7 +53,7 @@ module.exports = {
 			{
 				test: /\.scss$/,
 				exclude: /node_modules/,
-				loader: ExtractTextPlugin.extract([ 'css-loader', 'sass-loader' ])
+				loader: ExtractTextPlugin.extract([ 'css-loader?minimize', 'sass-loader' ])
 			},
 			{
 				// image extensions, fonts extensions
@@ -63,7 +63,7 @@ module.exports = {
 			}
 		]
 	},
-	devtool: 'inline-source-map',
+	// devtool: 'inline-source-map',
  	stats: {
      	colors: true
  	},
@@ -86,7 +86,14 @@ module.exports = {
 		,
 		// minify style files
 		new OptimizeCssAssetsPlugin({
-	      	cssProcessorOptions: { discardComments: {removeAll: true } },
+	      	cssProcessorOptions: {
+	      		discardComments: {
+	      			removeAll: true
+	      		},
+	      		map: {
+      				inline: false
+    			}
+	      	},
 	      	canPrint: true
 	    })
 	]
