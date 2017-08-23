@@ -54,7 +54,8 @@
           <div class="row">
             <div class="col-sm-9 col-xs-7">
               <div class="btn-group extension-tabs">
-                <a href="{{ extension_purchased_url }}" class="btn btn-default active">{{ text_purchased }}</a>
+                <a href="{{ extension_unpurchased_code_url }}" class="btn btn-default active">{{ entry_unverified_text }}</a>
+                <a href="{{ extension_purchased_url }}" class="btn btn-default">{{ text_purchased }}</a>
                 <a href="{{ extension_free_url }}" class="btn btn-default">{{ text_free }}</a>
               </div>
             </div>
@@ -90,7 +91,7 @@
             purchased_code: $('input[name="purchased-code"]').val()
           },
           beforeSend: function(){
-            button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i>' );
+            button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i> ' );
             $('#prucahsed-error-notice').remove();
           }
         }).always(function(){
@@ -144,21 +145,28 @@
             url: url,
             type: 'POST',
             beforeSend: function() {
-              button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i>' );
+              button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i> ' );
             }
           }).always(function(){
             button.find( '.fa' ).remove();
           }).done(function( res ){
 
             if ( typeof res.status == 'undefined' ) return;
-            if ( res.status ) {
+            // if ( res.status ) {
+            //   $( '.extension-tabs' ).find( 'a' ).removeClass( 'active' );
+            //   button.addClass( 'active' );
+            // }
+
+            if ( typeof res.html != 'undefined' ) {
+              tabs[url] = res.html;
               $( '.extension-tabs' ).find( 'a' ).removeClass( 'active' );
               button.addClass( 'active' );
-            }
-
-            if ( typeof res.text != 'undefined' ) {
-              tabs[url] = res.text;
-              extensions_area.html( res.text );
+              if ( res.status ) {
+                extensions_area.html( res.html );
+              } else {
+                tabs[url] = '<div class="row"><div class="col-md-12 col-xs-12"><div class="alert alert-danger">' + res.html + '</div></div></div>';
+                $('#extension-list').html( tabs[url] );
+              }
             }
           }).fail(function(xhr, ajaxOptions, thrownError) {
             tabs[url] = false;

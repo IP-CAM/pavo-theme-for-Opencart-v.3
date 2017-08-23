@@ -1,15 +1,15 @@
 <?php
 // Heading
 $_['heading_title']       					= 'PavoThemer';
-$_['theme_management_heading_title']       	= 'Pavothemer: Theme Management';
-$_['theme_management_title']       			= 'Theme Management';
-$_['theme_management_notices_text'] = 'This section just useful for Pavotheme. Please go to <strong>Pavothemer->Theme Management</strong> to enter purchased code or download theme.';
+$_['theme_management_heading_title']       	= 'Pavothemer: Management';
+$_['theme_management_title']       			= 'Management';
+$_['theme_management_notices_text'] = 'This section just useful for Pavotheme. Please go to <strong>Pavothemer->Management</strong> to enter purchased code or download theme.';
 
 // Menus
 $_['menu_settings_text'] 	= 'Settings';
 $_['menu_customize_text'] 	= 'Customize';
 $_['menu_tool_text'] 		= 'Tools';
-$_['menu_theme_text'] 		= 'Theme Management';
+$_['menu_management_text'] 		= 'Management';
 $_['menu_import_text'] 		= 'Import';
 $_['menu_export_text'] 		= 'Export';
 
@@ -24,6 +24,11 @@ $_['text_others']				= 'Others';
 $_['text_purchased']			= 'Purchased';
 $_['text_free']					= 'Free';
 $_['text_error_api_request']	= 'Error';
+$_['entry_verified_text']		= 'Verified';
+$_['entry_unverified_text']		= 'UnVerified';
+$_['entry_installed_text']		= 'Installed';
+$_['entry_uninstalled_text']	= 'Uninstalled';
+$_['entry_no_extension_found']	= 'No extensions found.';
 
 $_['text_explain_body_selector'] 	= 'Put CSS Selector such as body, h1, h3,h4, .box-title ';
 $_['text_explain_google_url'] 		= 'Example: http://fonts.googleapis.com/css?family=Jacques+Francois+Shadow|Pirata+One';

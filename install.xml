@@ -42,10 +42,10 @@
                 }
 
                 // theme management
-                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/themeManagement' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/themeManagement' ) ) {
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavothemer/management' ) || $this->user->hasPermission( 'access', 'extension/module/pavothemer/management' ) ) {
                     $settings[] = array(
-                        'name'     => $this->language->get('menu_theme_text'),
-                        'href'     => $this->url->link('extension/module/pavothemer/themeManagement', 'user_token=' . $this->session->data['user_token'], true),
+                        'name'     => $this->language->get('menu_management_text'),
+                        'href'     => $this->url->link('extension/module/pavothemer/management', 'user_token=' . $this->session->data['user_token'], true),
                         'children' => array()
                     );
                 }

@@ -309,6 +309,16 @@ class ModelExtensionPavothemerSample extends Model {
 	}
 
 	/**
+	 * get all extensions
+	 */
+	public function getExtensions() {
+		$sql = "SELECT * FROM " .DB_PREFIX . "extension";
+		$query = $this->db->query( $sql );
+
+		return $query->rows;
+	}
+
+	/**
 	 * get pavo extensions paid
 	 */
 	public function getExtensionsPaid() {
