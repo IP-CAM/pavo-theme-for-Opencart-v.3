@@ -83,6 +83,8 @@ $_['logo_text']   			= 'Logo Text';
 $_['logo_image']  			= 'Logo Image';
 $_['entry_enable_offsidebars'] = 'Enable OffCanvas Sidebars';
 
+$_['entry_reviews_text']  			= 'reviews';
+$_['entry_review_text']  			= 'review';
 // import - export - download text
 $_['entry_exporting_text']			= 'Exporting...';
 $_['entry_exporting_module'] 		= 'Exporting module...';

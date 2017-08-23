@@ -17,7 +17,7 @@ class PavothemerApiHelper {
 	/**
 	 * post data
 	 */
-	public static function post( $data = array() ) {
+	public static function post( $url = '', $data = array() ) {
 		$data['method'] = 'POST';
 		return self::request( $url, $data );
 	}
@@ -42,37 +42,38 @@ class PavothemerApiHelper {
 		curl_setopt( $curl, CURLOPT_TIMEOUT, $data['timeout'] );
 		curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $data['timeout'] );
 
+		// this option is required
+		curl_setopt( $curl, CURLOPT_REFERER, HTTP_CATALOG );
+
 		if ( ! empty( $data['user-agent'] ) ) {
 			curl_setopt( $curl, CURLOPT_USERAGENT, $data['user-agent'] );
 		}
-		curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
-		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
-		$method = strtolower( $data['method'] );
+		$method = strtoupper( $data['method'] );
+		$post_fields_data = http_build_query( $data['body'] );
 		switch ( $method ) {
-			case 'post':
-					$data = http_build_query( $data['body'] );
-					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-					curl_setopt( $curl, CURLOPT_POST, count( $data ) );
+			case 'HEAD':
+				curl_setopt( $handle, CURLOPT_NOBODY, true );
+				break;
+			case 'POST':
+					curl_setopt( $curl, CURLOPT_POST, true );
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $post_fields_data );
 				break;
 
-			case 'put':
+			case 'PUT':
 					curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'PUT' );
-					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $post_fields_data );
 				break;
-
-			case 'delete':
-				curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, 'DELETE' );
-				curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
 
 			default:
-					curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $data['method'] );
-					if ( ! is_null( $data['body'] ) ) {
-						curl_setopt( $curl, CURLOPT_POSTFIELDS, $data['body'] );
+					curl_setopt( $curl, CURLOPT_CUSTOMREQUEST, $method );
+					if ( $data['body'] ) {
+						curl_setopt( $curl, CURLOPT_POSTFIELDS, $post_fields_data );
 					}
 				break;
 		}
+		curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
+		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
 		if ( $data['httpversion'] == '1.0' )
 			curl_setopt( $curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0 );
@@ -94,7 +95,7 @@ class PavothemerApiHelper {
 					),
 				'body'		=> $output
 			);
-echo $output; die();
+
 		return $results;
 	}
 

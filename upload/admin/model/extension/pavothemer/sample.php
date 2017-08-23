@@ -308,4 +308,19 @@ class ModelExtensionPavothemerSample extends Model {
 
 	}
 
+	/**
+	 * get pavo extensions paid
+	 */
+	public function getExtensionsPaid() {
+
+		return array();
+	}
+
+	/**
+	 * get purchased codes
+	 */
+	public function getPurchasedCodes() {
+
+	}
+
 }

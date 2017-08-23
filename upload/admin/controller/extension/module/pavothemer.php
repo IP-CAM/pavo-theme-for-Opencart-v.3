@@ -138,7 +138,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function themeManagement() {
 		// load language file
-		$this->load->language('extension/module/pavothemer');
+		$this->load->language( 'extension/module/pavothemer' );
 		// load setting model
 		$this->load->model( 'setting/setting' );
 		/**
@@ -176,6 +176,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 */
 	public function apiExtensions() {
 		if ( $this->isAjax() ) {
+			$this->load->language( 'extension/module/pavothemer' );
 			$results = array(
 					'status'	=> false,
 					'text'		=> ''
@@ -191,8 +192,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			// url request
 			$api = 'http://localhost/opencart/api/index.php';
 			$purchased_code = $this->config->get( 'pavothemer_theme_purchased_code' );
-			$res = PavothemerApiHelper::get( $api, array(
+			$res = PavothemerApiHelper::post( $api, array(
 					'body'	=> array(
+							'action'			=> 'extensions',
 							'type'				=> $type,
 							'license' 			=> $license,
 							'purchased_code'	=> $purchased_code
@@ -222,7 +224,48 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	 * enter purchased code
 	 */
 	public function purchasedCode() {
+		if ( $this->isAjax() ) {
+			$this->load->language( 'extension/module/pavothemer' );
+			$results = array(
+					'status'	=> false,
+					'message'		=> ''
+				);
 
+			require_once dirname( __FILE__ ) . '/pavothemer/helper/api.php';
+			// defined some key
+
+			// license free or purchased
+			$purchased_code = ! empty( $this->request->request['purchased_code'] ) ? $this->request->request['purchased_code'] : '';
+			// url request
+			$api = 'http://localhost/opencart/api/index.php';
+			$res = PavothemerApiHelper::post( $api, array(
+					'body'	=> array(
+							'action'			=> 'verify-purchased-code',
+							'purchased_code'	=> $purchased_code
+						)
+				) );
+
+			if ( ! empty( $res['response'] ) && ! empty( $res['response']['code'] ) && $res['response']['code'] === 200 ) {
+				$body = ! empty( $res['body'] ) ? json_decode( $res['body'], true ) : array();
+				$extensions = ! empty( $body['extensions'] ) ? $body['extensions'] : array();
+
+				if ( ! empty( $body['error'] ) ) {
+					$results['message'] = ! empty( $body['message'] ) ? $body['message'] : ( ! empty( $body['response'] ) && ! empty( $body['response']['message'] ) ? $body['response']['message'] : '' );
+				} else {
+					$this->load->model( 'extension/pavothemer/sample' );
+					$paids = $this->model_extension_pavothemer_sample->getExtensionsPaid();
+					$results['status'] = ! empty( $body['error'] ) ? false : true;
+					$results['message'] = ! empty( $body['message'] ) ? $body['message'] : ( ! empty( $body['response'] ) && ! empty( $body['response']['message'] ) ? $body['response']['message'] : '' );
+					$results['html'] = $this->load->view( 'extension/module/pavothemer/paids', array( 'extensions' => $paids ) );
+					$results['extension_list'] = $this->load->view( 'extension/module/pavothemer/extensions', array( 'extensions' => $paids ) );
+				}
+			} else {
+				$results['message'] = ! empty( $res['response'] ) && ! empty( $res['response']['message'] ) ? $res['response']['message'] : sprintf( $this->language->get( 'error_curl' ), PavothemerApiHelper::$errno, PavothemerApiHelper::$error );
+			}
+
+			$this->response->addHeader( 'Content-Type: application/json' );
+			$this->response->setOutput( json_encode( $results ) );
+		}
 	}
 
 	/**

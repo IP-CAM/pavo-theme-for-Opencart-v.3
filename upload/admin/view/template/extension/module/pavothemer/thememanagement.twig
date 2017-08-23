@@ -37,34 +37,31 @@
           <h3 class="panel-title"><i class="fa fa-puzzle-piece"></i>{{ theme_management_title }}</h3>
         </div>
         <div class="panel-body">
-            <fieldset>
-              <legend>{{ text_purchase_code }}</legend>
-            </fieldset>
-            <div class="well">
-              {% if ( purchased_code ) %}
-                {{ purchased_code }}
-              {% else %}
-                <div class="input-group">
-                  <input class="form-control" name="purchased_code" placeholder="{{ text_enter_purchase_code }}" />
-                  <a class="input-group-addon" href="{{ enter_purchased_code_url }}" id="pavothemer-puchased-code">{{ text_enter }}</a>
-                </div>
-              {% endif %}
-            </div>
+          <fieldset>
+            <legend>{{ text_purchase_code }}</legend>
+          </fieldset>
+          <div class="well">
+            {% if ( purchased_code ) %}
+              {{ purchased_code }}
+            {% else %}
+              <div class="input-group">
+                <input class="form-control" name="purchased-code" placeholder="{{ text_enter_purchase_code }}" />
+                <a class="input-group-addon" href="{{ enter_purchased_code_url }}" id="pavothemer-puchased-code">{{ text_enter }}</a>
+              </div>
+            {% endif %}
+          </div>
 
-            <div class="row">
-              <div class="col-sm-9 col-xs-7">
-                <div class="btn-group extension-tabs">
-                  <a href="{{ extension_purchased_url }}" class="btn btn-default active">{{ text_purchased }}</a>
-                  <a href="{{ extension_free_url }}" class="btn btn-default">{{ text_free }}</a>
-                </div>
+          <div class="row">
+            <div class="col-sm-9 col-xs-7">
+              <div class="btn-group extension-tabs">
+                <a href="{{ extension_purchased_url }}" class="btn btn-default active">{{ text_purchased }}</a>
+                <a href="{{ extension_free_url }}" class="btn btn-default">{{ text_free }}</a>
               </div>
             </div>
+          </div>
 
-            <div id="extension-list">
-              {% for extension in extensions %}
-
-              {% endfor %}
-            </div>
+          <div id="extension-list"></div>
+          <div id="paid-list"></div>
         </div>
       </div>
 
@@ -75,6 +72,54 @@
   <script type="text/javascript">
     (function($){
 
+      var pruchased_ajax = false;
+      $( document ).on( 'click', '#pavothemer-puchased-code', function(e){
+        e.preventDefault();
+        var button = $( this );
+
+        if ( pruchased_ajax ) {
+          pruchased_ajax.abort();
+          pruchased_ajax = false;
+          button.find('.fa').remove();
+        }
+
+        pruchased_ajax = $.ajax({
+          url: button.attr( 'href' ),
+          type: 'POST',
+          data: {
+            purchased_code: $('input[name="purchased-code"]').val()
+          },
+          beforeSend: function(){
+            button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i>' );
+            $('#prucahsed-error-notice').remove();
+          }
+        }).always(function(){
+          button.find('.fa').remove();
+        }).done(function( res ){
+          if ( typeof res.status == 'undefined' ) return;
+
+          if ( typeof res.extension_list != 'undefined' ) {
+            $('.extension-tabs a').removeClass( 'active' );
+            $('.extension-tabs a:first').addClass( 'active' );
+            $( '#extension-list' ).html( res.html );
+          }
+
+          if ( typeof res.message !== 'undefined' && res.message ) {
+            if ( res.status === false ) {
+              $('.well').after('<div class="row" id="prucahsed-error-notice"><div class="col-md-12 col-xs-12"><div class="alert alert-danger">' + res.message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div></div>');
+            } else {
+              $('.well').after('<div class="row" id="prucahsed-error-notice"><div class="col-md-12 col-xs-12"><div class="alert alert-info">' + res.message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div></div>');
+            }
+          }
+
+        }).fail(function(xhr, ajaxOptions, thrownError) {
+          tabs[url] = false;
+          $('.well').after('<div class="row" id="prucahsed-error-notice"><div class="col-md-12 col-xs-12"><div class="alert alert-danger alert-dismissible">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div></div>');
+        });
+
+        return false;
+      } );
+
       var tabs = {};
       var extensions_area = $( '#extension-list' );
       var ajax = false;
@@ -82,12 +127,17 @@
         e.preventDefault();
         var button = $( this );
         var url = button.attr( 'href' );
-        if ( typeof tabs[url] !== 'undefined' ) {
+        if ( typeof tabs[url] !== 'undefined' && tabs[url] ) {
+          $( '.extension-tabs' ).find( 'a' ).removeClass( 'active' );
+          button.addClass( 'active' );
           extensions_area.html( tabs[url] );
         } else {
 
           if ( ajax ) {
             ajax.abort();
+            ajax = false;
+            $( '.extension-tabs a .fa' ).remove();
+            $( '.extension-tabs a[href="'+url+'"]' ).removeClass( 'active' );
           }
 
           ajax = $.ajax({
@@ -102,19 +152,25 @@
 
             if ( typeof res.status == 'undefined' ) return;
             if ( res.status ) {
-              extensions_area.find( 'a' ).removeClass( 'active' );
+              $( '.extension-tabs' ).find( 'a' ).removeClass( 'active' );
               button.addClass( 'active' );
             }
 
             if ( typeof res.text != 'undefined' ) {
+              tabs[url] = res.text;
               extensions_area.html( res.text );
             }
           }).fail(function(xhr, ajaxOptions, thrownError) {
+            tabs[url] = false;
             $('#extension-list').html('<div class="row"><div class="col-md-12 col-xs-12"><div class="alert alert-danger">' + thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText + '</div></div></div>');
           });
         }
         return false;
       } );
+
+      $( document ).ready(function(){
+        $('.extension-tabs a:first').click();
+      });
 
     })(jQuery);
   </script>
