@@ -8,7 +8,9 @@
 
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
+// define some key
 defined( 'PAVOTHEMER_DIR' ) || define( 'PAVOTHEMER_DIR', dirname( __FILE__ ) );
+defined( 'PAVOTHEMER_API' ) || define( 'PAVOTHEMER_API', 'http://localhost/opencart/api/index.php' );
 
 require_once PAVOTHEMER_DIR . '/helper/settings.php';
 require_once PAVOTHEMER_DIR . '/helper/theme.php';

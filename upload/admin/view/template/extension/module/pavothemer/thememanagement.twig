@@ -54,9 +54,9 @@
           <div class="row">
             <div class="col-sm-9 col-xs-7">
               <div class="btn-group extension-tabs">
-                <a href="{{ extension_unpurchased_code_url }}" class="btn btn-default active">{{ entry_unverified_text }}</a>
-                <a href="{{ extension_purchased_url }}" class="btn btn-default">{{ text_purchased }}</a>
-                <a href="{{ extension_free_url }}" class="btn btn-default">{{ text_free }}</a>
+                <a href="{{ extension_unpurchased_code_url }}" class="btn btn-default unpurchased active">{{ entry_unverified_text }}</a>
+                <a href="{{ extension_purchased_url }}" class="btn btn-default purchased">{{ text_purchased }}</a>
+                <a href="{{ extension_free_url }}" class="btn btn-default free">{{ text_free }}</a>
               </div>
             </div>
           </div>
@@ -74,6 +74,7 @@
     (function($){
 
       var pruchased_ajax = false;
+      var tabs = {};
       $( document ).on( 'click', '#pavothemer-puchased-code', function(e){
         e.preventDefault();
         var button = $( this );
@@ -102,13 +103,15 @@
           if ( typeof res.extension_list != 'undefined' ) {
             $('.extension-tabs a').removeClass( 'active' );
             $('.extension-tabs a:first').addClass( 'active' );
-            $( '#extension-list' ).html( res.html );
+            $( '#extension-list' ).html( res.extension_list );
           }
 
           if ( typeof res.message !== 'undefined' && res.message ) {
             if ( res.status === false ) {
               $('.well').after('<div class="row" id="prucahsed-error-notice"><div class="col-md-12 col-xs-12"><div class="alert alert-danger">' + res.message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div></div>');
             } else {
+              var tabs = {};
+              $( 'input[name="purchased-code"]' ).val('');
               $('.well').after('<div class="row" id="prucahsed-error-notice"><div class="col-md-12 col-xs-12"><div class="alert alert-info">' + res.message + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div></div>');
             }
           }
@@ -121,7 +124,6 @@
         return false;
       } );
 
-      var tabs = {};
       var extensions_area = $( '#extension-list' );
       var ajax = false;
       $( document ).on( 'click', '.extension-tabs a', function(e){
