@@ -1,0 +1,17 @@
+[
+	{
+		"name" : "pavoblog_category"
+	},
+	{
+		"name" : "pavoblog_category_description"
+	},
+	{
+		"name" : "pavoblog_comment"
+	},
+	{
+		"name" : "pavoblog_post"
+	},
+	{
+		"name" : "pavoblog_post_description"
+	}
+]

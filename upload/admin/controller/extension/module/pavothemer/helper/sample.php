@@ -29,7 +29,7 @@ class PavoThemerSampleHelper {
 	 * get samples backup histories inside the theme
 	 */
 	public function getProfiles() {
-		$histories = glob( $this->sampleDir. '*' );
+		$histories = glob( $this->sampleDir . 'profiles/*' );
 
 		$sampleHistories = array();
 		foreach ( $histories as $history ) {
@@ -46,7 +46,7 @@ class PavoThemerSampleHelper {
 	 * get single sample profile
 	 */
 	public function getProfile( $key = '' ) {
-		$file = $this->sampleDir . $key . '/profile.json';
+		$file = $this->sampleDir . 'profiles/' . $key . '/profile.json';
 		return file_exists( $file ) ? json_decode( file_get_contents( $file ), true ) : array();
 	}
 
@@ -55,7 +55,7 @@ class PavoThemerSampleHelper {
 	 */
 	public function delete( $sample = '' ) {
 		if ( ! $sample ) return false;
-		$dir = $this->sampleDir . $sample . '/';
+		$dir = $this->sampleDir . 'profiles/' . $sample . '/';
 		if ( $dir ) {
 			return $this->deleteDirectory( $dir );
 		}
@@ -86,13 +86,19 @@ class PavoThemerSampleHelper {
 	 * create directory
 	 */
 	public function makeDir() {
-		// clearn folder
+		if ( ! is_dir( $this->sampleDir ) ) {
+			if ( ! is_writable( dirname( $this->sampleDir ) ) ) {
+				@chmod( dirname( $this->sampleDir ), 0777 );
+			}
+		}
+
+		// clean folder
 		$profiles = $this->getProfiles();
 		if ( $profiles ) {
 			foreach ( $profiles as $profile ) {
-				$dir = $this->sampleDir . $profile . '/';
+				$dir = $this->sampleDir . 'profiles/' . $profile . '/';
 				if ( ! is_writable( $dir ) ) {
-					chmod( dirname( $dir ), 0777 );
+					@chmod( dirname( $dir ), 0777 );
 				}
 				if ( empty( glob( $dir . '*' ) ) ) {
 					rmdir( $dir );
@@ -101,7 +107,7 @@ class PavoThemerSampleHelper {
 		}
 
 		$folder = 'pavothemer_' . $this->theme . '_' . time();
-		$path = $this->sampleDir . $folder . '';
+		$path = $this->sampleDir . 'profiles/' . $folder . '';
 		if ( is_dir( $path ) ) {
 			return $folder;
 		}
@@ -112,18 +118,11 @@ class PavoThemerSampleHelper {
 	}
 
 	/**
-	 * download sample data from pavothemes.com
-	 */
-	public function downloadSample() {
-		require_once dirname( __FILE__ ) . '/helper/download.php';
-	}
-
-	/**
 	 * write file
 	 */
 	public function write( $settings = array(), $profile = '', $type = '' ) {
 		if ( ! $profile ) return false;
-		$file = $this->sampleDir . $profile . '/profile.json';
+		$file = $this->sampleDir . 'profiles/' . $profile . '/profile.json';
 		$content = file_exists( $file ) ? file_get_contents( $file ) : array();
 		$content = $content ? json_decode( $content, true ) : array();
 
@@ -148,7 +147,7 @@ class PavoThemerSampleHelper {
 	 */
 	public function exportSql( $sqlString = '', $profile = '' ) {
 		if ( ! $profile ) return false;
-		$file = $this->sampleDir . $profile . '/' . $this->theme . '.sql';
+		$file = $this->sampleDir . 'profiles/' . $profile . '/' . $this->theme . '.sql';
 
 		return true;
 	}
@@ -157,7 +156,7 @@ class PavoThemerSampleHelper {
 	 * load modules requireds
 	 */
 	public function getModulesRequired() {
-		$dir = dirname( $this->sampleDir ) . '/modules';
+		$dir = $this->sampleDir . '/modules';
 		$modules = glob( $dir . '/*.ocmod.zip' );
 		$data = array();
 		if ( is_dir( $dir ) && ! empty( $modules ) ) {
@@ -173,11 +172,11 @@ class PavoThemerSampleHelper {
 	 * zip profile to download
 	 */
 	public function zipProfile( $profile = '' ) {
-		$folder = $this->sampleDir . $profile;
+		$folder = $this->sampleDir . 'profiles/' . $profile;
 		$filename = $profile . '.zip';
 		// backup before
 		if ( file_exists( DIR_DOWNLOAD . $filename ) ) {
-			// return DIR_DOWNLOAD . $filename;
+			return DIR_DOWNLOAD . $filename;
 		}
 		$zip = $this->zip( $folder, DIR_DOWNLOAD . $filename );
 		if ( $zip ) {
@@ -249,7 +248,7 @@ class PavoThemerSampleHelper {
 
 		$zip = new ZipArchive();
 		if ( $zip->open( $file ) === true ) {
-			$zipFile = $this->sampleDir . basename( $file, '.zip' );
+			$zipFile = $this->sampleDir . 'profiles/' . basename( $file, '.zip' );
 			if ( file_exists( $zipFile ) ) {
 		    	$zip->close();
 		    	return 4;

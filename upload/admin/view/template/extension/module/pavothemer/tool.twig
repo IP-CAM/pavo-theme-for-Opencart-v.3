@@ -277,14 +277,12 @@
           }).always(function(){
             _that.button( 'reset' );
           }).done(function( res ){
-            if ( typeof res.text !== 'undefined' ) {
-              if ( typeof res.error !== 'undefined' ) {
-                $('#progress-bar').addClass('progress-bar-danger');
-                $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
-              } else if ( typeof res.success !== 'undefined' ) {
-                $('#progress-bar').addClass('progress-bar-success');
-                $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
-              }
+            if ( typeof res.error !== 'undefined' ) {
+              $('#progress-bar').addClass('progress-bar-danger');
+              $('#progress-text').html('<div class="text-danger">' + res.error + '</div>');
+            } else if ( typeof res.success !== 'undefined' ) {
+              $('#progress-bar').addClass('progress-bar-success');
+              $('#progress-text').html('<span class="text-success">' + res.success + '</span>');
             }
             if ( typeof res.table !== 'undefined' ) {
               $( '#sample-histories-table' ).replaceWith( res.table );
@@ -357,6 +355,7 @@
           $('#progress-text').removeClass( 'progress-bar-danger' ).html('');
           if ( data.length > 0 ) {
             var button = $( '#' + data[0] ).find( '.pavothemer-delete-export' );
+            $('#progress-bar').removeClass( 'progress-bar-danger' );
             next_delete( button, 0, totals.length, data );
           }
         }
@@ -394,16 +393,19 @@
         }).always(function(){
           button.button( 'reset' );
         }).done(function( res ){
-          if ( typeof res.text !== 'undefined' ) {
-            $('#progress-bar').css( 'width', ( parseInt( step ) / totals ) * 100 + '%' );
-            $('#progress-bar').addClass('progress-bar-success');
-            $('#progress-text').append('<span class="text-success">' + res.text + '</span><hr />');
+          $('#progress-bar').css( 'width', ( parseInt( step ) / totals ) * 100 + '%' );
+          if ( typeof res.success !== 'undefined' ) {
+            $('#progress-bar').removeClass( 'progress-bar-danger' ).addClass( 'progress-bar-success' );
+            $('#progress-text').append('<span class="text-success">' + res.success + '</span><hr />');
+          } else if ( typeof res.error !== 'undefined' ) {
+            $('#progress-bar').removeClass( 'progress-bar-success' ).addClass( 'progress-bar-danger' );
+            $('#progress-text').append('<span class="text-danger">' + res.error + '</span><hr />');
           }
 
           if ( step <= totals ) {
             var nextItem = selecteds.slice( step, step + 1 );
             var nextButton = typeof nextItem[0] !== 'undefined' ? $( '#' + nextItem[0] ).find( '.pavothemer-delete-export' ) : false;
-            if ( nextButton && nextButton.length === 1 ) {
+            if ( res.status && nextButton && nextButton.length === 1 ) {
               next_delete( nextButton, step, totals, selecteds )
             }
           } else {

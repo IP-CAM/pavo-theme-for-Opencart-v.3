@@ -223,35 +223,37 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				$results['status'] = true;
 			}
 
-			if ( $results['status'] && $extensions ) {
+			if ( $results['status'] ) {
 				$data = array();
 
-				// extensions
-				$this->load->model( 'setting/extension' );
-				$this->load->model( 'extension/pavothemer/sample' );
+				if ( $extensions ) {
+					// extensions
+					$this->load->model( 'setting/extension' );
+					$this->load->model( 'extension/pavothemer/sample' );
 
-				// all modules
-				$allExtensions = $this->model_extension_pavothemer_sample->getExtensions();
-				foreach ( $extensions as $k => $extension ) {
-					$type = isset( $extension['type'] ) ? $extension['type'] : 'module';
-					$code = isset( $extension['code'] ) ? $extension['code'] : '';
-					if ( ! $code ) continue;
-					$installed_extensions = $this->model_setting_extension->getInstalled( $type );
-					$extension['installed'] = in_array( $code, $installed_extensions );
-					$extension['verified'] = $this->config->get( 'pavothemer_extension_verified_' . $code ) ? true : false;
+					// all modules
+					$allExtensions = $this->model_extension_pavothemer_sample->getExtensions();
+					foreach ( $extensions as $k => $extension ) {
+						$type = isset( $extension['type'] ) ? $extension['type'] : 'module';
+						$code = isset( $extension['code'] ) ? $extension['code'] : '';
+						if ( ! $code ) continue;
+						$installed_extensions = $this->model_setting_extension->getInstalled( $type );
+						$extension['installed'] = in_array( $code, $installed_extensions );
+						$extension['verified'] = $this->config->get( 'pavothemer_extension_verified_' . $code ) ? true : false;
 
-					if (
-							( $license === 'free' && isset( $extension['price'] ) && $extension['price'] == 0 )
-						||
-							( $license == 'purchased' && $extension['verified'] )
-					) {
-						$data[$k] = $extension;
-					} else if ( $license === 'un-verified' && ! $extension['verified'] ) {
-						foreach ( $allExtensions as $ex ) {
-							if ( ! isset( $ex['type'] ) || ! isset( $ex['code'] ) ) continue;
-							if ( ! isset( $extension['type'] ) || ! isset( $extension['code'] ) ) continue;
-							if ( $extension['code'] == $ex['code'] && $extension['type'] == $ex['type'] ) {
-								$data[$k] = $extension;
+						if (
+								( $license === 'free' && isset( $extension['price'] ) && $extension['price'] == 0 )
+							||
+								( $license == 'purchased' && $extension['verified'] )
+						) {
+							$data[$k] = $extension;
+						} else if ( $license === 'un-verified' && ! $extension['verified'] ) {
+							foreach ( $allExtensions as $ex ) {
+								if ( ! isset( $ex['type'] ) || ! isset( $ex['code'] ) ) continue;
+								if ( ! isset( $extension['type'] ) || ! isset( $extension['code'] ) ) continue;
+								if ( $extension['code'] == $ex['code'] && $extension['type'] == $ex['type'] ) {
+									$data[$k] = $extension;
+								}
 							}
 						}
 					}
@@ -272,8 +274,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			$this->response->setOutput( json_encode( $results ) );
 		}
 	}
-
-	// private function getExtensionsBy
 
 	/**
 	 * enter purchased code
@@ -710,7 +710,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						if ( $status ) {
 							$response['success'] = $this->language->get( 'entry_exporting_theme_config' );
 						} else {
-							$response['error'] = $this->language->get( 'error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'</strong>';
+							$response['error'] = $this->language->get( 'error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'/sample/profiles</strong>';
 						}
 						break;
 
@@ -791,7 +791,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						$response = array(
 								'status'	=> true,
 								'table'		=> $this->sampleTable(),
-								'text'		=> $this->language->get( 'entry_export_success_text' )
+								'success'	=> $this->language->get( 'entry_export_success_text' )
 							);
 						break;
 				}
@@ -805,7 +805,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				}
 			}
 
-			$this->response->addHeader('Content-Type: application/json');
+			$this->response->addHeader( 'Content-Type: application/json' );
 			$this->response->setOutput( json_encode( $response ) );
 		} else {
 			$this->toolsForm( 'export' );
@@ -823,9 +823,14 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 		$status = $sampleHelper->delete( $sample );
 		$response = array(
-				'status'	=> $status,
-				'text'		=> $status ? $this->language->get( 'entry_delete_text' ) . ' <strong>' . $sample . '</strong> ' . $this->language->get( 'entry_successfully_text' ) : $this->language->get( 'error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'/sample</strong>'
+				'status'	=> $status
 			);
+
+		if ( $status ) {
+			$response['success'] = $this->language->get( 'entry_delete_text' ) . ' <strong>' . $sample . '</strong> ' . $this->language->get( 'entry_successfully_text' );
+		} else {
+			$response['error'] = $this->language->get( 'error_permission' ) . ': <strong>' . DIR_CATALOG . 'view/theme/'.$theme.'/sample</strong>';
+		}
 
 		if ( $this->isAjax() ) {
 			$response['table'] = $this->sampleTable();
@@ -878,7 +883,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				header('Content-Type: application/zip');
 				header('Content-Disposition: attachment; filename="'. basename( $file ) .'"');
 				header('Content-Length: '.filesize( $file ) );
-				readfile( $file ); exit();
+				readfile( $file );
+				unlink( $file );
+				exit();
 			}
 		}
 	}

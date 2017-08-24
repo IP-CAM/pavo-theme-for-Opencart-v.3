@@ -2,7 +2,6 @@ const path = require( 'path' );
 const webpack = require( 'webpack' );
 const glob = require( 'glob' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
-const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 
 const sasses = {};
 var files = [];
@@ -48,7 +47,7 @@ module.exports = {
 			{
 				test: /\.css$/,
 				exclude: /node_modules/,
-				loader: [ 'style-loader', 'css-loader?minimize=true' ]
+				loader: [ 'style-loader', 'css-loader' ]
 			},
 			{
 				test: /\.scss$/,
@@ -57,9 +56,9 @@ module.exports = {
 			},
 			{
 				// image extensions, fonts extensions
-				test: /\.(jpg|jpeg|png|ttf|woff|woff2|eot|svg|)$/,
+				test: /\.(png|jpg|jpeg|ttf|woff|woff2|eot|svg|)$/,
 				exclude: /node_modules/,
-				loader: 'url-loader'
+				loader: [ 'url-loader', 'file-loader?emitFile=false' ]
 			}
 		]
 	},
@@ -83,18 +82,5 @@ module.exports = {
 		    filename: "[name].min.css",
 		    disable: process.env.NODE_ENV === 'development'
 		})
-		,
-		// minify style files
-		new OptimizeCssAssetsPlugin({
-	      	cssProcessorOptions: {
-	      		discardComments: {
-	      			removeAll: true
-	      		},
-	      		map: {
-      				inline: false
-    			}
-	      	},
-	      	canPrint: true
-	    })
 	]
 }
