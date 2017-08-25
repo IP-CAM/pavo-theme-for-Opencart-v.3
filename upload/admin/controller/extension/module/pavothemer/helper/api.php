@@ -33,14 +33,24 @@ class PavothemerApiHelper {
 				'body'			=> array(),
 				'timeout'		=> 30,
 				'user-agent'	=> '',
-				'httpversion'	=> '1.0'
+				'httpversion'	=> '1.0',
+				'filename'		=> false
 			), $data );
+
+		$file_open = false;
+		if ( $data['filename'] ) {
+			$file_open = fopen( $data['filename'], 'w+' );
+		}
 
 		$curl = curl_init();
 		curl_setopt( $curl, CURLOPT_URL, $url );
 		curl_setopt( $curl, CURLOPT_POST, 1 );
 		curl_setopt( $curl, CURLOPT_TIMEOUT, $data['timeout'] );
 		curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $data['timeout'] );
+
+		if ( $data['filename'] ) {
+			
+		}
 
 		// this option is required
 		curl_setopt( $curl, CURLOPT_REFERER, HTTP_CATALOG );
@@ -75,6 +85,10 @@ class PavothemerApiHelper {
 		curl_setopt( $curl, CURLOPT_FOLLOWLOCATION, true );
 		curl_setopt( $curl, CURLOPT_RETURNTRANSFER, true );
 
+		if ( $file_open ) {
+			curl_setopt( $curl, CURLOPT_FILE, $file_open );
+		}
+
 		if ( $data['httpversion'] == '1.0' )
 			curl_setopt( $curl, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_0 );
 		else
@@ -85,6 +99,15 @@ class PavothemerApiHelper {
 		}
 
 		$output = curl_exec( $curl );
+
+		if ( $file_open ) {
+
+			if ( $output ) {
+				fwrite( $file_open, $output );
+			}
+			fclose( $file_open );
+		}
+
 		self::$error = curl_error( $curl );
 		self::$errno = curl_errno( $curl );
 

@@ -47,7 +47,7 @@ class PavoThemerSampleHelper {
 	 */
 	public function getProfile( $key = '' ) {
 		$file = $this->sampleDir . 'profiles/' . $key . '/profile.json';
-		return file_exists( $file ) ? json_decode( file_get_contents( $file ), true ) : array();
+		return $this->getJsonContent( $file );
 	}
 
 	/**
@@ -123,8 +123,7 @@ class PavoThemerSampleHelper {
 	public function write( $settings = array(), $profile = '', $type = '' ) {
 		if ( ! $profile ) return false;
 		$file = $this->sampleDir . 'profiles/' . $profile . '/profile.json';
-		$content = file_exists( $file ) ? file_get_contents( $file ) : array();
-		$content = $content ? json_decode( $content, true ) : array();
+		$content = $this->getJsonContent( $file );
 
 		$content[$type] = $settings;
 		if ( $fo = fopen( $file, 'w+' ) ) {
@@ -139,10 +138,7 @@ class PavoThemerSampleHelper {
 	 */
 	public function getTablesName() {
 		$file = $this->sampleDir . 'tables.json';
-		if ( file_exists( $file ) && is_readable( $file ) ) {
-			return json_decode( file_get_contents( $file ), true );
-		}
-		return array();
+		return $this->getJsonContent( $file );
 	}
 
 	/**
@@ -158,13 +154,65 @@ class PavoThemerSampleHelper {
 			$fopen = fopen( $dir . '/' . $file . '.php', 'w+' );
 			if ( $fopen && ! empty( $data[ $file ] ) ) {
 				$string = '<?php' . "\n";
-				foreach ( $data[ $file ] as $line ) {
-					$string .= '$query[\''.$file.'\'][] = "' . str_replace( '`"DB_PREFIX"', '`" . DB_PREFIX . "', $line ) . '";' . "\n";
+				foreach ( $data[ $file ] as $k => $line ) {
+					if ( $file === 'rows' ) {
+						$string .= '$query[\''.$file.'\'][\''.$k.'\'] = array();' . "\n";
+						foreach ( $line as $l ) {
+							$string .= '$query[\''.$file.'\'][\''.$k.'\'][] = "' . str_replace( '`"DB_PREFIX"', '`" . DB_PREFIX . "', $l ) . '";' . "\n";
+						}
+					} else {
+						$string .= '$query[\''.$file.'\'][] = "' . str_replace( '`"DB_PREFIX"', '`" . DB_PREFIX . "', $line ) . '";' . "\n";
+					}
 				}
 
 				fwrite( $fopen, $string );
 				fclose( $fopen );
 			}
+		}
+
+		return true;
+	}
+
+	/**
+	 * export images
+	 * export images to images.json
+	 */
+	public function exportImages( $images = array(), $profile = '' ) {
+		$file = $this->sampleDir . 'profiles/' . $profile . '/images.json';
+		$fopen = fopen( $file, 'w+' );
+		if ( $fopen ) {
+			fwrite( $fopen, json_encode( $images ) );
+			return fclose( $fopen );
+		}
+
+		return true;
+	}
+
+	/**
+	 * download images
+	 */
+	public function downloadImages( $profile = '' ) {
+		$file = $this->sampleDir . 'profiles/' . $profile . '/images.json';
+		$data = $this->getJsonContent( $file );
+		$url = ! empty( $data['url'] ) ? $data['url'] : false;
+		if ( ! $url ) return false;
+
+		$images = ! empty( $data['images'] ) ? $data['images'] : array();
+
+		if ( $images ) foreach ( $images as $image ) {
+			if ( ! $image ) continue;
+
+			$name = basename( $image );
+			$image_url = $url . 'image/' . $image;
+			$image_file = DIR_IMAGE . $image;
+			if ( file_exists( $image_file ) ) continue;
+
+			if ( ! class_exists( 'PavothemerApiHelper' ) )
+				require_once dirname( __FILE__ ) . '/api.php';
+
+			PavothemerApiHelper::get( $image_url, array(
+						'filename'			=> $image_file
+					) );
 		}
 
 		return true;
@@ -296,6 +344,16 @@ class PavoThemerSampleHelper {
 		}
 
 		return false;
+	}
+
+	/**
+	 * content json file
+	 */
+	public function getJsonContent( $file = '' ) {
+		if ( file_exists( $file ) ) {
+			return json_decode( file_get_contents( $file ), true );
+		}
+		return array();
 	}
 
 }

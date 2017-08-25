@@ -95,6 +95,42 @@ class ModelExtensionPavothemerSample extends Model {
 	}
 
 	/**
+	 * install sql
+	 */
+	public function installSQL( $query = array() ) {
+
+		if ( ! empty( $query['tables'] ) ) {
+			foreach ( $query['tables'] as $sql ) {
+				$this->db->query( $sql );
+			}
+		}
+
+		if ( ! empty( $query['rows'] ) ) {
+			foreach ( $query['rows'] as $table => $sql ) {
+				$csql = 'SELECT * FROM ' . DB_PREFIX . $table;
+				$q = $this->db->query( $csql );
+				if ( $q->row ) continue;
+				$this->load->model( 'localisation/language' );
+
+				// all languages
+				$languages = $this->model_localisation_language->getLanguages();
+				foreach ( $sql as $s ) {
+					if ( strpos( $s, 'LANGUAGE_ID_REPLACEMENT' ) ) {
+						foreach ( $languages as $language ) {
+							$s = str_replace( 'LANGUAGE_ID_REPLACEMENT', $language['language_id'], $s );
+						}
+					} else {
+						// execute query
+						$this->db->query( $s );
+					}
+				}
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * import layouts
 	 * #1 import modules to DB_PREFIX . 'module' table
 	 * #2 import layouts to DB_PREFIX . 'layout' table
@@ -247,36 +283,6 @@ class ModelExtensionPavothemerSample extends Model {
 	}
 
 	/**
-	 * install sql
-	 */
-	public function installSQL( $query = array() ) {
-
-		if ( ! empty( $query['tables'] ) ) {
-			foreach ( $query['tables'] as $sql ) {
-				$this->db->query( $sql );
-			}
-		}
-
-		if ( ! empty( $query['rows'] ) ) {
-			foreach ( $query['rows'] as $sql ) {
-				if ( strpos( $sql, 'LANGUAGE_ID_REPLACEMENT' ) ) {
-					$this->load->model( 'localisation/language' );
-
-					// all languages
-					$languages = $this->model_localisation_language->getLanguages();
-					foreach ( $languages as $language ) {
-						$sql = str_replace( 'LANGUAGE_ID_REPLACEMENT', $language['language_id'], $sql );
-					}
-				}
-
-				$this->db->query( $sql );
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * get theme settings for export
 	 */
 	public function getThemeSettings( $theme = '' ) {
@@ -332,7 +338,8 @@ class ModelExtensionPavothemerSample extends Model {
 	public function exportTables( $tables = array() ) {
 		$data = array(
 				'tables'	=> array(),
-				'rows'		=> array()
+				'rows'		=> array(),
+				'images'	=> array()
 			);
 		//var_dump($tables); die();
 		if ( $tables ) foreach ( $tables as $k => $table ) {
@@ -373,13 +380,22 @@ class ModelExtensionPavothemerSample extends Model {
 						$values = array_values( $row );
 						$values = array_map( array( $this->db, 'escape' ), $values );
 
+						# images storges in 'image' field
+						$image_key = array_search( 'image', $cols );
+						if ( $image_key !== false ) {
+							$data['images'][] = $values[$image_key];
+						}
+
 						// key
 						$key = array_search( 'language_id', $cols );
 						if ( $key !== false ) {
 							$values[$key] = 'LANGUAGE_ID_REPLACEMENT';
 						}
 
-						$data['rows'][] = "INSERT INTO `" . '"DB_PREFIX"' . $table_name . "` (`" . implode( "`, `", $cols ) . "`) VALUES ( '".implode( "', '", $values )."' )";
+						if ( ! isset( $data['rows'][$table_name] ) ) {
+							$data['rows'][$table_name] = array();
+						}
+						$data['rows'][$table_name][] = "INSERT INTO `" . '"DB_PREFIX"' . $table_name . "` (`" . implode( "`, `", $cols ) . "`) VALUES ( '".implode( "', '", $values )."' )";
 					}
 				}
 			}
