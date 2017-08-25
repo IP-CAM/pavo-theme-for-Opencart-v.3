@@ -441,7 +441,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			$module_names = array_keys( $modules_need_to_install );
 			if ( ! $preInstalled ) {
 				$module = current( $modules_need_to_install );
-				$next = $module_names[1];
+				$next = isset( $module_names[1] ) ? $module_names[1] : $next;
 			} else {
 				$i = $z = 0;
 				foreach ( $modules_need_to_install as $key => $value ) {
@@ -618,7 +618,8 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					break;
 
 				case 'import-sql':
-					$status = $this->model_extension_pavothemer_sample->installSql();
+					$query = $sampleHelper->getImportSQL( $data['folder'] );
+					$status = $this->model_extension_pavothemer_sample->installSQL( $query );
 					$response = array(
 							'status'	=> $status,
 							'next'		=> str_replace( '&amp;', '&', $this->url->link('extension/module/pavothemer/import', 'action=import-layout-settings&user_token=' . $this->session->data['user_token'], true ) ),
@@ -772,12 +773,15 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 						break;
 
 					case 'export-tables':
+
+						// tables need to export is defined in theme/sample/tables.json
 						$tables = $sampleHelper->getTablesName();
-						$sql = $this->model_extension_pavothemer_sample->exportTables( $tables );
-						$status = true;
+						$sql = $this->model_extension_pavothemer_sample->exportTables( $tables ); // , $data['folder']
+
+						$status = $sampleHelper->exportSQL( $sql, $data['folder'] );
 						$response = array(
-								'status'	=> true,
-								'data'		=> $sampleHelper->exportSql( $sql ),
+								'status'	=> $status,
+								'data'		=> $data,
 								'table'		=> $this->sampleTable()
 							);
 						if ( $status ) {

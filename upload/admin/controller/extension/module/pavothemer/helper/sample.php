@@ -138,18 +138,53 @@ class PavoThemerSampleHelper {
 	 * tables need to export
 	 */
 	public function getTablesName() {
-
+		$file = $this->sampleDir . 'tables.json';
+		if ( file_exists( $file ) && is_readable( $file ) ) {
+			return json_decode( file_get_contents( $file ), true );
+		}
 		return array();
 	}
 
 	/**
 	 * export sql file
 	 */
-	public function exportSql( $sqlString = '', $profile = '' ) {
+	public function exportSQL( $data = array(), $profile = '' ) {
 		if ( ! $profile ) return false;
-		$file = $this->sampleDir . 'profiles/' . $profile . '/' . $this->theme . '.sql';
+		// profile directory
+		$dir = $this->sampleDir . 'profiles/' . $profile;
+		$files = array( 'tables', 'rows' );
+		// each files insert data
+		foreach ( $files as $file ) {
+			$fopen = fopen( $dir . '/' . $file . '.php', 'w+' );
+			if ( $fopen && ! empty( $data[ $file ] ) ) {
+				$string = '<?php' . "\n";
+				foreach ( $data[ $file ] as $line ) {
+					$string .= '$query[\''.$file.'\'][] = "' . str_replace( '`"DB_PREFIX"', '`" . DB_PREFIX . "', $line ) . '";' . "\n";
+				}
+
+				fwrite( $fopen, $string );
+				fclose( $fopen );
+			}
+		}
 
 		return true;
+	}
+
+	/**
+	 * import sql query
+	 */
+	public function getImportSQL( $profile = '' ) {
+		$dir = $this->sampleDir . 'profiles/' . $profile;
+		$query = array( 'tables' => array(), 'rows' => array() );
+
+		foreach ( $query as $file => $data ) {
+			$file = $dir . '/' . $file . '.php';
+			if ( file_exists( $file ) ) {
+				require_once $file;
+			}
+		}
+
+		return $query;
 	}
 
 	/**
@@ -257,7 +292,7 @@ class PavoThemerSampleHelper {
 		    $zip->close();
 
 		    unlink( $file );
-		 	return $zipFile;   
+		 	return $zipFile;
 		}
 
 		return false;

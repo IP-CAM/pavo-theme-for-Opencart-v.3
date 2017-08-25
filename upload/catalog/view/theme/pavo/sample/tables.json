@@ -1,17 +1,19 @@
 [
 	{
-		"name" : "pavoblog_category"
+		"table" 	: "product",
+		"module" 	: "pavoblog"
 	},
 	{
-		"name" : "pavoblog_category_description"
+		"table" 	: "product_description",
+		"module" 	: "pavoblog"
 	},
 	{
-		"name" : "pavoblog_comment"
+		"table" 	: "product_attribute",
+		"module" 	: "pavoblog"
 	},
 	{
-		"name" : "pavoblog_post"
-	},
-	{
-		"name" : "pavoblog_post_description"
+		"table" 	: "product_discount",
+		"module" 	: "pavoblog"
 	}
+
 ]

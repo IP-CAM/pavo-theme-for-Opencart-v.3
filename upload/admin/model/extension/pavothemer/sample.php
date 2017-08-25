@@ -249,7 +249,29 @@ class ModelExtensionPavothemerSample extends Model {
 	/**
 	 * install sql
 	 */
-	public function installSql() {
+	public function installSQL( $query = array() ) {
+
+		if ( ! empty( $query['tables'] ) ) {
+			foreach ( $query['tables'] as $sql ) {
+				$this->db->query( $sql );
+			}
+		}
+
+		if ( ! empty( $query['rows'] ) ) {
+			foreach ( $query['rows'] as $sql ) {
+				if ( strpos( $sql, 'LANGUAGE_ID_REPLACEMENT' ) ) {
+					$this->load->model( 'localisation/language' );
+
+					// all languages
+					$languages = $this->model_localisation_language->getLanguages();
+					foreach ( $languages as $language ) {
+						$sql = str_replace( 'LANGUAGE_ID_REPLACEMENT', $language['language_id'], $sql );
+					}
+				}
+
+				$this->db->query( $sql );
+			}
+		}
 
 		return true;
 	}
@@ -304,15 +326,73 @@ class ModelExtensionPavothemerSample extends Model {
 		return $data;
 	}
 
-	public function exportTables() {
+	/**
+	 * export tables
+	 */
+	public function exportTables( $tables = array() ) {
+		$data = array(
+				'tables'	=> array(),
+				'rows'		=> array()
+			);
+		//var_dump($tables); die();
+		if ( $tables ) foreach ( $tables as $k => $table ) {
+			if ( isset( $table['table'] ) ) {
+				$table_name = str_replace( DB_PREFIX, '', $table['table'] );
 
+				// show create table query
+				$sql = 'SHOW CREATE TABLE  ' . DB_PREFIX . $table_name;
+				$query = $this->db->query( $sql );
+
+				// data results execute query
+				$row = $query->row;
+				if ( ! empty( $row['Create Table'] ) ) {
+
+					// create table query
+					$table_name = str_replace( DB_PREFIX, '', $table['table'] );
+					$data['tables'][ $table_name ] = str_replace( 'CREATE TABLE `' . DB_PREFIX . $table_name . '`', 'CREATE TABLE IF NOT EXISTS `' . '"DB_PREFIX"' . $table_name . '`', $row['Create Table'] );
+
+					// table columns
+					$sql = 'SHOW COLUMNS FROM ' . DB_PREFIX . $table_name . ' WHERE field="language_id"';
+					$query = $this->db->query( $sql );
+					$row = $query->row;
+
+					// row table query
+					$sql = 'SELECT * FROM ' . DB_PREFIX . $table_name;
+
+					// table has language id
+					if ( $row ) {
+						$sql .= ' WHERE language_id = ' . $this->config->get( 'config_language_id' );
+					}
+
+					// execute query
+					$query = $this->db->query( $sql );
+					// rows
+					$rows = $query->rows;
+					if ( $rows ) foreach ( $rows as $row ) {
+						$cols = array_keys( $row );
+						$values = array_values( $row );
+						$values = array_map( array( $this->db, 'escape' ), $values );
+
+						// key
+						$key = array_search( 'language_id', $cols );
+						if ( $key !== false ) {
+							$values[$key] = 'LANGUAGE_ID_REPLACEMENT';
+						}
+
+						$data['rows'][] = "INSERT INTO `" . '"DB_PREFIX"' . $table_name . "` (`" . implode( "`, `", $cols ) . "`) VALUES ( '".implode( "', '", $values )."' )";
+					}
+				}
+			}
+		}
+
+		return $data;
 	}
 
 	/**
 	 * get all extensions
 	 */
 	public function getExtensions() {
-		$sql = "SELECT * FROM " .DB_PREFIX . "extension";
+		$sql = "SELECT * FROM " . DB_PREFIX . "extension";
 		$query = $this->db->query( $sql );
 
 		return $query->rows;
@@ -333,13 +413,6 @@ class ModelExtensionPavothemerSample extends Model {
 		}
 
 		return $paids;
-	}
-
-	/**
-	 * get purchased codes
-	 */
-	public function getPurchasedCodes() {
-
 	}
 
 }
