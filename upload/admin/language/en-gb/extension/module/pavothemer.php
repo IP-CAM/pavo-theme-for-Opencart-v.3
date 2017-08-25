@@ -27,6 +27,8 @@ $_['text_error_api_request']	= 'Error';
 $_['entry_verified_text']		= 'Verified';
 $_['entry_unverified_text']		= 'UnVerified';
 $_['entry_installed_text']		= 'Installed';
+$_['entry_download_available_text'] = 'Download Available';
+$_['entry_themes_text']			= 'Themes';
 $_['entry_uninstalled_text']	= 'Uninstalled';
 $_['entry_no_extension_found']	= 'No extensions found.';
 
@@ -68,6 +70,7 @@ $_['entry_delete_text']				= 'Delete';
 $_['entry_empty_select']			= 'Please select export';
 $_['error_write_file'] 				= 'ERROR: can not backup store settings';
 $_['text_confirm_delete'] 			= 'Are you sure you want to delete the backup?';
+$_['text_confirm_import'] 			= 'Are you sure you want to import again? Please backup or export before import.';
 $_['entry_import_zip_file'] 		= 'Upload export zip file download from Export History';
 
 // Tab
