@@ -414,21 +414,4 @@ class ModelExtensionPavothemerSample extends Model {
 		return $query->rows;
 	}
 
-	/**
-	 * get pavo extensions paid
-	 */
-	public function getExtensionsVerified() {
-		$extensions = $this->getExtensions();
-		$paids = array();
-		foreach ( $extensions as $extension ) {
-			if ( ! isset( $extension['code'] ) ) continue;
-			$purchased_code = $this->config->get( 'pavothemer_extension_verified_' . $extension['code'] );
-			if ( $purchased_code ) {
-				$paids[] = $extension;
-			}
-		}
-
-		return $paids;
-	}
-
 }

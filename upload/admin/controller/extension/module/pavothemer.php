@@ -178,13 +178,17 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 	public function apiExtensions() {
 		if ( $this->isAjax() ) {
 			$this->load->language( 'extension/module/pavothemer' );
+			// extensions
+			$this->load->model( 'setting/extension' );
+			$this->load->model( 'extension/pavothemer/sample' );
+			// all modules
+			$allExtensionsInstalled = $this->model_extension_pavothemer_sample->getExtensions();
 
 			// type is module or theme
-			$type = ! empty( $this->request->request['type'] ) ? $this->request->request['type'] : 'themes';
-			// license free or purchased
-			$license = ! empty( $this->request->request['license'] ) ? $this->request->request['license'] : '';
+			$apiType = ! empty( $this->request->request['type'] ) ? $this->request->request['type'] : 'themes';
 
-			$cache_key = 'pavothemer_extensions_api' .( $type ? '_' . $type : ''  ).( $license ?  '_' . $license : '' );
+			$cache_key = 'pavothemer_extensions_api' . $apiType;
+			$purchased_codes = $this->config->get( 'pavothemer_purchased_codes' );
 			// get cached before
 			$this->cache->delete( $cache_key );
 			$extensions = $this->cache->get( $cache_key );
@@ -196,8 +200,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			require_once dirname( __FILE__ ) . '/pavothemer/helper/api.php';
 			if ( ! $extensions ) {
 
-				switch ( $type ) {
+				switch ( $apiType ) {
 					case 'theme':
+					case 'installed':
 							# code...
 							// make request
 							$res = PavothemerApiHelper::post( PAVOTHEMER_API, array(
@@ -216,7 +221,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					case 'available':
 							# code...
 							// download avaiable
-							$purchased_codes = $this->config->get( 'pavothemer_purchased_codes' );
 							// abx-chd-sdk-xyz-012e
 							// var_dump($purchased_codes); die();
 							$purchased_codes = $purchased_codes ? $purchased_codes : array();
@@ -235,10 +239,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 						break;
 
-					case 'installed':
-							# code...
-						break;
-
 					default:
 						# code...
 						break;
@@ -254,23 +254,26 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 				$data = array();
 
 				if ( $extensions ) {
-					// extensions
-					$this->load->model( 'setting/extension' );
-					$this->load->model( 'extension/pavothemer/sample' );
 
-					// all modules
-					$allExtensions = $this->model_extension_pavothemer_sample->getExtensions();
 					foreach ( $extensions as $k => $extension ) {
 						$type = isset( $extension['type'] ) ? $extension['type'] : 'module';
 						$code = isset( $extension['code'] ) ? $extension['code'] : '';
 						if ( ! $code ) continue;
 						$installed_extensions = $this->model_setting_extension->getInstalled( $type );
 						$extension['installed'] = in_array( $code, $installed_extensions );
+						$extension['verified'] = in_array( $code, $purchased_codes );
+						$extension['free'] = ( isset( $extension['price'] ) && $extension['price'] == 0 );
 
-						// $extension['verified'] = $this->config->get( 'pavothemer_extension_verified_' . $code ) ? true : false;
-						$extension['free'] = $extension['price'] == 0;
-
-						$data[] = $extension;
+						// get installed extensions
+						if ( $apiType == 'installed' ) {
+							foreach ( $allExtensionsInstalled as $ex ) {
+								if ( ! empty( $ex['code'] ) && $ex['code'] === $code ) {
+									$data[] = $extension;
+								}
+							}
+						} else {
+							$data[] = $extension;
+						}
 					}
 				}
 				$extensions = $data;
