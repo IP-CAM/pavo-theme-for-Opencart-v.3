@@ -9,9 +9,10 @@ $_['theme_management_notices_text'] = 'This section just useful for Pavotheme. P
 $_['menu_settings_text'] 	= 'Settings';
 $_['menu_customize_text'] 	= 'Customize';
 $_['menu_tool_text'] 		= 'Tools';
-$_['menu_management_text'] 		= 'Management';
+$_['menu_management_text'] 	= 'Management';
 $_['menu_import_text'] 		= 'Import';
 $_['menu_export_text'] 		= 'Export';
+$_['menu_builder_text']		= 'Home Builder';
 
 // Text
 $_['text_back'] 				= 'Back';

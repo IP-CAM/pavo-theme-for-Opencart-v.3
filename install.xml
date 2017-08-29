@@ -50,6 +50,15 @@
                     );
                 }
 
+                // view homebuilder
+                if ( $this->user->hasPermission( 'access', 'extension/module/pavobuilder' ) || $this->user->hasPermission( 'access', 'extension/module/pavobuilder' ) ) {
+                    $settings[] = array(
+                        'name'     => $this->language->get('menu_builder_text'),
+                        'href'     => $this->url->link('extension/module/pavobuilder', 'user_token=' . $this->session->data['user_token'], true),
+                        'children' => array()
+                    );
+                }
+
                 if ( $settings ) {
                     $data['menus'][] = array(
                         'id'       => 'pavothemer',

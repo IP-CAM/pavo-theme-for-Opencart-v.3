@@ -46,11 +46,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 			'href' => $this->url->link( 'common/dashboard', 'user_token=' . $this->session->data['user_token'], true )
 		);
 		$this->data['breadcrumbs'][] = array(
-       		'text'      => $this->language->get( 'text_extension' ),
-			'href'      => $this->url->link( 'marketplace/extension', 'user_token=' . $this->session->data['user_token'].'&type=module', 'SSL' ),
-      		'separator' => ' :: '
-   		);
-		$this->data['breadcrumbs'][] = array(
 			'text' => $this->language->get('heading_title'),
 			'href' => $this->url->link('common/dashboard', 'user_token=' . $this->session->data['user_token'], true)
 		);
@@ -58,7 +53,6 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// setting tabs
 		$this->data['settings'] = PavoThemerSettingHelper::instance( $theme )->getSettings();
 		$this->data['current_tab'] = isset( $this->request->get['current_tab'] ) ? $this->request->get['current_tab'] : current( array_keys( $this->data['settings'] ) );
-
 
 		$tab = isset( $this->request->get['tab'] ) ? $this->request->get['tab'] : '';
 		// setting tabs
@@ -75,7 +69,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 				// css file
 				if ( isset( $this->request->post['pavothemer_custom_css'] ) ) {
-					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize.css';
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/dist/customize.css';
 					$write = $themeHelper->writeFile( $file, $this->request->post['pavothemer_custom_css'] );
 					if ( ! $write ) {
 						$this->addMessage( $this->language->get( 'error_permission_in_directory' ) . ' <strong>' . dirname( $file ) . '</strong>' );
@@ -1224,6 +1218,9 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// access - modify pavothemer sampledata
 		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavothemer/management' );
 		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/management' );
+		// builder
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'access', 'extension/module/pavobuilder' );
+		$this->model_user_user_group->addPermission( $this->user->getId(), 'modify', 'extension/module/pavobuilder' );
 		// END ADD USER PERMISSION
 
 		$settingFields = PavoThemerSettingHelper::instance( $this->config->get('config_theme') )->getSettings();
@@ -1263,6 +1260,12 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 		// access - modify pavothemer sampledata
 		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/tools' );
 		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/tools' );
+		// access - modify pavothemer management
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavothemer/management' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavothemer/management' );
+		// builder
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'access', 'extension/module/pavobuilder' );
+		$this->model_user_user_group->removePermission( $this->user->getId(), 'modify', 'extension/module/pavobuilder' );
 		// END REMOVE USER PERMISSION
 	}
 

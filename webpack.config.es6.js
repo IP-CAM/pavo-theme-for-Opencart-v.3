@@ -4,7 +4,9 @@ const glob = require( 'glob' );
 const ExtractTextPlugin = require( 'extract-text-webpack-plugin' );
 
 const jsess = {};
-var files = glob.sync( 'upload/*/view/javascript/pavothemer/es6/*.es6.js' );
+var themerFiles = glob.sync( 'upload/*/view/javascript/pavothemer/es6/*.es6.js' );
+var builderFiles = glob.sync( 'upload/*/view/javascript/pavobuilder/es6/*.es6.js' );
+var files = themerFiles.concat( builderFiles );
 for ( let src of files ) {
 	var name = path.dirname( src ) + '/' + path.basename( src, '.es6.js' );
 	name = name.replace( path.join( __dirname, 'upload' ), '' ).replace( 'es6/', '' );

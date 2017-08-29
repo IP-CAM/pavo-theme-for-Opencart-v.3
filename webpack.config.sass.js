@@ -8,6 +8,8 @@ var files = [];
 var adminFiles = glob.sync( 'upload/*/view/stylesheet/pavothemer/*.scss' );
 var catalogFiles = glob.sync( 'upload/*/view/theme/*/sass/stylesheet*.scss' );
 files = adminFiles.concat( catalogFiles );
+var builderFiles = glob.sync( 'upload/*/view/stylesheet/pavobuilder/*.scss' );
+files = files.concat( builderFiles );
 var skinsFiles = glob.sync( 'upload/*/view/theme/*/sass/skins/*.scss' );
 
 files = files.concat( skinsFiles );
@@ -18,8 +20,8 @@ for ( let src of files ) {
 	// catalog
 	if ( folder_name === 'sass' ) {
 		name = src.replace( 'sass/' + path.basename( src ), 'stylesheet/' + path.basename( src, '.scss' ) );
-	} else if ( folder_name === 'pavothemer' ) {
-		name = src.replace( '.scss', '' );
+	} else if ( folder_name === 'pavothemer' || folder_name === 'pavobuilder' ) {
+		name = path.dirname( src ) + '/dist/' + path.basename( src, '.scss' );
 	} else if ( folder_name === 'skins' ) {
 		name = src.replace( 'sass/skins/' + path.basename( src ), 'stylesheet/skins/' + path.basename( src, '.scss' ) );
 	}
@@ -62,7 +64,7 @@ module.exports = {
 			}
 		]
 	},
-	// devtool: 'inline-source-map',
+	devtool: 'inline-source-map',
  	stats: {
      	colors: true
  	},

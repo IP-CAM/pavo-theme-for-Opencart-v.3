@@ -58,14 +58,15 @@ class PavoThemerHelper {
 	public function getCustomizes() {
 		// setting files
 		$files = $this->getCustomizeFiles( $this->theme );
+		$settingHelder = PavoThemerSettingHelper::instance( $this->theme );
 		if ( $files ) {
 			foreach ( $files as $file ) {
 				$fileInfo = pathinfo( $file );
-				$this->$_customizes[ $fileInfo['filename'] ] = PavoThemerSettingHelper::getSettingFile( $file );
+				$this->_customizes[ $fileInfo['filename'] ] = $settingHelder->getSettingFile( $file );
 			}
 		}
 
-		return $this->$_customizes;
+		return $this->_customizes;
 	}
 
 	/**

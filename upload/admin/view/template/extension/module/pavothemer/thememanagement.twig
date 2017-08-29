@@ -46,7 +46,7 @@
             {% else %}
               <div class="input-group">
                 <input class="form-control" name="purchased-code" placeholder="{{ text_enter_purchase_code }}" />
-                <a class="input-group-addon" href="{{ enter_purchased_code_url }}" id="pavothemer-puchased-code">{{ text_enter }}</a>
+                <a class="input-group-addon" href="{{ enter_purchased_code_url }}" id="pavothemer-puchased-code"><i class="fa fa-filter"></i> {{ text_enter }}</a>
               </div>
             {% endif %}
           </div>
@@ -78,11 +78,11 @@
       $( document ).on( 'click', '#pavothemer-puchased-code', function(e){
         e.preventDefault();
         var button = $( this );
-
+        var url = button.attr('href');
         if ( pruchased_ajax ) {
           pruchased_ajax.abort();
           pruchased_ajax = false;
-          button.find('.fa').remove();
+          button.find('.fa').removeClass( 'fa-circle-o-notch' ).removeClass( 'fa-spin' ).addClass( 'fa-filter' );
         }
 
         pruchased_ajax = $.ajax({
@@ -92,11 +92,12 @@
             purchased_code: $('input[name="purchased-code"]').val()
           },
           beforeSend: function(){
-            button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i> ' );
+            // button.prepend( '<i class="fa fa-circle-o-notch fa-spin"></i> ' );
+            button.find('.fa').removeClass( 'fa-filter' ).addClass( 'fa-circle-o-notch fa-spin' );
             $('#prucahsed-error-notice').remove();
           }
         }).always(function(){
-          button.find('.fa').remove();
+          button.find('.fa').removeClass( 'fa-circle-o-notch' ).removeClass( 'fa-spin' ).addClass( 'fa-filter' );
         }).done(function( res ){
           if ( typeof res.status == 'undefined' ) return;
 
