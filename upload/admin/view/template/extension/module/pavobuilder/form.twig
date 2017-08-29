@@ -57,13 +57,48 @@
 
 		            	<div id="pavobuilder-container">
 			            	<div id="pavobuilder-content">
-			            		<div class="pavo-row pavo-row-container" data-element="row">
-			            			<div class="pavo-controls row-controls"></div>
-			            			<div class="pavo-element-wrapper"></div>
+			            		<div class="pv-row-container" data-element="pv_row">
+			            			<div class="pv-controls row-controls">
+			            				<div class="left-controls">
+			            					<a href="#" class="pv-edit" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+			            					<a href="#" class="pv-clone" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
+			            					<a href="#" class="pv-delete" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+			            				</div>
+			            				<div class="right-controls">
+			            					<a href="#" class="pv-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
+			            				</div>
+			            			</div>
+			            			<div class="pv-element-wrapper">
+			            				<div class="pv-row pav-row-container">
+			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
+			            						<div class="pv-controls row-controls"></div>
+			            						<div class="pv-element-wrapper">
+			            							<div class="pv-column-container">
+			            								<div class="pv_text pv-element-content" data-element="pv_text">
+			            									<div class="pv-controls row-controls"></div>
+			            									<div class="pv-element-wrapper">
+			            										<p>
+			            											I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
+			            										</p>
+			            									</div>
+			            								</div>
+			            							</div>
+			            						</div>
+			            					</div>
+			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
+			            						<div class="pv-controls row-controls"></div>
+			            						<div class="pv-element-wrapper">
+			            							<div class="pv-column-container empty-element"></div>
+			            						</div>
+			            					</div>
+			            				</div>
+			            			</div>
 			            		</div>
 			            	</div>
 			            	<div id="pavobuilder-footer">
-			            		<a href="#" id="pavobuilder-add-element" class="">{{ entry_add_element_text }}</a>
+			            		<div class="pv-buttons">
+			            			<a href="#" id="pavobuilder-add-element" class="pv-add-element pv-button pv-button-info"><i class="fa fa-plus" aria-hidden="true"></i> {{ entry_add_element_text }}</a>
+			            		</div>
 			            	</div>
 		            	</div>
 		          	</form>

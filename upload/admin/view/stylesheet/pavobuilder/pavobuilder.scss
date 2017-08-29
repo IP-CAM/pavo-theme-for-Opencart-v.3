@@ -1,9 +1,15 @@
 // variables
 @import "sass/variables.scss";
+
 // bootstrap core
 @import "sass/bootstrap.scss";
+
 // layouts
+@import "sass/grid-framework.scss";
 @import "sass/grid.scss";
+
+// pagebuider
+@import "sass/builder";
 
 // elements
 @import "sass/elements.scss";

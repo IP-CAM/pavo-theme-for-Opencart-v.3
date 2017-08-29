@@ -19,3 +19,11 @@ $_['entry_layout_editor'] 	= 'Layout Editor';
 
 // homebuilder
 $_['entry_add_element_text']	= 'Add Element';
+$_['entry_edit_row_text']		= 'Edit row';
+$_['entry_delete_row_text']		= 'Delete row';
+$_['entry_clone_row_text']		= 'Clone row';
+$_['entry_reorder_text']		= 'Reorder';
+
+$_['entry_edit_column_text']	= 'Edit column';
+$_['entry_delete_column_text']	= 'Delete column';
+$_['entry_clone_column_text']	= 'Clone column';

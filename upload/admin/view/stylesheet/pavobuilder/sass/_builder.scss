@@ -1,0 +1,100 @@
+// START BUTTONS
+.pv-transition{
+	-webkit-transition: all 0.5s;
+	-o-transition: all 0.5s;
+	-moz-transition: all 0.5s;
+	-ms-transition: all 0.5s;
+	transition: all 0.5s;
+}
+.pv-button{
+	@extend .pv-transition;
+	background-color: #7bcd2d;
+	color: $pv_main_color;
+	font-size: $pv_main_fontsize;
+
+	border: 1px solid transparent;
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none !important;
+    border-radius: 3px;
+
+    i{
+    	padding: 0 10px 0 0;
+    }
+}
+
+.pv-button-info{
+	@extend .pv-button;
+	background-color: #00aeee;
+
+	&:hover{
+		background-color: #069ad0;
+	}
+}
+
+.pv-button-success{
+	@extend .pv-button;
+	background-color: $pv_success_bg;
+
+	&:hover{
+		background-color: $pv_success_bg_hover;
+	}
+}
+
+.pv-button-warning{
+	@extend .pv-button;
+	background-color: $pv_warning_bg;
+
+	&:hover{
+		background-color: $pv_warning_bg_hover;
+	}
+}
+// END BUTTONS
+
+// ROWS && COLUMNS
+.pv-row-container{
+	> .pv-element-wrapper{
+		background-color: $pv_row_background;
+	    padding: 20px 15px;
+	    border: $pv_dashed_border;
+	    margin-bottom: 20px;
+	}
+}
+.pv-column-container{
+	background-color: $pv_colum_empty_background;
+	border: $pv_column_border;
+	height: auto;
+	padding: 20px 10px;
+	&.empty-element{
+		min-height: 25px;
+		padding: 30px 0;
+	}
+
+	.pv-element-content{
+		box-shadow: 1px 1px 1px rgba(0, 0, 0, .08);
+	}
+	.pv-element-wrapper{
+		padding: 5px 10px;
+		background-color: $pv_ele_background;
+	}
+}
+
+// Footer
+#pavobuilder-footer{
+	.pv-buttons{
+		padding: 30px 20px;
+		font-size: $pv_lg_fontsize;
+		text-align: center;
+		border: $pv_dashed_border;
+
+		&:hover,
+		&.drag-over{
+			border: $pv_dashed_border_hover;
+		}
+
+		.pv-button{
+			padding: 10px 20px;
+			color: $pv_white_color;
+		}
+	}
+}
