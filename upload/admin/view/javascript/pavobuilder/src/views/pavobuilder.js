@@ -4,22 +4,26 @@ import Rows from './rows';
 
 export default class Builder extends Backbone.View {
 
-	initialize( data = {} ) {
+	constructor( data = {} ) {
+		super();
 		// set data is collection of row, it will pass wo Rows View
 		this.data = data;
-		this.$el = $( '#pavobuilder-container' );
+		this.el = '#pavobuilder-container';
+		this.$el = $( this.el );
 
+		this.setElement( $( '#pavobuilder-container' ) );
 		// events
 		this.events = {
 			'click #pavobuilder-add-element' : 'addRow'
 		}
+		// add event
+		this.delegateEvents();
 	}
 
 	render() {
 		// set rows data
 		this.rows = new Rows( this.data );
-		console.log( this.rows );
-		// this.$el.html( this.rows.render().el );
+		this.$el.html( this.rows.render() );
 
 		return this;
 	}
@@ -27,6 +31,8 @@ export default class Builder extends Backbone.View {
 	addRow( e ) {
 		e.preventDefault();
 		console.log( 'add row handler' );
+
+		return false;
 	}
 
 }
