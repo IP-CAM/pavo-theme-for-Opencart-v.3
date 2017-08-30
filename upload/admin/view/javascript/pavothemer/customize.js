@@ -1,4 +1,4 @@
-import ThemeCustomize from './theme-customize';
+import ThemeCustomize from './src/theme-customize';
 const $ = jQuery;
 
 const Pavo = {
