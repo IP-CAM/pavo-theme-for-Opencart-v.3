@@ -1,5 +1,4 @@
 import ThemeCustomize from './src/theme-customize';
-const $ = jQuery;
 
 const Pavo = {
 	customize ( type = '', callback = null ) {

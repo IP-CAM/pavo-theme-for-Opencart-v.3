@@ -79,6 +79,8 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		// layout data
 		$this->data['layout'] = $id ? $this->model_setting_module->getModule( $id ) : array();
 
+		// addScripts
+		$this->document->addScript( 'view/javascript/pavobuilder/dist/pavobuilder.min.js' );
 		// addStyles
 		$this->document->addStyle( 'view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
 		// set page document title

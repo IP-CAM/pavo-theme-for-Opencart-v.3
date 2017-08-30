@@ -27,3 +27,7 @@ $_['entry_reorder_text']		= 'Reorder';
 $_['entry_edit_column_text']	= 'Edit column';
 $_['entry_delete_column_text']	= 'Delete column';
 $_['entry_clone_column_text']	= 'Clone column';
+
+$_['entry_edit_element_text']	= 'Edit element';
+$_['entry_delete_element_text']	= 'Delete element';
+$_['entry_clone_element_text']	= 'Clone element';

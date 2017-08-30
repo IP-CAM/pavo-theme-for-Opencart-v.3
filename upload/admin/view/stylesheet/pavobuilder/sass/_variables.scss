@@ -1,8 +1,8 @@
-$pv_row_background		: #fff;
+$pv_row_background		: #fff;//rgba(171,214,224,.56);
 $pv_ele_background		: #fff;
 $pv_colum_background	: #fff;
-$pv_colum_empty_background : #f5f5f5;
-$pv_column_border		: solid 1px #e9e7e7;
+$pv_colum_empty_background : rgba(158, 158, 158, 0.13);
+$pv_column_border		: 1px solid 1px #e9e7e7;
 $pv_main_color			: #605f5f;
 $pv_white_color			: #fff;
 $pv_lg_fontsize			: 24px;
@@ -18,3 +18,7 @@ $pv_info_bg				: #00aeee;
 $pv_info_bg_hover		: #069ad0;
 $pv_warning_bg			: #feb710;
 $pv_warning_bg_hover	: #eaaf25;
+
+// icons
+$icon_background 		: $pv_row_background;
+$icon_background_hover	: $pv_info_bg_hover;

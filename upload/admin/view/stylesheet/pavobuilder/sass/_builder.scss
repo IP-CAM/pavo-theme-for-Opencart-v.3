@@ -25,10 +25,10 @@
 
 .pv-button-info{
 	@extend .pv-button;
-	background-color: #00aeee;
+	background-color: $pv_info_bg;
 
 	&:hover{
-		background-color: #069ad0;
+		background-color: $pv_info_bg_hover;
 	}
 }
 
@@ -55,9 +55,132 @@
 .pv-row-container{
 	> .pv-element-wrapper{
 		background-color: $pv_row_background;
+		border: $pv_column_border;
 	    padding: 20px 15px;
-	    border: $pv_dashed_border;
 	    margin-bottom: 20px;
+	}
+
+	.pv-controls{
+		overflow: hidden;
+
+		a{
+		    padding: 8px;
+		    font-size: 14px;
+		    display: inline-block;
+		    line-height: 1;
+		    color: hsla(0, 7%, 24%, 0.84);
+		    background-color: $icon_background;
+		    border: $pv_column_border;
+		    border-bottom: none;
+		    transition: all 0.3s;
+		    -moz-transition: all 0.3s;
+		    -webkit-transition: all 0.3s;
+		    -ms-transition: all 0.3s;
+		    -o-transition: all 0.3s;
+		    &:hover{
+		    	background-color: $icon_background_hover;
+		    	color: $pv_white_color;
+		    	cursor: pointer;
+		    }
+
+		    &.pv-reorder{
+		    	&:hover{
+		    		cursor: move;
+		    	}
+		    }
+
+		    &.pv-clone,
+		    &.pv-add{
+		    	&:hover{
+		    		cursor: copy;
+		    	}
+		    }
+
+		    &.pv-delete{
+		    	&:hover{
+		    		cursor: unset;
+		    	}
+		    }
+		}
+	}
+
+	.pv-column{
+		>.pv-controls{
+		    position: absolute;
+		    top: -15px;
+		    background-color: transparent;
+		    right: 0;
+		    left: 0;
+		    text-align: center;
+
+		    a{
+		    	background-color: $pv_info_bg;
+		    	color: $pv_white_color;
+		    	border-radius: 50%;
+		    	font-size: 10px;
+		    	&:hover{
+		    		background-color: $pv_info_bg_hover;
+		    	}
+		    }
+		}
+	}
+
+	.pv-element-content{
+		position: relative;
+		> .pv-controls{
+			position: absolute;
+			opacity: 0;
+		    z-index: 1004;
+		    top: 50%;
+		    left: 50%;
+		    background-color: $pv_info_bg;
+		    border: 0px solid transparent;
+		    -webkit-transform: translate(-50%, -50%);
+		    -ms-transform: translate(-50%, -50%);
+		    -o-transform: translate(-50%, -50%);
+		    transform: translate(-50%, -50%);
+		    border-top-right-radius: 3px;
+		    border-top-left-radius: 3px;
+		    border-bottom-right-radius: 3px;
+		    border-bottom-left-radius: 3px;
+
+		    a{
+		    	color: $pv_white_color;
+		    	background-color: $pv_info_bg;
+		    	border: none;
+		    	margin: 0;
+
+			    &:hover{
+			    	background-color: $pv_info_bg_hover;
+			    }
+
+			    &.pv-delete{
+			    	background-color: $pv_warning_bg;
+			    	&:hover{
+			    		background-color: $pv_warning_bg_hover;
+			    	}
+			    }
+		    }
+		}
+
+		&:hover{
+			.pv-controls{
+				opacity: 1;
+			}
+		}
+
+		&:hover{
+			&:before{
+			    content: '';
+			    position: absolute;
+			    right: 0;
+			    left: 0;
+			    bottom: 0;
+			    top: 0;
+			    background-color: rgba(171, 214, 224, 0.56);
+			    opacity: 0.8;
+			}
+		}
 	}
 }
 .pv-column-container{
@@ -76,6 +199,9 @@
 	.pv-element-wrapper{
 		padding: 5px 10px;
 		background-color: $pv_ele_background;
+		p{
+			font-size: 10px;
+		}
 	}
 }
 

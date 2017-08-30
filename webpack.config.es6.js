@@ -44,18 +44,28 @@ module.exports = {
 			}
 		]
 	},
-	devtool: 'source-map',
+	devtool: 'inline-source-map',
 	plugins: [
 		new webpack.DefinePlugin({
-	      'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
+	      	'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
 	    }),
 	    new webpack.optimize.OccurrenceOrderPlugin(),
+	    // disable ProvidePlugin because jquery is already in opencart website
+	 	// new webpack.ProvidePlugin({
+		//     $: "jquery",
+		//     jQuery: "jquery",
+		//     "window.jQuery": "jquery",
+		//     jquery: "jquery"
+		// }),
 	    new webpack.optimize.UglifyJsPlugin({
 	      	compress: { warnings: false },
 	      	mangle: true,
-	      	sourcemap: false,
+	      	sourcemap: true,
 	      	beautify: false,
 	      	dead_code: true
 	    })
-	]
+	],
+	resolve: {
+		extensions: [ '.js' ]
+	}
 }
