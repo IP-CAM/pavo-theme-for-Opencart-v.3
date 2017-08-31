@@ -29,6 +29,7 @@ export default class Builder extends Backbone.View {
 			rows: this.rowsCollection
 		} );
 		this.rows.render().el;
+
 		return this;
 	}
 

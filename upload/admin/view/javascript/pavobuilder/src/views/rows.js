@@ -11,7 +11,7 @@ export default class Rows extends Backbone.View {
 
 		this.$el = $( '#pavobuilder-content' );
 
-		// listen collection status
+		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
 		this.listenTo( this.rows, 'change', this.render );
 		this.events = {
@@ -31,6 +31,11 @@ export default class Rows extends Backbone.View {
 				this.addRow( data );
 			} );
 		}
+
+		// set sortable
+		this.$el.sortable({
+			placeholder: 'pavobuilder-sortable-placeholder'
+		});
 
 		return this;
 	}

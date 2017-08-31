@@ -5,5 +5,12 @@ export default class RowModel extends Backbone.Model {
 	constructor( data = {} ) {
 		super();
 	}
+
+	defaults() {
+		return {
+			settings: {},
+			columns: {}
+		}
+	}
 	
 }

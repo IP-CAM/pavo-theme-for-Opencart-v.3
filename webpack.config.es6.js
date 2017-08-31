@@ -28,23 +28,10 @@ module.exports = {
 				query: {
 					presets: [ 'es2015', 'stage-0' ]
 				}
-			},
-			{
-				test: /\.css$/,
-				loader: [ 'style-loader', 'css-loader' ]
-			},
-			{
-				test: /\.scss$/,
-				exclude: /node_modules/,
-				loader: ExtractTextPlugin.extract([ 'css-loader', 'sass-loader' ])
-			},
-			{
-				test: /\.(jpg|jpeg|png)$/,
-				loader: 'url-loader'
 			}
 		]
 	},
-	// devtool: 'inline-source-map',
+	devtool: 'inline-source-map',
 	plugins: [
 		new webpack.DefinePlugin({
 	      	'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )

@@ -5,12 +5,15 @@ import Column from './column';
 
 export default class Row extends Backbone.View {
 
+	/**
+	 * Constructor class
+	 */
 	constructor( row = { settings: {}, columns: {} } ) {
 		super();
 		// set backbone model
 		this.row = row;
 		// set columns is a collection
-		this.columnsCollection = new ColumsCollection( row.columns );
+		this.row.columns = new ColumsCollection( row.columns );
 
 		var template = _.template( $( '#pavobuilder-row-template' ).html(), { variable: 'data' } )( this.row );
 		this.setElement( template );
@@ -20,31 +23,43 @@ export default class Row extends Backbone.View {
 			'click .pv-edit-row'		: 'editRowHandler'
 		}
 
+		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
 
 		// add event
 		this.delegateEvents();
 	}
 
+	/**
+	 * Render html
+	 */
 	render() {
-		if ( this.columnsCollection.models.length > 0 ) {
-			_.map( this.columnsCollection.models, ( model ) => {
+		// each collection
+		if ( this.row.columns.models.length > 0 ) {
+			_.map( this.row.columns.models, ( model ) => {
 				// map column models add add it to Row View
 				this.addColumn( model );
 			} );
 		} else {
 			this.addColumn( -1, {} );
 		}
+
+		setTimeout( () => {
+			this.$el.removeClass( 'row-fade-in' );
+		}, 1000 );
 		return this;
 	}
 
-	// edit row handler
-	editRowHandler() {
-
+	/**
+	 * Edit row handler
+	 */
+	editRowHandler( e ) {
 		return false;
 	}
 
-	// delete row handler
+	/**
+	 * Delete row handler
+	 */
 	deleteRowHandler() {
 		this.row.destroy();
 		return false;
@@ -54,13 +69,19 @@ export default class Row extends Backbone.View {
 	 * Add Column
 	 */
 	addColumn( model = {} ) {
-		this.columnsCollection.add( model );
+		this.row.columns.add( model );
 	}
 
+	/**
+	 * Remove Column
+	 */
 	removeColumn( index = -1 ) {
 
 	}
 
+	/**
+	 * Update Column
+	 */
 	updateColumn( index = -1 ) {
 
 	}

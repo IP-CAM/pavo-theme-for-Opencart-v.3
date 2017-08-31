@@ -123,8 +123,14 @@
   	</div>
   	{# end pavo builder control #}
 
+  	<script type="text/html" id="pavobuilder-edit-row-template">
+  		<div class="pavobuilder-edit-row-form" data-element-type="<%= data.type %>">
+
+  		</div>
+  	</script>
+
   	<script type="text/html" id="pavobuilder-row-template">
-		<div class="pv-row-container" data-element="pv_row" data-cid="<%= data.cid %>">
+		<div class="pv-row-container row-fade-in" data-element="pv_row" data-cid="<%= data.cid %>">
 			<div class="pv-controls row-controls">
 				<div class="left-controls pull-left">
 					<a href="#" class="pv-edit pv-edit-row" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>

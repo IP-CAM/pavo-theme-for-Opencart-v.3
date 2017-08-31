@@ -81,8 +81,10 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		// addScripts
 		$this->document->addScript( 'view/javascript/pavobuilder/dist/pavobuilder.min.js' );
+		$this->document->addScript( 'view/javascript/jquery/jquery-ui/jquery-ui.min.js' );
 		// addStyles
 		$this->document->addStyle( 'view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
+		$this->document->addStyle( 'view/javascript/jquery/jquery-ui/jquery-ui.min.css' );
 		// set page document title
 		if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
 		$this->data['errors'] = $this->errors;
