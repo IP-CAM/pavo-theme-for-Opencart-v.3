@@ -57,63 +57,13 @@
 
 		            	<div id="pavobuilder-container">
 			            	<div id="pavobuilder-content">
-			            		<div class="pv-row-container" data-element="pv_row">
-			            			<div class="pv-controls row-controls">
-			            				<div class="left-controls pull-left">
-			            					<a href="#" class="pv-edit" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-			            					<a href="#" class="pv-clone" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
-			            					<a href="#" class="pv-delete" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
-			            				</div>
-			            				<div class="right-controls pull-right">
-			            					<a href="#" class="pv-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
-			            				</div>
-			            			</div>
-			            			<div class="pv-element-wrapper">
-			            				<div class="pv-row pav-row-container">
-			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
-			            						<div class="pv-controls column-controls">
-					            					<a href="#" class="pv-add" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-			            							<a href="#" class="pv-edit" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					            					<a href="#" class="pv-delete" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
-			            						</div>
-			            						<div class="pv-element-wrapper">
-			            							<div class="pv-column-container">
-			            								<div class="pv_text pv-element-content" data-element="pv_text">
-			            									<div class="pv-controls element-controls">
-			            										<a href="#" class="pv-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
-			            										<a href="#" class="pv-edit" title="{{ entry_edit_element_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-								            					<a href="#" class="pv-clone" title="{{ entry_clone_element_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
-								            					<a href="#" class="pv-delete" title="{{ entry_delete_element_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
-			            									</div>
-			            									<div class="pv-element-wrapper">
-			            										<p>
-			            											I am text block. Click edit button to change this text. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.
-			            										</p>
-			            									</div>
-			            								</div>
-			            							</div>
-			            						</div>
-			            					</div>
-			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
-			            						<div class="pv-controls column-controls">
-					            					<a href="#" class="pv-add" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-			            							<a href="#" class="pv-edit" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					            					<a href="#" class="pv-delete" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
-			            						</div>
-			            						<div class="pv-element-wrapper">
-			            							<div class="pv-column-container empty-element"></div>
-			            						</div>
-			            					</div>
-			            				</div>
-			            			</div>
-			            		</div>
 
-			            		<div class="pv-row-container" data-element="pv_row">
+			            		{# <div class="pv-row-container" data-element="pv_row">
 			            			<div class="pv-controls row-controls">
 			            				<div class="left-controls pull-left">
-			            					<a href="#" class="pv-edit" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-			            					<a href="#" class="pv-clone" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
-			            					<a href="#" class="pv-delete" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+			            					<a href="#" class="pv-edit pv-edit-row" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+											<a href="#" class="pv-clone pv-clone-row" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
+											<a href="#" class="pv-delete pv-delete-row" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 			            				</div>
 			            				<div class="right-controls pull-right">
 			            					<a href="#" class="pv-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
@@ -123,9 +73,9 @@
 			            				<div class="pv-row pav-row-container">
 			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
 			            						<div class="pv-controls column-controls">
-					            					<a href="#" class="pv-add" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-			            							<a href="#" class="pv-edit" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					            					<a href="#" class="pv-delete" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+					            					<a href="#" class="pv-add add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+			            							<a href="#" class="pv-edit edit-element" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+					            					<a href="#" class="pv-delete delete-column" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 			            						</div>
 			            						<div class="pv-element-wrapper">
 			            							<div class="pv-column-container">
@@ -147,9 +97,9 @@
 			            					</div>
 			            					<div class="pv-column pv-col-sm-6" data-element="pv_column">
 			            						<div class="pv-controls column-controls">
-					            					<a href="#" class="pv-add" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-			            							<a href="#" class="pv-edit" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					            					<a href="#" class="pv-delete" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+					            					<a href="#" class="pv-add pv-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+													<a href="#" class="pv-edit pv-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+						        					<a href="#" class="pv-delete pv-delete-column" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 			            						</div>
 			            						<div class="pv-element-wrapper">
 			            							<div class="pv-column-container empty-element"></div>
@@ -157,7 +107,7 @@
 			            					</div>
 			            				</div>
 			            			</div>
-			            		</div>
+			            		</div> #}
 			            	</div>
 			            	<div id="pavobuilder-footer">
 			            		<div class="pv-buttons">
@@ -174,12 +124,12 @@
   	{# end pavo builder control #}
 
   	<script type="text/html" id="pavobuilder-row-template">
-		<div class="pv-row-container" data-element="pv_row">
+		<div class="pv-row-container" data-element="pv_row" data-cid="<%= data.cid %>">
 			<div class="pv-controls row-controls">
 				<div class="left-controls pull-left">
-					<a href="#" class="pv-edit" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-					<a href="#" class="pv-clone" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
-					<a href="#" class="pv-delete" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+					<a href="#" class="pv-edit pv-edit-row" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+					<a href="#" class="pv-clone pv-clone-row" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
+					<a href="#" class="pv-delete pv-delete-row" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 				</div>
 				<div class="right-controls pull-right">
 					<a href="#" class="pv-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
@@ -187,14 +137,14 @@
 			</div>
 			<div class="pv-element-wrapper">
 				<div class="pv-row pav-row-container">
-					<div class="pv-column pv-col-sm-6" data-element="pv_column">
+					<div class="pv-column pv-col-sm-12" data-element="pv_column">
 						<div class="pv-controls column-controls">
-        					<a href="#" class="pv-add" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
-							<a href="#" class="pv-edit" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-        					<a href="#" class="pv-delete" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+        					<a href="#" class="pv-add pv-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+							<a href="#" class="pv-edit pv-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+        					<a href="#" class="pv-delete pv-delete-column" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 						</div>
 						<div class="pv-element-wrapper">
-							<div class="pv-column-container"></div>
+							<div class="pv-column-container empty-element"><%= data.cid %></div>
 						</div>
 					</div>
 				</div>

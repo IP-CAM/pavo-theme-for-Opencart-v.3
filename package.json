@@ -26,7 +26,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "./node_modules/.bin/webpack --watch"
+    "dev": "./node_modules/.bin/webpack --watch",
+    "scripts": "./node_modules/.bin/webpack webpack.config.es6.js --watch"
   },
   "repository": {
     "type": "git",
