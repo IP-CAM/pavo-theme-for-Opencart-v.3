@@ -9,7 +9,8 @@ export default class RowModel extends Backbone.Model {
 	defaults() {
 		return {
 			settings: {},
-			columns: {}
+			columns: {},
+			editing: false
 		}
 	}
 	

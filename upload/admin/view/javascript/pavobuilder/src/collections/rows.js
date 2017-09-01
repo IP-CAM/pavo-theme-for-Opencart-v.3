@@ -8,4 +8,12 @@ export default class RowsCollection extends Backbone.Collection {
 		this.model = RowModel;
 	}
 
+	/**
+	 * Move item sort models
+	 */
+	moveItem( fromIndex = 0, toIndex = 0 ) {
+		this.models.splice( toIndex, 0, this.models.splice( fromIndex, 1 )[0] );
+        this.trigger( 'move' );
+	}
+
 }

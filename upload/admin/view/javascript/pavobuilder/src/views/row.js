@@ -12,21 +12,21 @@ export default class Row extends Backbone.View {
 		super();
 		// set backbone model
 		this.row = row;
+
 		// set columns is a collection
 		this.row.columns = new ColumsCollection( row.columns );
 
-		var template = _.template( $( '#pavobuilder-row-template' ).html(), { variable: 'data' } )( this.row );
-		this.setElement( template );
+		this.template = _.template( $( '#pavobuilder-row-template' ).html(), { variable: 'data' } )( this.row );
+		this.setElement( this.template );
 
 		this.events = {
-			'click .pv-delete-row'		: 'deleteRowHandler',
-			'click .pv-edit-row'		: 'editRowHandler'
+			'click .pv-delete-row'		: 'deleteRowHandler'
 		}
 
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
 
-		// add event
+		// delegate event
 		this.delegateEvents();
 	}
 
@@ -48,13 +48,6 @@ export default class Row extends Backbone.View {
 			this.$el.removeClass( 'row-fade-in' );
 		}, 1000 );
 		return this;
-	}
-
-	/**
-	 * Edit row handler
-	 */
-	editRowHandler( e ) {
-		return false;
 	}
 
 	/**

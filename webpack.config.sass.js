@@ -39,14 +39,6 @@ module.exports = {
 	module: {
 		loaders: [
 			{
-				test: /\.js$/,
-				exclude: /node_modules/,
-				loader: 'babel-loader',
-				query: {
-					presets: [ 'es2015', 'stage-0' ]
-				}
-			},
-			{
 				test: /\.css$/,
 				exclude: /node_modules/,
 				loader: [ 'style-loader', 'css-loader' ]
@@ -64,22 +56,11 @@ module.exports = {
 			}
 		]
 	},
-	devtool: 'inline-source-map',
+	devtool: 'eval-source-map',
  	stats: {
      	colors: true
  	},
 	plugins: [
-		new webpack.DefinePlugin({
-	      'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
-	    }),
-	    new webpack.optimize.OccurrenceOrderPlugin(),
-	    new webpack.optimize.UglifyJsPlugin({
-	      	compress: { warnings: true },
-	      	mangle: true,
-	      	sourcemap: false,
-	      	beautify: false,
-	      	dead_code: true
-	    }),
 	    new ExtractTextPlugin({
 		    filename: "[name].min.css",
 		    disable: process.env.NODE_ENV === 'development'
