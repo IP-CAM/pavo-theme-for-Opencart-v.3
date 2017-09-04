@@ -120,4 +120,17 @@ class PavoThemerHelper {
 		return $options;
 	}
 
+	/**
+	 * shortcodes list supported by Pavotheme
+	 */
+	public function getShortcodes() {
+		$files = glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/pavobuilder/*.twig' );
+		$results = array();
+		foreach ( $files as $file ) {
+			$results[] = basename( $file, '.twig' );
+		}
+
+		return $results;
+	}
+
 }

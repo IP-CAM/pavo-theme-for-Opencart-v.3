@@ -62,6 +62,8 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	 */
 	private function form( $id = 0 ) {
 		$this->load->language( 'extension/module/pavobuilder' );
+		$this->load->model( 'setting/extension' );
+		$this->load->model( 'setting/module' );
 		/**
 		 * breadcrumbs data
 		 */
@@ -75,7 +77,42 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			'href' => $this->url->link('extension/module/pavobuilder', 'user_token=' . $this->session->data['user_token'], true)
 		);
 
+		// languages
+		$this->data['languages'] = json_encode( $this->language->all() );
 		$this->data['layout_id'] = $id;
+		$this->data['elements']	= array();
+		$this->data['groups']	= array();
+
+		$extensions = $this->model_setting_extension->getInstalled( 'module' );
+		foreach ( $extensions as $key => $code ) {
+			$this->load->language( 'extension/module/' . $code );
+			$modules = $this->model_setting_module->getModulesByCode( $code );
+			$this->data['groups'][] = $group = strip_tags( $this->language->get( 'heading_title' ) );
+			foreach ( $modules as $module ) {
+				$module['icon']		= 'fa fa-opencart';
+				$module['group']	= strip_tags( $this->language->get( 'heading_title' ) );
+				$this->data['elements'][] = $module;
+			}
+		}
+
+		$file = dirname( __FILE__ ) . '/pavothemer/helper/theme.php';
+		if ( ! class_exists( 'PavoThemerHelper' ) && file_exists( $file ) ) {
+			require $file;
+		}
+		// theme helper
+		$themeHelper = PavoThemerHelper::instance( $this->config->get( 'config_theme' ) );
+		$shortcodes = $themeHelper->getShortcodes();
+		if ( $shortcodes ) {
+			$this->data['groups'] = $this->language->get( 'entry_pavo_shortcodes' );
+			foreach ( $shortcodes as $shortcode ) {
+				$this->data['elements'][] = array(
+						'element'	=> $shortcode,
+						'settings'	=> '',
+						'code'		=> $shortcode
+					);
+			}
+		}
+
 		// layout data
 		$this->data['layout'] = $id ? $this->model_setting_module->getModule( $id ) : array();
 

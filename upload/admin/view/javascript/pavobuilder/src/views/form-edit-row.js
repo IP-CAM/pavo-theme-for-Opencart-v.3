@@ -6,11 +6,11 @@ export default class FormEditRow extends Backbone.View {
 	/**
 	 * Constructor class
 	 */
-	constructor( row = { settings: {}, columns: {} } ) {
-		super();
+	initialize( row = { settings: {}, columns: {} } ) {
+		// super();
 		// row is RowModel
 		this.row = row;
-		this.template = _.template( $( '#pavobuilder-edit-row-template' ).html(), { variable: 'data' } );
+		this.template = _.template( $( '#pa-edit-row-template' ).html(), { variable: 'data' } );
 	}
 
 	/**
@@ -19,7 +19,6 @@ export default class FormEditRow extends Backbone.View {
 	render() {
 		let template = this.template( this.row );
 		this.setElement( template );
-
 		return this;
 	}
 

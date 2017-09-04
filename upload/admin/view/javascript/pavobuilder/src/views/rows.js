@@ -5,11 +5,11 @@ import FormEditRow from './form-edit-row';
 
 export default class Rows extends Backbone.View {
 
-	constructor( data = { rows : {} } ) {
-		super();
+	initialize( data = { rows : {} } ) {
+		// super( data );
 		// set this.rows is a collection
 		this.rows = data.rows;
-		this.$el = $( '#pavobuilder-content' );
+		this.$el = $( '#pa-content' );
 
 		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
@@ -18,13 +18,9 @@ export default class Rows extends Backbone.View {
 		// 	console.log( this.rows );
 		// } );
 		this.events = {
-			'click .pv-clone-row' 	: 'cloneRow',
-			'click .pv-edit-row'	: 'toggleEditRow'
+			'click .pa-clone-row' 	: 'cloneRow',
+			'click .pa-edit-row'	: 'toggleEditRow'
 		};
-
-		// row edit form
-		this.rowEditForm = new FormEditRow( { settings: {}, columns: {}, editing : false } );
-		$( 'body' ).prepend( this.rowEditForm.render().el );
 
 		// add event
 		this.delegateEvents();
@@ -35,15 +31,15 @@ export default class Rows extends Backbone.View {
 	 */
 	render() {
 		if ( this.rows.models.length > 0 ) {
-			_.map( this.rows.models, ( data ) => {
-				this.addRow( data );
+			_.map( this.rows.models, ( model ) => {
+				this.addRow( model );
 			} );
 		}
 
 		// set sortable
 		this.$el.sortable({
-			placeholder: 'pavobuilder-sortable-placeholder',
-			handle: '.pv-reorder-row',
+			placeholder: 'pa-sortable-placeholder',
+			handle: '.pa-reorder-row',
 			// sortable updated callback
 			start: this.dragRow,
 			stop: this.dropRown.bind( this )
@@ -59,7 +55,7 @@ export default class Rows extends Backbone.View {
 		if ( typeof status.at === 'undefined' ) {
 			this.$el.append( new Row( model ).render().el );
 		} else {
-			let rows = this.$el.find( '.pv-row-container' );
+			let rows = this.$el.find( '.pa-row-container' );
 			rows.map( ( i, row ) => {
 				let newIndex = parseInt( status.at ) - 1;
 				if ( newIndex == i ) {
@@ -73,7 +69,7 @@ export default class Rows extends Backbone.View {
 	 * Clone Row
 	 */
 	cloneRow( e ) {
-		let cid = $( e.target ).parents( '.pv-row-container:first' ).data( 'cid' );
+		let cid = $( e.target ).parents( '.pa-row-container:first' ).data( 'cid' );
 		let model = this.rows.get( { cid: cid } );
 		let index = this.rows.indexOf( model );
 		let newModel = model.clone();
@@ -85,12 +81,22 @@ export default class Rows extends Backbone.View {
 	 * Toggle edit row
 	 */
 	toggleEditRow( e ) {
+		let button = $( e.target );
+		let model_cid = button.parents( '.pa-row-container:first' ).data('cid');
+		let model = this.rows.get( { 'cid': model_cid } );
 
-		let model = {};
+		model.set( 'editing', ! model.get( 'editing' ) );
+
 		if ( model.get( 'editing' ) === true ) {
-			this.rowEditForm.$el.removeClass( 'hide' ).addClass( 'fade in' );
-		} else {
-			this.rowEditForm.$el.removeClass( 'fade in' ).addClass( 'hide' );
+			// row edit form
+			this.rowEditForm = new FormEditRow( model );
+			$( 'body' ).append( this.rowEditForm.render().el );
+			// this.rowEditForm.$el.modal( 'show' );
+			$('#pa-inspector').modal( 'show' );
+			$('#pa-inspector').on( 'hidden.bs.modal', () => {
+				model.set( 'editing', false );
+				this.rowEditForm.remove();
+			} );
 		}
 
 		return false;

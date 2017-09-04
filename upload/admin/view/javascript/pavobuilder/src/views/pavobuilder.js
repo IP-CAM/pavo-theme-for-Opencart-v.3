@@ -5,15 +5,17 @@ import Rows from './rows';
 
 export default class Builder extends Backbone.View {
 
-	constructor( rows = {} ) {
+	constructor( rows = [] ) {
 		super();
 		// set data is collection of row, it will pass to Rows View
+		// console.log(rows);
 		this.rowsCollection = new RowsCollection( rows );
-		this.$el = $( '#pavobuilder-container' );
+		// console.log( this.rowsCollection );
+		this.$el = $( '#pa-container' );
 
 		// events
 		this.events = {
-			'click #pavobuilder-add-element' : 'addRowHandler'
+			'click #pa-add-element' : 'addRowHandler'
 		}
 
 		// add event
@@ -28,7 +30,7 @@ export default class Builder extends Backbone.View {
 		this.rows = new Rows( {
 			rows: this.rowsCollection
 		} );
-		this.rows.render().el;
+		this.rows.render().el;return;
 
 		return this;
 	}
@@ -40,7 +42,14 @@ export default class Builder extends Backbone.View {
 	addRowHandler( e ) {
 		e.preventDefault();
 		// add row model to collection
-		this.rowsCollection.add({});
+		let model = {
+			settings: { xxx: 'DKM' },
+			columns: [
+				{ settings: { id: 1 }, elements: {} },
+				{ settings: { id: 2 }, elements: {} }
+			]
+		};
+		this.rowsCollection.add( model );
 		return false;
 	}
 

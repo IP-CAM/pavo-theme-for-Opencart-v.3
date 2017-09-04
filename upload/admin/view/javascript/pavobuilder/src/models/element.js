@@ -3,9 +3,14 @@ import _ from 'underscore';
 
 export default class Element extends Backbone.Model {
 
-	constructor( data = {} ) {
-		super();
+	initialize( data = {} ) {
+		// super();
+	}
 
+	defaults() {
+		return {
+			settings: {}
+		};
 	}
 
 }

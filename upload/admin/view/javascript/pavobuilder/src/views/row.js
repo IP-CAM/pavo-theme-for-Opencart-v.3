@@ -1,6 +1,6 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
-import ColumsCollection from '../collections/columns';
+// import ColumnsCollection from '../collections/columns';
 import Column from './column';
 
 export default class Row extends Backbone.View {
@@ -8,23 +8,21 @@ export default class Row extends Backbone.View {
 	/**
 	 * Constructor class
 	 */
-	constructor( row = { settings: {}, columns: {} } ) {
-		super();
+	initialize( row = { settings: {}, columns: {} } ) {
 		// set backbone model
 		this.row = row;
 
-		// set columns is a collection
-		this.row.columns = new ColumsCollection( row.columns );
-
-		this.template = _.template( $( '#pavobuilder-row-template' ).html(), { variable: 'data' } )( this.row );
+		this.template = _.template( $( '#pa-row-template' ).html(), { variable: 'data' } )( this.row );
 		this.setElement( this.template );
 
 		this.events = {
-			'click .pv-delete-row'		: 'deleteRowHandler'
+			'click .pa-delete-row'		: 'deleteRowHandler',
+			'click .pa-add-column'		: 'addColumnHandler'
 		}
 
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
+		this.listenTo( this.row.get( 'columns' ), 'update', this.render );
 
 		// delegate event
 		this.delegateEvents();
@@ -35,13 +33,14 @@ export default class Row extends Backbone.View {
 	 */
 	render() {
 		// each collection
-		if ( this.row.columns.models.length > 0 ) {
-			_.map( this.row.columns.models, ( model ) => {
+		if ( this.row.get( 'columns' ).models.length > 0 ) {
+			_.map( this.row.get( 'columns' ).models, ( model ) => {
 				// map column models add add it to Row View
 				this.addColumn( model );
 			} );
 		} else {
-			this.addColumn( -1, {} );
+			// console.log( this.row.get( 'columns' ) );
+			this.addColumn({ settings: {}, columns: [] });
 		}
 
 		setTimeout( () => {
@@ -59,24 +58,34 @@ export default class Row extends Backbone.View {
 	}
 
 	/**
+	 * Add column handler
+	 */
+	addColumnHandler( e ) {
+		// stop event default
+		e.preventDefault();
+		this.row.get( 'columns' ).add({});
+		return false;
+	}
+
+	/**
 	 * Add Column
 	 */
 	addColumn( model = {} ) {
-		this.row.columns.add( model );
+		this.$el.find( '.pav-row-container' ).append( new Column( model ).render().el );
 	}
 
 	/**
 	 * Remove Column
 	 */
-	removeColumn( index = -1 ) {
+	removeColumn() {
 
 	}
 
 	/**
 	 * Update Column
 	 */
-	updateColumn( index = -1 ) {
-
+	updateColumn( column = {} ) {
+		console.log( column );
 	}
 
 }

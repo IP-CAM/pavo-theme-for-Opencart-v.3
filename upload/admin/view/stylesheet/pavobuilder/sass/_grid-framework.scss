@@ -4,9 +4,9 @@
 // any value of `$grid-columns`.
 
 // [converter] This is defined recursively in LESS, but Sass supports real loops
-@mixin pv-make-grid-columns($i: 1, $list: ".pv-col-xs-#{$i}, .pv-col-sm-#{$i}, .pv-col-md-#{$i}, .pv-col-lg-#{$i}") {
+@mixin pa-make-grid-columns($i: 1, $list: ".pa-col-xs-#{$i}, .pa-col-sm-#{$i}, .pa-col-md-#{$i}, .pa-col-lg-#{$i}") {
   @for $i from (1 + 1) through $grid-columns {
-    $list: "#{$list}, .pv-col-xs-#{$i}, .pv-col-sm-#{$i}, .pv-col-md-#{$i}, .pv-col-lg-#{$i}";
+    $list: "#{$list}, .pa-col-xs-#{$i}, .pa-col-sm-#{$i}, .pa-col-md-#{$i}, .pa-col-lg-#{$i}";
   }
   #{$list} {
     position: relative;
@@ -20,9 +20,9 @@
 
 
 // [converter] This is defined recursively in LESS, but Sass supports real loops
-@mixin pv-float-grid-columns($class, $i: 1, $list: ".pv-col-#{$class}-#{$i}") {
+@mixin pa-float-grid-columns($class, $i: 1, $list: ".pa-col-#{$class}-#{$i}") {
   @for $i from (1 + 1) through $grid-columns {
-    $list: "#{$list}, .pv-col-#{$class}-#{$i}";
+    $list: "#{$list}, .pa-col-#{$class}-#{$i}";
   }
   #{$list} {
     float: left;
@@ -30,52 +30,52 @@
 }
 
 
-@mixin pv-calc-grid-column($index, $class, $type) {
+@mixin pa-calc-grid-column($index, $class, $type) {
   @if ($type == width) and ($index > 0) {
-    .pv-col-#{$class}-#{$index} {
+    .pa-col-#{$class}-#{$index} {
       width: percentage(($index / $grid-columns));
     }
   }
   @if ($type == push) and ($index > 0) {
-    .pv-col-#{$class}-push-#{$index} {
+    .pa-col-#{$class}-push-#{$index} {
       left: percentage(($index / $grid-columns));
     }
   }
   @if ($type == push) and ($index == 0) {
-    .pv-col-#{$class}-push-0 {
+    .pa-col-#{$class}-push-0 {
       left: auto;
     }
   }
   @if ($type == pull) and ($index > 0) {
-    .pv-col-#{$class}-pull-#{$index} {
+    .pa-col-#{$class}-pull-#{$index} {
       right: percentage(($index / $grid-columns));
     }
   }
   @if ($type == pull) and ($index == 0) {
-    .pv-col-#{$class}-pull-0 {
+    .pa-col-#{$class}-pull-0 {
       right: auto;
     }
   }
   @if ($type == offset) {
-    .pv-col-#{$class}-offset-#{$index} {
+    .pa-col-#{$class}-offset-#{$index} {
       margin-left: percentage(($index / $grid-columns));
     }
   }
 }
 
 // [converter] This is defined recursively in LESS, but Sass supports real loops
-@mixin pv-loop-grid-columns($columns, $class, $type) {
+@mixin pa-loop-grid-columns($columns, $class, $type) {
   @for $i from 0 through $columns {
-    @include pv-calc-grid-column($i, $class, $type);
+    @include pa-calc-grid-column($i, $class, $type);
   }
 }
 
 
 // Create grid for specific class
-@mixin pv-make-grid($class) {
-  @include pv-float-grid-columns($class);
-  @include pv-loop-grid-columns($grid-columns, $class, width);
-  @include pv-loop-grid-columns($grid-columns, $class, pull);
-  @include pv-loop-grid-columns($grid-columns, $class, push);
-  @include pv-loop-grid-columns($grid-columns, $class, offset);
+@mixin pa-make-grid($class) {
+  @include pa-float-grid-columns($class);
+  @include pa-loop-grid-columns($grid-columns, $class, width);
+  @include pa-loop-grid-columns($grid-columns, $class, pull);
+  @include pa-loop-grid-columns($grid-columns, $class, push);
+  @include pa-loop-grid-columns($grid-columns, $class, offset);
 }

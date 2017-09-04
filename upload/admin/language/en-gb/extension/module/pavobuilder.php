@@ -31,3 +31,8 @@ $_['entry_clone_column_text']	= 'Clone column';
 $_['entry_edit_element_text']	= 'Edit element';
 $_['entry_delete_element_text']	= 'Delete element';
 $_['entry_clone_element_text']	= 'Clone element';
+
+$_['entry_all_text']			= 'All';
+$_['entry_pavo_shortcodes']		= 'Pavo Shortcodes';
+$_['entry_cancel_text']			= 'Cancel';
+$_['entry_update_text']			= 'Update';

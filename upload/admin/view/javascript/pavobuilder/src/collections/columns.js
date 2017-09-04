@@ -3,8 +3,7 @@ import ColumnModel from '../models/column'
 
 export default class ColumnsCollection extends Backbone.Collection {
 
-	constructor() {
-		super();
+	initialize( columns ) {
 		this.model = ColumnModel;
 	}
 

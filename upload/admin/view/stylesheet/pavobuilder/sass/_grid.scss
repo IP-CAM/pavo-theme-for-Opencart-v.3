@@ -36,7 +36,7 @@
 //
 // Rows contain and clear the floats of your columns.
 
-.pv-row {
+.pa-row {
   @include make-row;
 
 }
@@ -46,7 +46,7 @@
 //
 // Common styles for small and large grid columns
 
-@include pv-make-grid-columns;
+@include pa-make-grid-columns;
 
 
 // Extra small grid
@@ -54,7 +54,7 @@
 // Columns, offsets, pushes, and pulls for extra small devices like
 // smartphones.
 
-@include pv-make-grid(xs);
+@include pa-make-grid(xs);
 
 
 // Small grid
@@ -63,7 +63,7 @@
 // to tablets.
 
 @media (min-width: $screen-sm-min) {
-  @include pv-make-grid(sm);
+  @include pa-make-grid(sm);
 }
 
 
@@ -72,7 +72,7 @@
 // Columns, offsets, pushes, and pulls for the desktop device range.
 
 @media (min-width: $screen-md-min) {
-  @include pv-make-grid(md);
+  @include pa-make-grid(md);
 }
 
 
@@ -81,5 +81,5 @@
 // Columns, offsets, pushes, and pulls for the large desktop device range.
 
 @media (min-width: $screen-lg-min) {
-  @include pv-make-grid(lg);
+  @include pa-make-grid(lg);
 }

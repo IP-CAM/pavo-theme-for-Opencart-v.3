@@ -1,13 +1,13 @@
 // START BUTTONS
-.pv-transition{
+.pa-transition{
 	-webkit-transition: all 0.5s;
 	-o-transition: all 0.5s;
 	-moz-transition: all 0.5s;
 	-ms-transition: all 0.5s;
 	transition: all 0.5s;
 }
-.pv-button{
-	@extend .pv-transition;
+.pa-button{
+	@extend .pa-transition;
 	background-color: #7bcd2d;
 	color: $pv_main_color;
 	font-size: $pv_main_fontsize;
@@ -23,8 +23,8 @@
     }
 }
 
-.pv-button-info{
-	@extend .pv-button;
+.pa-button-info{
+	@extend .pa-button;
 	background-color: $pv_info_bg;
 
 	&:hover{
@@ -32,8 +32,8 @@
 	}
 }
 
-.pv-button-success{
-	@extend .pv-button;
+.pa-button-success{
+	@extend .pa-button;
 	background-color: $pv_success_bg;
 
 	&:hover{
@@ -41,8 +41,8 @@
 	}
 }
 
-.pv-button-warning{
-	@extend .pv-button;
+.pa-button-warning{
+	@extend .pa-button;
 	background-color: $pv_warning_bg;
 
 	&:hover{
@@ -52,7 +52,7 @@
 // END BUTTONS
 
 // ROWS && COLUMNS
-.pavobuilder-sortable-placeholder{
+.pa-sortable-placeholder{
 	color: white;
 	visibility: visible !important;
 	height: auto;
@@ -66,7 +66,7 @@
 	    #465298 10px
   	);
 }
-.pv-row-container{
+.pa-row-container{
 	&.row-fade-in{
 		-webkit-animation-duration: 0.75s;
 	    animation-duration: 0.75s;
@@ -76,14 +76,14 @@
 	    animation-name: rowFadeIn;
 	}
 
-	> .pv-element-wrapper{
+	> .pa-element-wrapper{
 		background-color: $pv_row_background;
 		border: $pv_column_border;
 	    padding: 20px 15px;
 	    margin-bottom: 20px;
 	}
 
-	.pv-controls{
+	.pa-controls{
 		overflow: hidden;
 
 		a{
@@ -106,20 +106,20 @@
 		    	cursor: pointer;
 		    }
 
-		    &.pv-reorder{
+		    &.pa-reorder{
 		    	&:hover{
 		    		cursor: move;
 		    	}
 		    }
 
-		    &.pv-clone,
-		    &.pv-add{
+		    &.pa-clone,
+		    &.pa-add{
 		    	&:hover{
 		    		cursor: copy;
 		    	}
 		    }
 
-		    &.pv-delete{
+		    &.pa-delete{
 		    	&:hover{
 		    		cursor: unset;
 		    	}
@@ -127,8 +127,8 @@
 		}
 	}
 
-	.pv-column{
-		>.pv-controls{
+	.pa-column{
+		>.pa-controls{
 		    position: absolute;
 		    top: -15px;
 		    background-color: transparent;
@@ -148,9 +148,9 @@
 		}
 	}
 
-	.pv-element-content{
+	.pa-element-content{
 		position: relative;
-		> .pv-controls{
+		> .pa-controls{
 			position: absolute;
 			opacity: 0;
 		    z-index: 1004;
@@ -177,7 +177,7 @@
 			    	background-color: $pv_info_bg_hover;
 			    }
 
-			    &.pv-delete{
+			    &.pa-delete{
 			    	background-color: $pv_warning_bg;
 			    	&:hover{
 			    		background-color: $pv_warning_bg_hover;
@@ -187,7 +187,7 @@
 		}
 
 		&:hover{
-			.pv-controls{
+			.pa-controls{
 				opacity: 1;
 			}
 		}
@@ -206,7 +206,7 @@
 		}
 	}
 }
-.pv-column-container{
+.pa-column-container{
 	background-color: $pv_colum_empty_background;
 	border: $pv_column_border;
 	height: auto;
@@ -216,10 +216,10 @@
 		padding: 30px 0;
 	}
 
-	.pv-element-content{
+	.pa-element-content{
 		box-shadow: 1px 1px 1px rgba(0, 0, 0, .08);
 	}
-	.pv-element-wrapper{
+	.pa-element-wrapper{
 		padding: 5px 10px;
 		background-color: $pv_ele_background;
 		p{
@@ -229,8 +229,8 @@
 }
 
 // Footer
-#pavobuilder-footer{
-	.pv-buttons{
+#pa-footer{
+	.pa-buttons{
 		padding: 30px 20px;
 		font-size: $pv_lg_fontsize;
 		text-align: center;
@@ -241,7 +241,7 @@
 			border: $pv_dashed_border_hover;
 		}
 
-		.pv-button{
+		.pa-button{
 			padding: 10px 20px;
 			color: $pv_white_color;
 		}
