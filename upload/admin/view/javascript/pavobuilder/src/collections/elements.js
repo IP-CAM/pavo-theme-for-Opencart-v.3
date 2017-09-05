@@ -4,7 +4,6 @@ import ElementModel from '../models/element'
 export default class ElementsCollection extends Backbone.Collection {
 
 	initialize( elements = {} ) {
-		super( elements );
 		this.model = ElementModel;
 	}
 

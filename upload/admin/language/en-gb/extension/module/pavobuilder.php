@@ -36,3 +36,6 @@ $_['entry_all_text']			= 'All';
 $_['entry_pavo_shortcodes']		= 'Pavo Shortcodes';
 $_['entry_cancel_text']			= 'Cancel';
 $_['entry_update_text']			= 'Update';
+
+$_['confirm_delete_row']		= 'Delete this row. Are you sure?';
+$_['confirm_delete_column']		= 'Delete this column. Are you sure?';

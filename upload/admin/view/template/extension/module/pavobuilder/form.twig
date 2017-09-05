@@ -235,12 +235,29 @@
 				<div class="left-controls pull-left">
 					<a href="#" class="pa-edit pa-edit-row" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
 					<a href="#" class="pa-clone pa-clone-row" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
-					<a href="#" class="pa-delete pa-delete-row" title="{{ entry_delete_row_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+					<a href="#" class="pa-delete pa-delete-row" title="{{ entry_delete_row_text }}" data-confirm="{{ confirm_delete_row }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 				</div>
 				<div class="right-controls pull-right">
 					<a href="#" class="pa-reorder pa-reorder-row" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
 				</div>
 			</div>
+			<ul class="pa-row-column-control">
+				<li><a href="#" class="pa-add pa-add-column" title="{{ entry_add_column_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+				<ul class="pa-actions-hidden">
+					<li>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+					</li>
+					<li>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+					</li>
+					<li>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+					</li>
+					<li>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+					</li>
+				</ul>
+			</ul>
 			<div class="pa-element-wrapper">
 				<div class="pa-row pav-row-container"></div>
 			</div>
@@ -248,15 +265,18 @@
   	</script>
 
   	<script type="text/html" id="pa-column-template">
-  		<div class="pa-column pa-col-sm-12" data-element="pv_column">
+  		<div class="pa-column <%= data.settings.class %>" data-element="pv_column" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
 			<div class="pa-controls column-controls">
 				<a href="#" class="pa-add pa-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
 				<a href="#" class="pa-edit pa-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-				<a href="#" class="pa-delete pa-delete-column" title="{{ entry_delete_column_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+				<a href="#" class="pa-delete pa-delete-column" title="{{ entry_delete_column_text }}" data-confirm="{{ confirm_delete_column }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 			</div>
 			<div class="pa-element-wrapper">
-				<div class="pa-column-container"><%= data.cid %></div>
+				<div class="pa-column-container"></div>
 			</div>
+			<% if ( data.editabled ) { %>
+				<div class="pa-column-resize"></div>
+			<% } %>
 		</div>
   	</script>
 

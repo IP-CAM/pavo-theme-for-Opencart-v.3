@@ -8,7 +8,6 @@ export default class Builder extends Backbone.View {
 	constructor( rows = [] ) {
 		super();
 		// set data is collection of row, it will pass to Rows View
-		// console.log(rows);
 		this.rowsCollection = new RowsCollection( rows );
 		// console.log( this.rowsCollection );
 		this.$el = $( '#pa-container' );
@@ -30,7 +29,7 @@ export default class Builder extends Backbone.View {
 		this.rows = new Rows( {
 			rows: this.rowsCollection
 		} );
-		this.rows.render().el;return;
+		this.rows.render().el;
 
 		return this;
 	}
@@ -45,8 +44,8 @@ export default class Builder extends Backbone.View {
 		let model = {
 			settings: { xxx: 'DKM' },
 			columns: [
-				{ settings: { id: 1 }, elements: {} },
-				{ settings: { id: 2 }, elements: {} }
+				{ settings: { id: 1, class: 'pa-col-sm-6' }, elements: {} },
+				{ settings: { id: 2, class: 'pa-col-sm-6' }, elements: {}, editabled: true }
 			]
 		};
 		this.rowsCollection.add( model );

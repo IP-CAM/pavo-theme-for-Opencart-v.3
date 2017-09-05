@@ -1,6 +1,5 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
-// import ColumnsCollection from '../collections/columns';
 import Column from './column';
 
 export default class Row extends Backbone.View {
@@ -12,9 +11,6 @@ export default class Row extends Backbone.View {
 		// set backbone model
 		this.row = row;
 
-		this.template = _.template( $( '#pa-row-template' ).html(), { variable: 'data' } )( this.row );
-		this.setElement( this.template );
-
 		this.events = {
 			'click .pa-delete-row'		: 'deleteRowHandler',
 			'click .pa-add-column'		: 'addColumnHandler'
@@ -22,16 +18,19 @@ export default class Row extends Backbone.View {
 
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
-		this.listenTo( this.row.get( 'columns' ), 'update', this.render );
-
 		// delegate event
-		this.delegateEvents();
+		// this.delegateEvents();
 	}
 
 	/**
 	 * Render html
 	 */
 	render() {
+
+		let data = this.row.toJSON();
+		data.cid = this.row.cid;
+		this.template = _.template( $( '#pa-row-template' ).html(), { variable: 'data' } )( data );
+		this.setElement( this.template );
 		// each collection
 		if ( this.row.get( 'columns' ).models.length > 0 ) {
 			_.map( this.row.get( 'columns' ).models, ( model ) => {
@@ -53,7 +52,11 @@ export default class Row extends Backbone.View {
 	 * Delete row handler
 	 */
 	deleteRowHandler() {
-		this.row.destroy();
+		// this.
+		if ( confirm( this.$el.find( '.pa-delete-row' ).data( 'confirm' ) ) ) {
+			// this.remove();
+			this.row.destroy();
+		}
 		return false;
 	}
 
