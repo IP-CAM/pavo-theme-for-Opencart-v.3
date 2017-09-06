@@ -11,15 +11,91 @@ export default class FormEditRow extends Backbone.View {
 		// row is RowModel
 		this.row = row;
 		this.template = _.template( $( '#pa-edit-row-template' ).html(), { variable: 'data' } );
+		this.listenTo( this.row, 'change:editing', this._toggle_form );
+		this.listenTo( this.row, 'destroy', this.remove );
+
+		this.events = {
+			'click .btn.pa-close'	: '_closeHandler',
+			'click .btn.pa-update'	: '_updateHandler'
+		}
+
+		this.render();
 	}
 
 	/**
 	 * Render html
 	 */
 	render() {
-		let template = this.template( this.row );
-		this.setElement( template );
+		if ( this.row.get( 'editing' ) ) {
+			let template = this.template( this.row.toJSON() );
+			this.setElement( template );
+			$( 'body' ).append( this.el );
+			$( 'body' ).find( this.$el ).modal( 'show' );
+			$( 'body' ).find( this.$el ).on( 'hidden.bs.modal', ( e ) => {
+				this.row.set( 'editing', false );
+			} );
+		}
 		return this;
 	}
+
+	/**
+	 * Toggle show edit form
+	 */
+	_toggle_form( model ) {
+		if ( ! model.get( 'editing' ) ) {
+			this.remove();
+		}
+	}
+
+	/**
+	 * Close handler click
+	 */
+	_closeHandler( e ) {
+		e.preventDefault();
+		this._close();
+		return false;
+	}
+
+	_close() {
+		$( 'body' ).find( this.$el ).modal( 'hide' );
+		this.row.set( 'editing', false );
+	}
+
+	/**
+	 * 
+	 */
+	_updateHandler( e ) {
+		e.preventDefault();
+
+		new Promise( ( resolve, reject ) => {
+			let data = this.$el.find( '#pa-edit-row-settings' ).serializeArray();
+			let settings = this.serializeFormJSON( data );
+			// settings = { ...this.row.get('settings'), settings };
+			this.row.set( 'settings', settings );
+			// call close method
+			resolve();
+		} ).then(() => {
+			this._close();
+		});
+		return false;
+	}
+
+	serializeFormJSON ( serialize = '' ) {
+
+        var results = {};
+
+        serialize.map( ( ob, name ) => {
+        	if ( results[ob.name] ) {
+                if ( ! results[ob.name].push) {
+                    results[ob.name] = [ results[ob.name] ];
+                }
+                results[ob.name].push(ob.value || '');
+            } else {
+                results[ob.name] = ob.value || '';
+            }
+        } );
+
+        return results;
+    };
 
 }

@@ -30,7 +30,6 @@ export default class Builder extends Backbone.View {
 			rows: this.rowsCollection
 		} );
 		this.rows.render().el;
-
 		return this;
 	}
 
@@ -44,8 +43,7 @@ export default class Builder extends Backbone.View {
 		let model = {
 			settings: { xxx: 'DKM' },
 			columns: [
-				{ settings: { id: 1, class: 'pa-col-sm-6' }, elements: {} },
-				{ settings: { id: 2, class: 'pa-col-sm-6' }, elements: {}, editabled: true }
+				{ settings: { class: 'pa-col-sm-12' } }
 			]
 		};
 		this.rowsCollection.add( model );

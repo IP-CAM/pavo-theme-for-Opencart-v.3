@@ -19,4 +19,12 @@ export default class Column extends Backbone.View {
 		return this;
 	}
 
+	_removeHandler() {
+
+	}
+
+	_updateHandler() {
+
+	}
+
 }

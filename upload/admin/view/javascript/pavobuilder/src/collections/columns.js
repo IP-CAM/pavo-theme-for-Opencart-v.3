@@ -18,14 +18,16 @@ export default class ColumnsCollection extends Backbone.Collection {
 	}
 
 	/**
-	 * Editabled
+	 * Set Editabled is TRUE
+	 * And change reRender status allow view change
 	 */
 	_editabled() {
 		this.models.map( ( model ) => {
-			if ( this.indexOf( model ) > 0 ) {
-				model.set( 'editabled', true );
-			} else {
-				model.set( 'editabled', false );
+			let editabled = model.get( 'editabled' );
+			let nextEditabled = this.indexOf( model ) > 0;
+			model.set( 'editabled', nextEditabled );
+			if ( editabled != nextEditabled ) {
+				model.set( 'reRender', true );
 			}
 		} );
 	}

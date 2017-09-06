@@ -1,7 +1,6 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
 import Row from './row';
-import FormEditRow from './form-edit-row';
 
 export default class Rows extends Backbone.View {
 
@@ -18,8 +17,7 @@ export default class Rows extends Backbone.View {
 		// 	console.log( this.rows );
 		// } );
 		this.events = {
-			'click .pa-clone-row' 	: 'cloneRowHandler',
-			'click .pa-edit-row'	: 'toggleEditRowHandler'
+			'click .pa-clone-row' 	: 'cloneRowHandler'
 		};
 
 		// add event
@@ -30,8 +28,8 @@ export default class Rows extends Backbone.View {
 	 * Render html method
 	 */
 	render() {
-		if ( this.rows.models.length > 0 ) {
-			_.map( this.rows.models, ( model ) => {
+		if ( this.rows.length > 0 ) {
+			this.rows.map( ( model ) => {
 				this.addRow( model );
 			} );
 		}
@@ -59,7 +57,7 @@ export default class Rows extends Backbone.View {
 			rows.map( ( i, row ) => {
 				let newIndex = parseInt( status.at ) - 1;
 				if ( newIndex == i ) {
-					$( rows[newIndex] ).after( new Row( model ).render().el )
+					$( rows[newIndex] ).after( new Row( collection.get( model ) ).render().el )
 				}
 			} );
 		}
@@ -95,31 +93,6 @@ export default class Rows extends Backbone.View {
 		} );
 
 		return data;
-	}
-
-	/**
-	 * Toggle edit row
-	 */
-	toggleEditRowHandler( e ) {
-		let button = $( e.target );
-		let model_cid = button.parents( '.pa-row-container:first' ).data('cid');
-		let model = this.rows.get( { 'cid': model_cid } );
-
-		model.set( 'editing', ! model.get( 'editing' ) );
-
-		if ( model.get( 'editing' ) === true ) {
-			// row edit form
-			this.rowEditForm = new FormEditRow( model );
-			$( 'body' ).append( this.rowEditForm.render().el );
-			// this.rowEditForm.$el.modal( 'show' );
-			$('#pa-inspector').modal( 'show' );
-			$('#pa-inspector').on( 'hidden.bs.modal', () => {
-				model.set( 'editing', false );
-				this.rowEditForm.remove();
-			} );
-		}
-
-		return false;
 	}
 
 	/**

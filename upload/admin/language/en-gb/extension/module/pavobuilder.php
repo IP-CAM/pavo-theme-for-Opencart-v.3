@@ -16,7 +16,6 @@ $_['entry_enabled_text']	= 'Enabled';
 $_['entry_disabled_text']	= 'Disabled';
 $_['entry_layout_editor'] 	= 'Layout Editor';
 
-
 // homebuilder
 $_['entry_add_element_text']	= 'Add Element';
 $_['entry_edit_row_text']		= 'Edit row';

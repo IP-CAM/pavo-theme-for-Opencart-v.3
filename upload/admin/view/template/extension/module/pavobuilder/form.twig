@@ -128,15 +128,16 @@
   	</script>
 
   	<script type="text/html" id="pa-edit-row-template">
+  		<% console.log( data ) %>
   		<div id="pa-inspector" class="modal">
-  			<div class="modal-dialog">
+  			<div class="modal-dialog modal-lg">
   				<div class="modal-content">
   					<div class="modal-header">
   						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         				<h4 class="modal-title text-info"><i class="fa fa-exclamation-triangle"></i> {{ entry_edit_row_text }}</h4>
   					</div>
   					<div class="modal-body">
-				  		<form method="POST" class="form-horizontal">
+				  		<form method="POST" class="form-horizontal" id="pa-edit-row-settings">
 				  			<ul class="nav nav-tabs">
 				  				<li class="active"><a href="#nav-row-general" data-toggle="tab" aria-expanded="true">General</a></li>
 				  				<li><a href="#nav-row-animate" data-toggle="tab" aria-expanded="true">Animate</a></li>
@@ -146,33 +147,24 @@
 				  					<div class="form-group">
 				  						<label class="col-sm-2 control-label">Row ID</label>
 				  						<div class="col-sm-10">
-				  							<input name="settings[id]" value="" class="form-control"/>
+				  							<input name="row_id" value="<%= data.settings.row_id ? data.settings.row_id : '' %>" class="form-control"/>
 				  						</div>
 				  					</div>
 				  					<div class="form-group">
 				  						<label class="col-sm-2 control-label">Layout</label>
 				  						<div class="col-sm-10">
-				  							<select name="settings[layout]" class="form-control">
-				  								<option value="wide">Wide</option>
-				  								<option value="boxed">Boxed</option>
+				  							<select name="layout" class="form-control">
+				  								<option value="wide"<%= data.settings.layout == 'wide' ? ' selected' : '' %>>Wide</option>
+				  								<option value="boxed"<%= data.settings.layout == 'boxed' ? ' selected' : '' %>>Boxed</option>
 				  							</select>
 				  						</div>
 				  					</div>
 				  				</div>
 				  				<div id="nav-row-animate" class="tab-pane">
 				  					<div class="form-group">
-				  						<label class="col-sm-2 control-label">Row ID</label>
+				  						<label class="col-sm-2 control-label">xxxx</label>
 				  						<div class="col-sm-10">
-				  							<input name="settings[id]" value="" class="form-control"/>
-				  						</div>
-				  					</div>
-				  					<div class="form-group">
-				  						<label class="col-sm-2 control-label">Layout</label>
-				  						<div class="col-sm-10">
-				  							<select name="settings[layout]" class="form-control">
-				  								<option value="wide">Wide</option>
-				  								<option value="boxed">Boxed</option>
-				  							</select>
+				  							<input name="xxx" value="<%= data.settings.xxx %>" class="form-control"/>
 				  						</div>
 				  					</div>
 				  				</div>
@@ -180,8 +172,8 @@
 				  		</form>
   					</div>
   					<div class="modal-footer">
-  						<button type="button" class="btn btn-danger" data-dismiss="modal" aria-hidden="true">{{ entry_cancel_text }}</button>
-  						<button type="button" class="btn btn-info" data-dismiss="modal" aria-hidden="true">{{ entry_update_text }}</button>
+  						<button type="button" class="btn btn-danger pa-close" aria-hidden="true">{{ entry_cancel_text }}</button>
+  						<button type="button" class="btn btn-info pa-update" aria-hidden="updateform="pa-edit-row-settings">{{ entry_update_text }}</button>
   					</div>
   				</div>
   			</div>
@@ -245,16 +237,16 @@
 				<li><a href="#" class="pa-add pa-add-column" title="{{ entry_add_column_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
 				<ul class="pa-actions-hidden">
 					<li>
-						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="1">1</a>
 					</li>
 					<li>
-						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="2">2</a>
 					</li>
 					<li>
-						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="3">3</a>
 					</li>
 					<li>
-						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}">x</a>
+						<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="4">4</a>
 					</li>
 				</ul>
 			</ul>
@@ -281,7 +273,7 @@
   	</script>
 
   	<script type="text/html" id="pa-element-template">
-  		<div class="{{ data.element }} pa-element-content" data-element="{{ data.element }}">
+  		<div class="pa-element-content{{ data.element ? ' ' + data.element : '' }}" data-element="{{ data.element }}">
   			<span>{{ data.name }}</span>
   			<code>{{ data.cid }}</code>
   		</div>
