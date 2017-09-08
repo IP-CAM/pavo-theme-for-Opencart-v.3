@@ -5,19 +5,14 @@ import Row from './row';
 export default class Rows extends Backbone.View {
 
 	initialize( data = { rows : {} } ) {
-		// super( data );
 		// set this.rows is a collection
 		this.rows = data.rows;
 		this.$el = $( '#pa-content' );
 
 		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
-		// // when model of collection had change on View Room
-		// this.listenTo( this.rows, 'change', () => {
-		// 	console.log( this.rows );
-		// } );
 		this.events = {
-			'click .pa-clone-row' 	: 'cloneRowHandler'
+			'click .pa-clone-row' 	: '_cloneRowHandler'
 		};
 
 		// add event
@@ -66,7 +61,7 @@ export default class Rows extends Backbone.View {
 	/**
 	 * Clone Row
 	 */
-	cloneRowHandler( e ) {
+	_cloneRowHandler( e ) {
 		e.preventDefault();
 		let cid = $( e.target ).parents( '.pa-row-container:first' ).data( 'cid' );
 		let model = this.rows.get( { cid: cid } );
@@ -78,7 +73,7 @@ export default class Rows extends Backbone.View {
 	}
 
 	/**
-	 * Clone model
+	 * Clone row model
 	 */
 	_clone( data = {} ) {
 		if ( data instanceof Backbone.Model || data instanceof Backbone.Collection ) {

@@ -1,0 +1,177 @@
+<script type="text/javascript">
+	var PA_VARS = window.PA_VARS = '{{ languages }}';
+</script>
+
+<script type="text/html" id="pa-edit-row-template">
+	<div id="pa-inspector" class="modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title text-info"><i class="fa fa-exclamation-triangle"></i> {{ entry_edit_row_text }}</h4>
+				</div>
+				<div class="modal-body">
+			  		<form method="POST" class="form-horizontal" id="pa-edit-row-settings">
+			  			<ul class="nav nav-tabs">
+			  				<li class="active"><a href="#nav-row-general" data-toggle="tab" aria-expanded="true">General</a></li>
+			  				<li><a href="#nav-row-animate" data-toggle="tab" aria-expanded="true">Animate</a></li>
+			  			</ul>
+			  			<div class="tab-content">
+			  				<div id="nav-row-general" class="tab-pane active">
+			  					<div class="form-group">
+			  						<label class="col-sm-2 control-label">Row ID</label>
+			  						<div class="col-sm-10">
+			  							<input name="row_id" value="<%= data.settings.row_id ? data.settings.row_id : '' %>" class="form-control"/>
+			  						</div>
+			  					</div>
+			  					<div class="form-group">
+			  						<label class="col-sm-2 control-label">Layout</label>
+			  						<div class="col-sm-10">
+			  							<select name="layout" class="form-control">
+			  								<option value="wide"<%= data.settings.layout == 'wide' ? ' selected' : '' %>>Wide</option>
+			  								<option value="boxed"<%= data.settings.layout == 'boxed' ? ' selected' : '' %>>Boxed</option>
+			  							</select>
+			  						</div>
+			  					</div>
+			  				</div>
+			  				<div id="nav-row-animate" class="tab-pane">
+			  					<div class="form-group">
+			  						<label class="col-sm-2 control-label">xxxx</label>
+			  						<div class="col-sm-10">
+			  							<input name="xxx" value="<%= data.settings.xxx %>" class="form-control"/>
+			  						</div>
+			  					</div>
+			  				</div>
+			  			</div>
+			  		</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger pa-close" aria-hidden="true">{{ entry_cancel_text }}</button>
+					<button type="button" class="btn btn-info pa-update" aria-hidden="updateform="pa-edit-row-settings">{{ entry_update_text }}</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="pa-elements-panel">
+	<div id="pa-elements-list" class="pa-elements-list elements-panel modal">
+		<div class="modal-dialog modal-lg">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title text-info"><i class="fa fa-exclamation-triangle"></i> {{ entry_add_element_text }}</h4>
+				</div>
+				<div class="modal-body">
+					{% if ( groups ) %}
+						<ul class="nav nav-tabs">
+							<li class="active"><a href="#nav-elements-all" data-toggle="tab" aria-expanded="true">{{ entry_all_text }}</a></li>
+				  		{% for tab in groups %}
+				  			<li><a href="#nav-{{ tab.slug }}" data-toggle="tab" aria-expanded="true">{{ tab.name }}</a></li>
+				  		{% endfor %}
+			  		</ul>
+			  		<div class="tab-content">
+			  			<div id="nav-elements-all" class="tab-pane active"></div>
+			  			{% for tab in groups %}
+			  				<div id="nav-{{ tab.slug }}" class="tab-pane">
+				  				{% for element in elements %}
+				  					{% if ( element.group_slug == tab.slug ) %}
+				  						<div class="pa-col-sm-3">
+						  					<a class="element element-item element-item-{{ element.code ? element.code : '' }}" href="#" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-settings="{{ element.settings | escape }}" data-mask="{{ element | json_encode() | escape }}">
+					  							<i class="{{ element.icon }}"></i>
+					  							<span>{{ element.name }}</span>
+					  							{% if ( element.type == 'shortcode' and element.shortcode ) %}
+					  								<code>{{ element.shortcode }}</code>
+					  							{% else %}
+					  								<code>{{ element.code }}.{{ element.module_id }}</code>
+					  							{% endif %}
+					  						</a>
+				  						</div>
+				  					{% endif %}
+				  				{% endfor %}
+			  				</div>
+			  			{% endfor %}
+			  		</div>
+		  		{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="pa-row-template">
+	<div class="pa-row-container row-fade-in" data-element="pv_row" data-cid="<%= data.cid %>">
+		<div class="pa-controls row-controls">
+			<div class="left-controls pull-left">
+				<a href="#" class="pa-edit pa-edit-row" title="{{ entry_edit_row_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+				<a href="#" class="pa-clone pa-clone-row" title="{{ entry_clone_row_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
+				<a href="#" class="pa-delete pa-delete-row" title="{{ entry_delete_row_text }}" data-confirm="{{ confirm_delete_row }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+			</div>
+			<div class="right-controls pull-right">
+				<a href="#" class="pa-reorder pa-reorder-row" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
+			</div>
+		</div>
+		<ul class="pa-row-column-control">
+			<li><a href="#" class="pa-add pa-add-column" title="{{ entry_add_column_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a></li>
+			<ul class="pa-actions-hidden">
+				<li>
+					<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="1">1</a>
+				</li>
+				<li>
+					<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="2">2</a>
+				</li>
+				<li>
+					<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="3">3</a>
+				</li>
+				<li>
+					<a href="#" class="pa-edit-column-num" title="{{ entry_add_column_text }}" data-columns="4">4</a>
+				</li>
+			</ul>
+		</ul>
+		<div class="pa-element-wrapper">
+			<div class="pa-row pav-row-container"></div>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="pa-column-template">
+	<div class="pa-column <%= data.settings.class %>" data-element="pv_column" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
+		<div class="pa-controls column-controls top">
+			<a href="#" class="pa-add pa-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+			<a href="#" class="pa-edit pa-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+			<a href="#" class="pa-delete pa-delete-column" title="{{ entry_delete_column_text }}" data-confirm="{{ confirm_delete_column }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+		</div>
+		<div class="pa-element-wrapper">
+			<div class="pa-column-container"></div>
+		</div>
+		<% if ( data.editabled ) { %>
+			<div class="pa-column-resize"></div>
+		<% } %>
+		<div class="pa-controls column-controls bottom">
+			<a href="#" class="pa-add pa-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="pa-element-template">
+
+	<div class="pa-element-content<%= data.mask.element ? ' ' + data.mask.element : '' %>" data-element="<%= data.mask.element %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
+		<div class="pa-controls element-controls">
+			<a href="#" class="pa-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
+			<a href="#" class="pa-edit" title="{{ entry_edit_element_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+			<a href="#" class="pa-clone" title="{{ entry_clone_element_text }}"><i class="fa fa-clone" aria-hidden="true"></i></a>
+			<a href="#" class="pa-delete" title="{{ entry_delete_element_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
+		</div>
+		<div class="pa-element-wrapper">
+			<a class="element element-item element-item-<%= data.mask.code ? data.mask.code : '' %>" href="#" data-group="<%= data.mask.slug %>" data-shortcode="<%= data.mask.shortcode %>" data-module-id="<%= data.mask.module_id %>" data-module-code="<%= data.mask.code %>" data-settings="<%= data.mask.settings %>">
+				<i class="<%= data.mask.icon %>"></i>
+				<span><%= data.mask.name %></span>
+				<% if ( data.mask.type == 'shortcode' || data.mask.shortcode ) { %>
+					<code><%= data.mask.shortcode %></code>
+				<% } else { %>
+					<code><%= data.mask.code %>.<%= data.mask.module_id %></code>
+				<% } %>
+			</a>
+		</div>
+	</div>
+</script>

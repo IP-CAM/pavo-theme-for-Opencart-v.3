@@ -1,7 +1,7 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
 import Column from './column';
-import FormEditRow from './form-edit-row';
+import FormEditRow from './globals/form-edit-row';
 
 export default class Row extends Backbone.View {
 
@@ -13,18 +13,16 @@ export default class Row extends Backbone.View {
 		this.row = row;
 
 		this.events = {
-			'click .pa-delete-row'		: 'deleteRowHandler',
-			'click .pa-add-column'		: 'addColumnHandler',
-			'click .pa-edit-column-num'	: 'changeColumnsHandler',
-			'click .pa-edit-row'		: 'setEditRowHandler'
+			'click .pa-delete-row'		: '_deleteRowHandler',
+			'click .pa-add-column'		: '_addColumnHandler',
+			'click .pa-edit-column-num'	: '_changeColumnsHandler',
+			'click .pa-edit-row'		: '_setEditRowHandler'
 		}
 
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
 		this.listenTo( this.row.get( 'columns' ), 'add', this.addColumn );
-		this.listenTo( this.row, 'change:editing', this._renderEditRowForm );
-		// delegate event
-		// this.delegateEvents();
+		this.listenTo( this.row, 'change:editing', this.renderEditRowForm );
 	}
 
 	/**
@@ -59,7 +57,7 @@ export default class Row extends Backbone.View {
 	/**
 	 * Delete row handler
 	 */
-	deleteRowHandler() {
+	_deleteRowHandler() {
 		// this.
 		if ( confirm( this.$el.find( '.pa-delete-row' ).data( 'confirm' ) ) ) {
 			// this.remove();
@@ -71,34 +69,33 @@ export default class Row extends Backbone.View {
 	/**
 	 * Add column handler
 	 */
-	addColumnHandler( e ) {
+	_addColumnHandler( e ) {
 		// stop event default
 		e.preventDefault();
 		let columns = this.row.get( 'columns' ).length + 1;
 		let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns ) );
-
-		if ( this.row.get( 'columns' ) >= 12 ) {
-			alert( 1 );
-		} else {
-			this.row.get( 'columns' ).map( ( model ) => {
-				let settings = model.get( 'settings' );
-				settings.class = classWrapper;
-				model.set( 'settings', settings );
-				model.set( 'reRender', true );
-			} );
-			this.row.get( 'columns' ).add({
-				settings: {
-					class: classWrapper
-				}
-			});
+		if ( this.row.get( 'columns' ).length >= 12 ) {
+			classWrapper = 'pa-col-sm-12';
 		}
+
+		this.row.get( 'columns' ).map( ( model ) => {
+			let settings = model.get( 'settings' );
+			settings.class = classWrapper;
+			model.set( 'settings', settings );
+			model.set( 'reRender', true );
+		} );
+		this.row.get( 'columns' ).add({
+			settings: {
+				class: classWrapper
+			}
+		});
 		return false;
 	}
 
 	/**
 	 * Change Columns of row
 	 */
-	changeColumnsHandler( e ) {
+	_changeColumnsHandler( e ) {
 		e.preventDefault();
 
 		let button = $( e.target );
@@ -173,7 +170,7 @@ export default class Row extends Backbone.View {
 	/**
 	 * Set edit row mode
 	 */
-	setEditRowHandler( e ) {
+	_setEditRowHandler( e ) {
 		e.preventDefault();
 		this.row.set( 'editing', true );
 		return false;
@@ -182,7 +179,7 @@ export default class Row extends Backbone.View {
 	/**
 	 * render edit row form
 	 */
-	_renderEditRowForm( model ) {
+	renderEditRowForm( model ) {
 		if ( model.get( 'editing' ) === true ) {
 			// row edit form
 			let editForm = new FormEditRow( model );

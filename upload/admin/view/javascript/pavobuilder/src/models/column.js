@@ -12,8 +12,9 @@ export default class ColumnModel extends Backbone.Model {
 		return {
 			settings: {},
 			elements: new ElementsCollection(),
-			editabled: false
-		}
+			editabled: false,
+			adding: false
+		};
 	}
 	
 }

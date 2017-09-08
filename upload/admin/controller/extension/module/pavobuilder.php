@@ -87,11 +87,19 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		foreach ( $extensions as $key => $code ) {
 			$this->load->language( 'extension/module/' . $code );
 			$modules = $this->model_setting_module->getModulesByCode( $code );
-			$this->data['groups'][] = $group = strip_tags( $this->language->get( 'heading_title' ) );
-			foreach ( $modules as $module ) {
-				$module['icon']		= 'fa fa-opencart';
-				$module['group']	= strip_tags( $this->language->get( 'heading_title' ) );
-				$this->data['elements'][] = $module;
+			if ( $modules ) {
+				$this->data['groups'][] = array(
+						'name'		=> strip_tags( $this->language->get( 'heading_title' ) ),
+						'slug'		=> $code
+					);
+				foreach ( $modules as $module ) {
+					$module['type']				= 'module';
+					$module['icon']				= 'fa fa-opencart';
+					$module['group']			= strip_tags( $this->language->get( 'heading_title' ) );
+					$module['group_slug']		= $code;
+					$module['settings']			= $module['setting'];
+					$this->data['elements'][] 	= $module;
+				}
 			}
 		}
 
@@ -103,18 +111,24 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		$themeHelper = PavoThemerHelper::instance( $this->config->get( 'config_theme' ) );
 		$shortcodes = $themeHelper->getShortcodes();
 		if ( $shortcodes ) {
-			$this->data['groups'] = $this->language->get( 'entry_pavo_shortcodes' );
+			$this->data['groups'][] = array(
+					'name'		=> $this->language->get( 'entry_pavo_shortcodes' ),
+					'slug'		=> 'pa-shortcodes-list'
+				);
 			foreach ( $shortcodes as $shortcode ) {
 				$this->data['elements'][] = array(
-						'element'	=> $shortcode,
+						'type'		=> 'shortcode',
 						'settings'	=> '',
-						'code'		=> $shortcode
+						'shortcode'	=> $shortcode,
+						'group' 	=> strip_tags( $this->language->get( 'heading_title' ) ),
+						'group_slug'=> 'pa-shortcodes-list'
 					);
 			}
 		}
 
 		// layout data
 		$this->data['layout'] = $id ? $this->model_setting_module->getModule( $id ) : array();
+		$this->data['underscore_template'] = $this->load->view( 'extension/module/pavobuilder/_template', $this->data );
 
 		// addScripts
 		$this->document->addScript( 'view/javascript/pavobuilder/dist/pavobuilder.min.js' );
@@ -130,6 +144,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			'column_left' 	=> $this->load->controller( 'common/column_left' ),
 			'footer'		=> $this->load->controller( 'common/footer' )
 		), $this->data );
+
 		$this->response->setOutput( $this->load->view( 'extension/module/pavobuilder/form', $this->data ) );
 	}
 

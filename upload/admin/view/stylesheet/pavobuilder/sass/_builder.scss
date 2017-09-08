@@ -59,13 +59,14 @@
 	max-height: 150px;
 	min-height: 100px;
   	background: repeating-linear-gradient(
-	    45deg,
-	    #606dbc,
-	    #606dbc 5px,
-	    #465298 5px,
-	    #465298 10px
+	    135deg,
+	    #d4d4d4,
+	    #d4d4d4 5px,
+	    #fff 5px,
+	    #fff 10px
   	);
 }
+
 .pa-row-container{
 	&.row-fade-in{
 		-webkit-animation-duration: 0.75s;
@@ -81,6 +82,88 @@
 		border: $pv_column_border;
 	    padding: 20px 15px;
 	    margin-bottom: 20px;
+	}
+
+	.pa-row-column-control{
+		position: relative;
+		list-style: none;
+		margin: 0;
+	    display: inline-block;
+	    float: left;
+	    width: 100%;
+	    text-align: center;
+	    padding: 10px 0 10px 0;
+
+	    .pa-actions-hidden{
+		    list-style: none;
+		    margin: 0;
+		    padding: 0;
+		    position: absolute;
+		    left: 50%;
+		    z-index: 11;
+		    left: 50%;
+		    top: -15px;
+		    transform: translateX(-50%);
+			li {
+				display: inline-block;
+				float: left;
+			}
+			a {
+				display: block;
+				width: 20px;
+			}
+	    }
+	}
+
+	.pa-column-container{
+		padding: 10px 5px 10px;
+		background-color: $pv_colum_empty_background;
+		border: $pv_column_border;
+		height: auto;
+		padding: 30px 10px 20px 10px;
+		&.empty-element{
+			min-height: 25px;
+			padding: 30px 0;
+		}
+
+		.pa-element-content{
+			box-shadow: 1px 1px 1px rgba(0, 0, 0, .08);
+			text-align: left;
+			background-color: #fff;
+			margin-bottom: 10px;
+
+		    &.pa-ui-placeholder{
+		    	:after{
+		    		height: calc(100% - 2px);
+				    width: calc(100% - 2px);
+				    position: absolute;
+				    content: 'Pavo Builder';
+				    top: 0px;
+				    left: 0px;
+				    background: rgba(255,255,255,0.25);
+				    border-radius: 2px;
+				    border: 1px dashed #42BCE2 !important;
+				    color: rgba(0,0,0,0.05);
+				    font-weight: bold;
+				    font-size: 1.2em;
+				    display: flex !important;
+				    align-items: center !important;
+				    justify-content: center !important;
+				    line-height: inherit;
+				    overflow: hidden;
+		    	}
+		    }
+			.element-item{
+				margin: 0 10px 0 10px;
+			}
+		}
+		.pa-element-wrapper{
+			padding: 10px 0px;
+			background-color: $pv_ele_background;
+			p{
+				font-size: 10px;
+			}
+		}
 	}
 
 	.pa-controls{
@@ -128,6 +211,7 @@
 	}
 
 	.pa-column{
+		margin: 10px 0;
 		>.pa-controls{
 		    position: absolute;
 		    top: -15px;
@@ -136,6 +220,10 @@
 		    left: 0;
 		    text-align: center;
 
+		    &.bottom{
+		    	top: auto;
+		    	bottom: -15px;
+		    }
 		    a{
 		    	background-color: $pv_info_bg;
 		    	color: $pv_white_color;
@@ -227,59 +315,41 @@
 		}
 	}
 }
-.pa-row-column-control{
-	position: relative;
-	list-style: none;
-	margin: 0;
-    display: inline-block;
-    float: left;
-    width: 100%;
-    text-align: center;
-    padding: 10px 0 10px 0;
-
-    .pa-actions-hidden{
-	    list-style: none;
-	    margin: 0;
-	    padding: 0;
-	    position: absolute;
-	    left: 50%;
-	    z-index: 11;
-	    left: 50%;
-	    top: -15px;
-	    transform: translateX(-50%);
-		li {
-			display: inline-block;
+#pa-elements-list{
+	.tab-content{
+		overflow: hidden;
+	}
+}
+#pa-elements-list,
+.pa-element-content{
+	.element-item{
+		color: #666;
+		display: block;
+		padding: 8px 10px;
+	    background-color: hsla(0,0%,62%,.12);
+	    overflow: hidden;
+	    margin: 0px -10px 10px -8px;
+		i{
+			font-size: 30px;
+			color: #06b7f0;
+		    display: block;
 			float: left;
+			margin-right: 8px;
 		}
-		a {
+		span{
+			vertical-align: top;
+			font-size: 13px;
+			font-weight: 600;
 			display: block;
-			width: 20px;
 		}
-    }
-
-}
-.pa-column-container{
-	background-color: $pv_colum_empty_background;
-	border: $pv_column_border;
-	height: auto;
-	padding: 20px 10px;
-	&.empty-element{
-		min-height: 25px;
-		padding: 30px 0;
-	}
-
-	.pa-element-content{
-		box-shadow: 1px 1px 1px rgba(0, 0, 0, .08);
-	}
-	.pa-element-wrapper{
-		padding: 20px 15px 30px 15px;
-		background-color: $pv_ele_background;
-		p{
-			font-size: 10px;
+		code{
+		    display: block;
+		    float: left;
+		    padding: 3px 0;
+		    font-size: 11px;
 		}
 	}
 }
-
 // Footer
 #pa-footer{
 	.pa-buttons{

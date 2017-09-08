@@ -38,3 +38,4 @@ $_['entry_update_text']			= 'Update';
 
 $_['confirm_delete_row']		= 'Delete this row. Are you sure?';
 $_['confirm_delete_column']		= 'Delete this column. Are you sure?';
+$_['confirm_element_column']	= 'Delete this elements. Are you sure?';

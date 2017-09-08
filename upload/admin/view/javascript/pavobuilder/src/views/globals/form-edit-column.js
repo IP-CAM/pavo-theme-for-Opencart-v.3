@@ -1,18 +1,18 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
 
-export default class FormEditRow extends Backbone.View {
+export default class FormEditColumn extends Backbone.View {
 
 	/**
 	 * Constructor class
 	 */
-	initialize( row = { settings: {}, columns: {} } ) {
+	initialize( column = { settings: {}, elements: {} } ) {
 		// super();
-		// row is RowModel
-		this.row = row;
-		this.template = _.template( $( '#pa-edit-row-template' ).html(), { variable: 'data' } );
-		this.listenTo( this.row, 'change:editing', this._toggle_form );
-		this.listenTo( this.row, 'destroy', this.remove );
+		// column is ColumnModel
+		this.column = column;
+		this.template = _.template( $( '#pa-edit-column-template' ).html(), { variable: 'data' } );
+		this.listenTo( this.column, 'change:editing', this._toggle_form );
+		this.listenTo( this.column, 'destroy', this.remove );
 
 		this.events = {
 			'click .btn.pa-close'	: '_closeHandler',
@@ -26,13 +26,13 @@ export default class FormEditRow extends Backbone.View {
 	 * Render html
 	 */
 	render() {
-		if ( this.row.get( 'editing' ) ) {
-			let template = this.template( this.row.toJSON() );
+		if ( this.column.get( 'editing' ) ) {
+			let template = this.template( this.column.toJSON() );
 			this.setElement( template );
 			$( 'body' ).append( this.el );
 			$( 'body' ).find( this.$el ).modal( 'show' );
 			$( 'body' ).find( this.$el ).on( 'hidden.bs.modal', ( e ) => {
-				this.row.set( 'editing', false );
+				this.column.set( 'editing', false );
 			} );
 		}
 		return this;
@@ -56,22 +56,27 @@ export default class FormEditRow extends Backbone.View {
 		return false;
 	}
 
+	/**
+	 * Close modal and, set 'editing' false
+	 *
+	 * when model change 'setting' to false view will be lose
+	 */
 	_close() {
 		$( 'body' ).find( this.$el ).modal( 'hide' );
-		this.row.set( 'editing', false );
+		this.column.set( 'editing', false );
 	}
 
 	/**
-	 * 
+	 * Update column settings
 	 */
 	_updateHandler( e ) {
 		e.preventDefault();
 
 		new Promise( ( resolve, reject ) => {
-			let data = this.$el.find( '#pa-edit-row-settings' ).serializeArray();
+			let data = this.$el.find( '#pa-edit-column-settings' ).serializeArray();
 			let settings = this.serializeFormJSON( data );
-			// settings = { ...this.row.get('settings'), settings };
-			this.row.set( 'settings', settings );
+			// settings = { ...this.column.get('settings'), settings };
+			this.column.set( 'settings', settings );
 			// call close method
 			resolve();
 		} ).then(() => {
@@ -80,6 +85,9 @@ export default class FormEditRow extends Backbone.View {
 		return false;
 	}
 
+	/**
+	 * Convert serialize string data to json data
+	 */
 	serializeFormJSON ( serialize = '' ) {
 
         var results = {};
