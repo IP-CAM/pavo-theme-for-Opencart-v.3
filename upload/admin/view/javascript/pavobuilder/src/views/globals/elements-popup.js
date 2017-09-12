@@ -81,7 +81,7 @@ export default class ElementsPopup extends Backbone.View {
 		// add new element to column
 		this.column.get( 'elements' ).add( settings, { at: this.column.get( 'adding_position' ) } );
 		// set 'reRender' true to re-generate column
-		this.column.set( 'reRender', true );
+		// this.column.set( 'reRender', true );
 		this.column.set( 'adding_position', false );
 		// close model
 		this._close();

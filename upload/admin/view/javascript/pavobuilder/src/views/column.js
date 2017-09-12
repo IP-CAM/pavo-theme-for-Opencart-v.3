@@ -23,7 +23,7 @@ export default class Column extends Backbone.View {
 		// this.listenTo( this.column, 'change:editabled', this._reRender );
 		this.listenTo( this.column, 'change:reRender', this._reRender );
 		this.listenTo( this.column.get( 'elements' ), 'remove', this._onRemoveElement );
-		this.listenTo( this.column.get( 'elements' ), 'add', this._onAddElement );
+		this.listenTo( this.column.get( 'elements' ), 'add', this.addElement );
 
 		// delegate event
 		this.delegateEvents();
@@ -41,9 +41,9 @@ export default class Column extends Backbone.View {
 		this.setElement( this.template );
 
 		if ( this.column.get( 'elements' ).length > 0 ) {
-			this.column.get( 'elements' ).map( ( element ) => {
+			this.column.get( 'elements' ).map( ( element, at, collection ) => {
 				// map element models and add it as Element to ColumnView
-				this.addElement( element, this.column.get( 'elements' ) );
+				this.addElement( element, collection, { at: at } );
 			} );
 		} else {
 			this.$el.addClass( 'empty-element' );
@@ -68,8 +68,10 @@ export default class Column extends Backbone.View {
 	 * Add element
 	 */
 	addElement( model = {}, collection = {}, data = {} ) {
-		if ( data.at !== undefined && collection.length > 0 ) {
-			$( this.$( '.pa-element-content' ).get( parseInt( data.at ) ) ).after( new Element( model ).render().el );
+		if ( this.$( '.pa-element-content' ).length > data.at && data.at ) {
+			$( this.$( '.pa-element-content' ).get( parseInt( data.at ) - 1 ) ).after( new Element( model ).render().el );
+		} else if ( data.at == 0 ) {
+			this.$( '.pa-column-container' ).prepend( new Element( model ).render().el );
 		} else {
 			this.$( '.pa-column-container' ).append( new Element( model ).render().el );
 		}
@@ -91,7 +93,7 @@ export default class Column extends Backbone.View {
 	_deleteColumnHandler( e ) {
 		e.preventDefault();
 		// this.
-		if ( confirm( this.$el.find( '.pa-delete-column' ).data( 'confirm' ) ) ) {
+		if ( confirm( this.$( '.pa-delete-column' ).data( 'confirm' ) ) ) {
 			// this.remove();
 			this.column.destroy();
 		}
@@ -128,11 +130,12 @@ export default class Column extends Backbone.View {
 		let button = $( e.target ).parents( '.pa-element-content:first' );
 		let cid = button.data( 'cid' );
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
-		let newModel = model.clone();
+
 		let index = this.column.get( 'elements' ).indexOf( model );
 
-		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) } );
-		this.column.set( 'reRender', true );
+		let newModel = model.clone();
+
+		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
 		return false;
 	}
 
@@ -143,13 +146,6 @@ export default class Column extends Backbone.View {
 		if ( this.column.get( 'elements' ).length === 0 ) {
 			this.$el.addClass( 'empty-element' );
 		}
-	}
-
-	/**
-	 * On add new element to ElementsCollection
-	 */
-	_onAddElement( element, collection, data ) {
-		this.addElement( element, this.column.get( 'elements' ), data );
 	}
 
 	/**
@@ -165,9 +161,13 @@ export default class Column extends Backbone.View {
 	 * Recieved element from other column
 	 */
 	_receive( e, ui ) {
-		this.column.get( 'elements' ).add( ui.item.element.toJSON(), { at: ui.item.index() - 1, sort: false } );
-		console.log( this.column );
-        ui.item.element.destroy();
+		new Promise( ( resolve, reject ) => {
+			let index = ui.item.index();
+			this.column.get( 'elements' ).add( ui.item.element.toJSON(), { at: index } );
+			resolve();
+		} ).then( () => {
+			ui.item.element.destroy();
+		} );
 	}
 
 	/**
@@ -177,7 +177,7 @@ export default class Column extends Backbone.View {
 	_start( e, ui ) {
 		ui.item.indexStart = ui.item.index();
         ui.item.elements = this.column.get( 'elements' );
-        ui.item.element = this.column.get( 'elements' ).at( ui.item.index() );
+        ui.item.element = this.column.get( 'elements' ).at( ui.item.indexStart );
 	}
 
 	/**
@@ -185,10 +185,15 @@ export default class Column extends Backbone.View {
 	 * just useful when update elements inside drop event
 	 */
 	_update( e, ui ) {
+
+		if ( ui.item.elements !== this.column.get( 'elements' ) ) {
+			return;
+		}
+		let index = ui.item.index();
 		// resort elements collection
-		this.column.get( 'elements' ).moveItem( ui.item.indexStart, ui.item.index() );
+		this.column.get( 'elements' ).moveItem( ui.item.indexStart, index );
 		// trigger drop event element
-		ui.item.trigger( 'drop', ui.item.index() );
+		ui.item.trigger( 'drop', index );
 	}
 
 }

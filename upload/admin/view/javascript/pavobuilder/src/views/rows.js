@@ -70,7 +70,7 @@ export default class Rows extends Backbone.View {
 		let cid = $( e.target ).parents( '.pa-row-container:first' ).data( 'cid' );
 		let model = this.rows.get( { cid: cid } );
 		let index = this.rows.indexOf( model );
-		let newModel = this._clone( model.toJSON() );
+		let newModel = this._clone( model ); // .toJSON()
 
 		this.rows.add( newModel, { at: parseInt( index ) + 1 } );
 		return false;
