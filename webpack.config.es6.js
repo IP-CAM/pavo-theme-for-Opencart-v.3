@@ -53,6 +53,9 @@ module.exports = {
 	    })
 	],
 	resolve: {
-		extensions: [ '.js' ]
+		extensions: [ '.js' ],
+		alias: {
+			'jquery-ui': 'jquery-ui/ui'
+		}
 	}
 }

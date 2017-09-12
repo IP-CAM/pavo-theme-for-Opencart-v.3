@@ -2,6 +2,8 @@ import Backbone from 'Backbone';
 import _ from 'underscore';
 import Row from './row';
 
+import ElementsCollection from '../collections/elements';
+
 export default class Rows extends Backbone.View {
 
 	initialize( data = { rows : {} } ) {
@@ -37,6 +39,8 @@ export default class Rows extends Backbone.View {
 			start: this.dragRow,
 			stop: this.dropRown.bind( this )
 		});
+
+		// this.$el.find('.pa-element-content').sortable();
 
 		return this;
 	}
@@ -79,6 +83,7 @@ export default class Rows extends Backbone.View {
 		if ( data instanceof Backbone.Model || data instanceof Backbone.Collection ) {
 			data = data.toJSON();
 		}
+
 		_.map( data, ( value, name ) => {
 			if ( value instanceof Object ) {
 				data[name] = this._clone( value );

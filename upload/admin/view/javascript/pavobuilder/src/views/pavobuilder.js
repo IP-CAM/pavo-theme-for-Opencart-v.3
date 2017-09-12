@@ -30,6 +30,8 @@ export default class Builder extends Backbone.View {
 			rows: this.rowsCollection
 		} );
 		this.rows.render().el;
+
+		this.$el.find( '.pa-element-content' ).sortable();
 		return this;
 	}
 
@@ -41,7 +43,7 @@ export default class Builder extends Backbone.View {
 		e.preventDefault();
 		// add row model to collection
 		let model = {
-			settings: { xxx: 'DKM' },
+			settings: {},
 			columns: [
 				{ settings: { class: 'pa-col-sm-12' } }
 			]

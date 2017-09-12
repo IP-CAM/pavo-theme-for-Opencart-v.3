@@ -133,11 +133,12 @@
 			margin-bottom: 10px;
 
 		    &.pa-ui-placeholder{
+		    	box-shadow: none;
 		    	:after{
-		    		height: calc(100% - 2px);
-				    width: calc(100% - 2px);
+		    		height: 100%;
+				    width: 100%;
 				    position: absolute;
-				    content: 'Pavo Builder';
+				    content: '';
 				    top: 0px;
 				    left: 0px;
 				    background: rgba(255,255,255,0.25);
@@ -151,6 +152,12 @@
 				    justify-content: center !important;
 				    line-height: inherit;
 				    overflow: hidden;
+		    	}
+		    	.element-item{
+		    		opacity: 0;
+		    	}
+		    	.element-controls{
+		    		display: none;
 		    	}
 		    }
 			.element-item{

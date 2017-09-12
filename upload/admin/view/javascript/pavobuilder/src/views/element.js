@@ -1,6 +1,5 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
-import sortable from '../common/sortable';
 
 export default class Column extends Backbone.View {
 
@@ -23,14 +22,6 @@ export default class Column extends Backbone.View {
 		data.cid = this.element.cid;
 		this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 		this.setElement( this.template );
-
-		// this.$el.attr( 'draggable', true );
-		// this.$el.attr( 'droppable', true );
-
-		this.$el.sortable({
-			element : this.element,
-			handle 	: '.pa-reorder'
-		});
 
 		return this;
 	}

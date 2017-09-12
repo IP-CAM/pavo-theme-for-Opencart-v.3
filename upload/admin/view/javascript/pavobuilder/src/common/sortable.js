@@ -15,6 +15,7 @@ class Sortable {
 
 	defaults() {
 		return {
+			items 			: [],
 			placeholder		: '',
 			helper			: '',
 			handle			: ''
@@ -29,20 +30,47 @@ class Sortable {
         this.$el = $( this.el );
         this.options = options;
 
-        // this.el.addEventListener( '' )
-    	let handle = this.$el.find( this.options.handle );
-        this.events.map( ( event ) => {
-        	if ( handle.length > 0 ) {
-        		handle.get(0).addEventListener( event, this[event].bind(this), false );
-        	} else {
-        		this.el.addEventListener( event, this[event].bind(this), false );
+        if ( this.options.items ) {
+	        // init
+	    	this.el.setAttribute( 'draggable', true );
+	    	this.el.setAttribute( 'droppable', true );
+        	for ( let item of this.options.items ) {
+
+		    	new Promise( ( resolve, reject ) => {
+		    		item = this.$el.find( item );
+		    		let handle = this.$el.find( this.options.handle );
+		    		if ( item.length ) {
+		    			handle = handle !== undefined ? handle.get( 0 ) : null;
+		    			resolve( {
+		    				item: item.get( 0 ),
+		    				handle: handle
+		    			} );
+		    		}
+		    	} ).then( ( data ) => {
+		    		let item = data.item;
+		    		let handle = data.handle;
+		    		// set draggable, droppable
+			    	item.setAttribute( 'draggable', true );
+			    	item.setAttribute( 'droppable', true );
+			    	if ( handle ) {
+			    		handle.setAttribute( 'draggable', true );
+			    		handle.setAttribute( 'droppable', true );
+			    	}
+			    	// map
+			        this.events.map( ( event ) => {
+			        	if ( handle != null ) {
+			        		handle.addEventListener( event, this[event].bind(this), false );
+			        	} else {
+			        		item.addEventListener( event, this[event].bind(this), false );
+			        		// this.el.addEventListener( event, this[event].bind(this), false );
+			        	}
+			        } );
+		    	} );
         	}
-        } );
+        }
     }
 
     mousedown( e ) {
-    	this.el.setAttribute( 'draggable', true );
-    	this.el.setAttribute( 'droppable', true );
     	let handle = this.$el.find( this.options.handle );
     	if ( handle.length > 0 && ( handle.get( 0 ) == e.target || $.contains( handle.get( 0 ), e.target ) ) ) {
     		this.dragstart( e );
@@ -50,22 +78,19 @@ class Sortable {
     }
 
     dragstart( e ) {
-    	$( this.$el ).addClass( 'pa-ui-dragging pa-ui-placeholder' );
-    	$(e).push( 'originalEvent' );
-    	console.log( e.originalEvent, e );
+    	console.log( 1 );
+    	// $( this.$el ).addClass( 'pa-ui-dragging pa-ui-placeholder' );
 
-  //   	return false;
-  //   	var img = document.createElement("img");
-  //   	img.src = "http://kryogenix.org/images/hackergotchi-simpler.png";
-  //   	e.dataTransfer.setDragImage(
-		// 	img,
-		// 	35,
-		// 	35
-		// );
+    	// if ( e.dataTransfer !== undefined && e.dataTransfer.setDragImage !== undefined && this.options.helper ) {
+    	// 	e.dataTransfer.setDragImage( document.getElementById( this.options.helper[0] ), this.options.helper[1], this.options.helper[2] );
+    	// }
+
+    	// e.preventDefault();
+    	// return false;
     }
 
     drag( e ) {
-    	console.log(5);
+    	console.log( 2 );
     }
 
     dragover( e ) {
@@ -77,14 +102,15 @@ class Sortable {
     }
 
     dragend( e ) {
-    	$( this.$el ).removeClass( 'pa-ui-dragging pa-ui-placeholder' );
+    	console.log( 5 );
+    	// $( this.$el ).removeClass( 'pa-ui-dragging pa-ui-placeholder' );
 
-    	this.el.setAttribute( 'droppable', false );
-    	this.el.setAttribute( 'draggable', false );
+    	// this.el.setAttribute( 'droppable', false );
+    	// this.el.setAttribute( 'draggable', false );
     }
 
     drop( e ) {
-    	console.log(7);
+    	console.log(6);
     }
 }
 

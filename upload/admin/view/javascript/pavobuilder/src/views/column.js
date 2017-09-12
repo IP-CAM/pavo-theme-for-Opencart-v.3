@@ -1,5 +1,6 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
+import sortable from 'jquery-ui/ui/widgets/sortable';
 import ColumnModel from '../models/column'
 import ElementsPopup from './globals/elements-popup';
 import Element from './element';
@@ -19,9 +20,10 @@ export default class Column extends Backbone.View {
 		this.listenTo( this.column, 'destroy', this.remove );
 		// re-render html layout
 		// because if is index > 0, we need resize column control
-		this.listenTo( this.column, 'change:editabled', this._reRender );
+		// this.listenTo( this.column, 'change:editabled', this._reRender );
 		this.listenTo( this.column, 'change:reRender', this._reRender );
-		this.listenTo( this.column.get( 'elements' ), 'remove', this._onRemoveElements );
+		this.listenTo( this.column.get( 'elements' ), 'remove', this._onRemoveElement );
+		this.listenTo( this.column.get( 'elements' ), 'add', this._onAddElement );
 
 		// delegate event
 		this.delegateEvents();
@@ -41,21 +43,36 @@ export default class Column extends Backbone.View {
 		if ( this.column.get( 'elements' ).length > 0 ) {
 			this.column.get( 'elements' ).map( ( element ) => {
 				// map element models and add it as Element to ColumnView
-				this.addElement( element );
+				this.addElement( element, this.column.get( 'elements' ) );
 			} );
 		} else {
 			this.$el.addClass( 'empty-element' );
 		}
-		// this.$el.sortable();
+
+		this.$( '.pa-column-container' ).sortable({
+			connectWith : '.pa-column-container',
+			items 		: '.pa-element-content',
+			handle 		: '.pa-reorder',
+			cursor 		: 'move',
+			placeholder : 'pa-sortable-placeholder',
+			receive 	: this._receive.bind( this ),
+			start 		: this._start.bind( this ),
+			tolerance	: 'pointer',
+			update 		: this._update.bind( this )
+		});
+
 		return this;
 	}
 
 	/**
 	 * Add element
 	 */
-	addElement( model = {} ) {
-		this.$el.append( new Element( model.toJSON() ) );
-		this.$el.find( '.pa-column-container' ).append( new Element( model ).render().el );
+	addElement( model = {}, collection = {}, data = {} ) {
+		if ( data.at !== undefined && collection.length > 0 ) {
+			$( this.$( '.pa-element-content' ).get( parseInt( data.at ) ) ).after( new Element( model ).render().el );
+		} else {
+			this.$( '.pa-column-container' ).append( new Element( model ).render().el );
+		}
 	}
 
 	/**
@@ -114,15 +131,25 @@ export default class Column extends Backbone.View {
 		let newModel = model.clone();
 		let index = this.column.get( 'elements' ).indexOf( model );
 
-		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
+		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) } );
 		this.column.set( 'reRender', true );
 		return false;
 	}
 
-	_onRemoveElements() {
+	/**
+	 * on remove element
+	 */
+	_onRemoveElement() {
 		if ( this.column.get( 'elements' ).length === 0 ) {
 			this.$el.addClass( 'empty-element' );
 		}
+	}
+
+	/**
+	 * On add new element to ElementsCollection
+	 */
+	_onAddElement( element, collection, data ) {
+		this.addElement( element, this.column.get( 'elements' ), data );
 	}
 
 	/**
@@ -132,6 +159,36 @@ export default class Column extends Backbone.View {
 		e.preventDefault();
 
 		return false;
+	}
+
+	/**
+	 * Recieved element from other column
+	 */
+	_receive( e, ui ) {
+		this.column.get( 'elements' ).add( ui.item.element.toJSON(), { at: ui.item.index() - 1, sort: false } );
+		console.log( this.column );
+        ui.item.element.destroy();
+	}
+
+	/**
+	 * Start drag event
+	 * set indexStart, elements - collection data, element - model
+	 */
+	_start( e, ui ) {
+		ui.item.indexStart = ui.item.index();
+        ui.item.elements = this.column.get( 'elements' );
+        ui.item.element = this.column.get( 'elements' ).at( ui.item.index() );
+	}
+
+	/**
+	 * Update when sortable
+	 * just useful when update elements inside drop event
+	 */
+	_update( e, ui ) {
+		// resort elements collection
+		this.column.get( 'elements' ).moveItem( ui.item.indexStart, ui.item.index() );
+		// trigger drop event element
+		ui.item.trigger( 'drop', ui.item.index() );
 	}
 
 }
