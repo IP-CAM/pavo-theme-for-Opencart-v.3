@@ -376,3 +376,78 @@
 		}
 	}
 }
+
+.pa-layout-onion{
+	position: relative;
+	div{
+		position: relative;
+		padding: 50px;
+		border: 1px solid #eee;
+
+		&.content{
+			padding: 15px;
+		}
+
+		&.margin{
+			&:before{
+				position: absolute;
+			    content: 'Margin';
+			    top: 15px;
+			    left: 10px;
+			    color: rgba(119, 119, 119, 0.4);
+			}
+		}
+		&.border{
+			background-color: #ddd;
+			&:before{
+				position: absolute;
+			    content: 'Border';
+			    top: 15px;
+			    left: 10px;
+			    color: rgba(119, 119, 119, 0.4);
+			}
+		}
+		&.padding{
+			background-color: #efefef;
+			&:before{
+				position: absolute;
+			    content: 'Padding';
+			    top: 15px;
+			    left: 10px;
+			    color: rgba(119, 119, 119, 0.4);
+			}
+		}
+		&.content{
+			background-color: #fff;
+		}
+	}
+
+	input{
+		position: absolute;
+		width: 40px;
+		height: 20px;
+		display: block;
+	 	transform: translate(-50%, -50%);
+	 	border: 1px solid rgba(119, 119, 119, 0.47);
+		&.top{
+			top: 24px;
+			left: 50%;
+			right: 50%;
+		}
+		&.right{
+			right: -15px;
+			top: 50%;
+			bottom: auto;
+		}
+		&.bottom{
+		    left: 50%;
+		    right: 50%;
+		    bottom: 0;
+		}
+		&.left{
+			left: 24px;
+			top: 50%;
+			bottom: auto;
+		}
+	}
+}

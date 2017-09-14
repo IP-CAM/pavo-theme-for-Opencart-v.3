@@ -1,5 +1,6 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
+import EditForm from './globals/edit-form';
 
 export default class Column extends Backbone.View {
 
@@ -7,6 +8,7 @@ export default class Column extends Backbone.View {
 		this.element = element;
 		this.listenTo( this.element, 'destroy', this.remove );
 		this.listenTo( this.element, 'change', this.render );
+		this.listenTo( this.element, 'change:editing', this.renderElementEditForm );
 
 		this.events = {
 			'click .pa-delete'		: '_removeHandler',
@@ -42,10 +44,17 @@ export default class Column extends Backbone.View {
 	 */
 	_editHandler( e ) {
 		e.preventDefault();
-		
-		console.log( 'editing' );
-
+		this.element.set( 'editing', true );
 		return false;
+	}
+
+	/**
+	 * Render Edit Element Form
+	 */
+	renderElementEditForm( model ) {
+		if ( model.get( 'editing' ) ) {
+			new EditForm( model, PA_VARS.entry_edit_element_text );
+		}
 	}
 
 }

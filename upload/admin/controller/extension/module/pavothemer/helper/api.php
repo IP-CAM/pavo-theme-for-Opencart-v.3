@@ -48,10 +48,6 @@ class PavothemerApiHelper {
 		curl_setopt( $curl, CURLOPT_TIMEOUT, $data['timeout'] );
 		curl_setopt( $curl, CURLOPT_CONNECTTIMEOUT, $data['timeout'] );
 
-		if ( $data['filename'] ) {
-			
-		}
-
 		// this option is required
 		curl_setopt( $curl, CURLOPT_REFERER, HTTP_CATALOG );
 

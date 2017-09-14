@@ -1,7 +1,7 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
 import Column from './column';
-import FormEditRow from './globals/form-edit-row';
+import EditForm from './globals/edit-form';
 
 export default class Row extends Backbone.View {
 
@@ -59,7 +59,7 @@ export default class Row extends Backbone.View {
 	 */
 	_deleteRowHandler() {
 		// this.
-		if ( confirm( this.$el.find( '.pa-delete-row' ).data( 'confirm' ) ) ) {
+		if ( confirm( this.$( '.pa-delete-row' ).data( 'confirm' ) ) ) {
 			// this.remove();
 			this.row.destroy();
 		}
@@ -86,6 +86,7 @@ export default class Row extends Backbone.View {
 		} );
 		this.row.get( 'columns' ).add({
 			settings: {
+				element: 'pa_column',
 				class: classWrapper
 			}
 		});
@@ -139,7 +140,7 @@ export default class Row extends Backbone.View {
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 
-					// lastest index if columns collection
+					// lastest index if columns collection 
 					lastest_column_index = index;
 				} else if ( lastest_column_index !== false ) {
 					new Promise(function(resolve, reject) {
@@ -182,7 +183,7 @@ export default class Row extends Backbone.View {
 	renderEditRowForm( model ) {
 		if ( model.get( 'editing' ) === true ) {
 			// row edit form
-			let editForm = new FormEditRow( model );
+			let editForm = new EditForm( model, PA_VARS.entry_edit_row_text, window.PA_ROW_FIELDS );
 		}
 	}
 

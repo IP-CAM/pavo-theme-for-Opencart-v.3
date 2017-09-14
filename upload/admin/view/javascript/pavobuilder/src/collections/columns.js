@@ -7,6 +7,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 	initialize( columns ) {
 		this.model = ColumnModel;
 		this.on( 'update', this._editabled, this );
+		this.on( 'add', this._addParam, this );
 	}
 
 	/**
@@ -30,6 +31,12 @@ export default class ColumnsCollection extends Backbone.Collection {
 				model.set( 'reRender', true );
 			}
 		} );
+	}
+
+	_addParam( model ) {
+		let settings = model.get( 'settings' );
+		settings.element = 'pa_column';
+		model.set( 'settings', settings );
 	}
 
 }

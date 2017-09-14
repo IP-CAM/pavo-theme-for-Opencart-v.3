@@ -22,6 +22,10 @@ module.exports = {
 	module: {
 		loaders: [
 			{
+				test: /\.css$/,
+				loader: [ 'style-loader', 'css-loader' ]
+			},
+			{
 				test: /\.js$/,
 				exclude: /node_modules/,
 				loader: 'babel-loader',
@@ -37,8 +41,7 @@ module.exports = {
 	      	'process.env.NODE_ENV': JSON.stringify( process.env.NODE_ENV )
 	    }),
 	    new webpack.optimize.OccurrenceOrderPlugin(),
-	    // disable ProvidePlugin because jquery is already in opencart website
-	 	// new webpack.ProvidePlugin({
+	 // 	new webpack.ProvidePlugin({
 		//     $: "jquery",
 		//     jQuery: "jquery",
 		//     "window.jQuery": "jquery",
@@ -50,10 +53,11 @@ module.exports = {
 	      	sourcemap: true,
 	      	beautify: false,
 	      	dead_code: true
-	    })
+	    }),
+		new ExtractTextPlugin( './node_modules/spectrum-colorpicker/spectrum.css' )
 	],
 	resolve: {
-		extensions: [ '.js' ],
+		extensions: [ '.js', '.css' ],
 		alias: {
 			'jquery-ui': 'jquery-ui/ui'
 		}

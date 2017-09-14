@@ -2,6 +2,7 @@ import Backbone from 'Backbone';
 import _ from 'underscore';
 import sortable from 'jquery-ui/ui/widgets/sortable';
 import ColumnModel from '../models/column'
+import EditForm from './globals/edit-form';
 import ElementsPopup from './globals/elements-popup';
 import Element from './element';
 
@@ -24,6 +25,7 @@ export default class Column extends Backbone.View {
 		this.listenTo( this.column, 'change:reRender', this._reRender );
 		this.listenTo( this.column.get( 'elements' ), 'remove', this._onRemoveElement );
 		this.listenTo( this.column.get( 'elements' ), 'add', this.addElement );
+		this.listenTo( this.column, 'change:editing', this._renderEditColumnForm );
 
 		// delegate event
 		this.delegateEvents();
@@ -153,7 +155,7 @@ export default class Column extends Backbone.View {
 	 */
 	_editHandler( e ) {
 		e.preventDefault();
-
+		this.column.set( 'editing', true );
 		return false;
 	}
 
@@ -194,6 +196,16 @@ export default class Column extends Backbone.View {
 		this.column.get( 'elements' ).moveItem( ui.item.indexStart, index );
 		// trigger drop event element
 		ui.item.trigger( 'drop', index );
+	}
+
+	/**
+	 * render edit form if 'editing' is true
+	 */
+	_renderEditColumnForm( model ) {
+		if ( model.get( 'editing' ) === true ) {
+			// row edit form
+			let editForm = new EditForm( model, PA_VARS.entry_edit_column_text );
+		}
 	}
 
 }

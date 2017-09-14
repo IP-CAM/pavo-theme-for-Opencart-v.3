@@ -9,7 +9,9 @@ export default class Element extends Backbone.Model {
 
 	defaults() {
 		return {
-			settings : {},
+			settings : {
+				element: 'pa_element'
+			},
 			mask	 : {}
 		};
 	}

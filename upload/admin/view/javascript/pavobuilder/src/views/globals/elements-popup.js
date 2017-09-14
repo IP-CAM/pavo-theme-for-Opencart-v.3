@@ -73,9 +73,9 @@ export default class ElementsPopup extends Backbone.View {
 			button = $( e.target ).parents( 'a:first' );
 		}
 
-		let settings = {
-			settings	: button.data( 'settings' ),
-			mask		: button.data( 'mask' )
+		let settings = button.data();
+		if ( settings.elements !== undefined ) {
+			delete settings.elements;
 		}
 
 		// add new element to column

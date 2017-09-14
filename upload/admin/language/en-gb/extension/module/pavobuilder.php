@@ -1,7 +1,8 @@
 <?php
 // Heading Title
 $_['heading_title'] 		= 'PavoBuilder';
-
+$_['text_success']          = 'Success: You have modified layout!';
+$_['text_warning']          = 'ERROR: Permission denied';
 // layouts list
 $_['layout_list_text'] 		= 'Layouts';
 $_['entry_add_new_text'] 	= 'Add New';
@@ -39,3 +40,25 @@ $_['entry_update_text']			= 'Update';
 $_['confirm_delete_row']		= 'Delete this row. Are you sure?';
 $_['confirm_delete_column']		= 'Delete this column. Are you sure?';
 $_['confirm_element_column']	= 'Delete this elements. Are you sure?';
+
+// Label
+$_['entry_general_text']		= 'General';
+$_['entry_animate_text']		= 'Animate';
+$_['entry_row_id_text']			= 'Row ID';
+$_['entry_extra_class_text']	= 'Extra Class';
+$_['entry_layout_type_text']	= 'Layout';
+$_['entry_wide_text']			= 'Wide';
+$_['entry_boxed_text']			= 'Boxed';
+$_['entry_effect_text']			= 'Effect';
+$_['entry_background_text']		= 'Background';
+$_['entry_color_text']			= 'Color';
+$_['entry_background_color_text']	= 'Backbround Color';
+$_['entry_background_image_text']	= 'Backbround Image';
+$_['entry_image_text']			= 'Image';
+$_['entry_video_text']			= 'Video';
+$_['entry_video_url_text']		= 'Video URL';
+$_['entry_parallax_text']		= 'Parallax';
+$_['entry_box_text']			= 'Box';
+$_['entry_styles_text']			= 'Styles';
+$_['entry_padding_text']		= 'Padding';
+$_['entry_margin_text']			= 'Margin';

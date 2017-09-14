@@ -90,10 +90,12 @@
         $styles = array(
             'stylesheet',
             $this->language->get( 'direction' ) === 'rtl' ? 'stylesheet-rtl' : '',
+            'animate',
             $skin ? 'skins/' . $skin : '',
             'customize'
         );
 
+        $this->document->addStyle( 'admin/view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
         foreach ( $styles as $style ) {
             if ( ! $style ) continue;
             $style = DIR_TEMPLATE . $theme . '/stylesheet/' . $style;

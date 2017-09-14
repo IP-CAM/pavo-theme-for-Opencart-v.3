@@ -124,13 +124,35 @@ class PavoThemerHelper {
 	 * shortcodes list supported by Pavotheme
 	 */
 	public function getShortcodes() {
-		$files = glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/pavobuilder/*.twig' );
+		$files = glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/extension/module/pavobuilder/*.twig' );
 		$results = array();
 		foreach ( $files as $file ) {
 			$results[] = basename( $file, '.twig' );
 		}
 
 		return $results;
+	}
+
+	/**
+	 * get animate effects
+	 */
+	public function getAnimates() {
+		$animates = array();
+		$file = DIR_CATALOG . 'view/theme/' . $this->theme . '/stylesheet/animate.min.css';
+
+		if ( file_exists( $file ) ) {
+			$content = file_get_contents( $file );
+			// get all current animate supported
+			preg_match_all( '/[^.]keyframes[^.](.*?)\{/i', $content, $matches );
+			if ( ! empty( $matches[1] ) ) {
+				$matches[1] = array_map( 'trim', $matches[1] );
+				foreach ( $matches[1] as $animate ) {
+					$animates[$animate] = ucfirst( $animate );
+				}
+			}
+		}
+
+		return $animates;
 	}
 
 }

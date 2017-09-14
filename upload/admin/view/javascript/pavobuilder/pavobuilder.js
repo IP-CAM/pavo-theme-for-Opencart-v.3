@@ -1,7 +1,16 @@
 import $ from 'jquery';
 import Builder from './src/views/pavobuilder';
+import Common from './src/common/functions';
 
 $( document ).ready(() => {
 	// init view
-	new Builder().render();
+	let HomePageBuilder = new Builder( window.PA_PARAMS );
+	HomePageBuilder.render();
+
+	$( document ).on( 'submit', '#pavohomebuilder-layout-edit', ( e ) => {
+		// e.preventDefault();
+		let textarea = $( '#pavo-home-pagebuilder-content' );
+		textarea.text( JSON.stringify( Common.toJSON( HomePageBuilder.rowsCollection, [ 'editabled', 'adding', 'reRender', 'adding_position' ] ) ) );
+		return true;
+	} );
 });

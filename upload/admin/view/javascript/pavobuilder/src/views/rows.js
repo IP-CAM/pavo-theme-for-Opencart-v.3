@@ -1,8 +1,7 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
 import Row from './row';
-
-import ElementsCollection from '../collections/elements';
+import Common from '../common/functions';
 
 export default class Rows extends Backbone.View {
 
@@ -14,7 +13,7 @@ export default class Rows extends Backbone.View {
 		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
 		this.events = {
-			'click .pa-clone-row' 	: '_cloneRowHandler'
+			'click .pa-clone-row' 					: '_cloneRowHandler'
 		};
 
 		// add event
@@ -52,7 +51,7 @@ export default class Rows extends Backbone.View {
 		if ( typeof status.at === 'undefined' ) {
 			this.$el.append( new Row( model ).render().el );
 		} else {
-			let rows = this.$el.find( '.pa-row-container' );
+			let rows = this.$( '.pa-row-container' );
 			rows.map( ( i, row ) => {
 				let newIndex = parseInt( status.at ) - 1;
 				if ( newIndex == i ) {
@@ -70,29 +69,10 @@ export default class Rows extends Backbone.View {
 		let cid = $( e.target ).parents( '.pa-row-container:first' ).data( 'cid' );
 		let model = this.rows.get( { cid: cid } );
 		let index = this.rows.indexOf( model );
-		let newModel = this._clone( model ); // .toJSON()
+		let newModel = Common.toJSON( model );
 
 		this.rows.add( newModel, { at: parseInt( index ) + 1 } );
 		return false;
-	}
-
-	/**
-	 * Clone row model
-	 */
-	_clone( data = {} ) {
-		if ( data instanceof Backbone.Model || data instanceof Backbone.Collection ) {
-			data = data.toJSON();
-		}
-
-		_.map( data, ( value, name ) => {
-			if ( value instanceof Object ) {
-				data[name] = this._clone( value );
-			} else {
-				data[name] = value;
-			}
-		} );
-
-		return data;
 	}
 
 	/**

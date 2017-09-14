@@ -45,7 +45,7 @@ export default class Builder extends Backbone.View {
 		let model = {
 			settings: {},
 			columns: [
-				{ settings: { class: 'pa-col-sm-12' } }
+				{ settings: { element: 'pa_column', class: 'pa-col-sm-12' } }
 			]
 		};
 		this.rowsCollection.add( model );
