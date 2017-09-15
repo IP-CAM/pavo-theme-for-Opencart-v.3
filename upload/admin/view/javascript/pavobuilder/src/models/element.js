@@ -3,16 +3,15 @@ import _ from 'underscore';
 
 export default class Element extends Backbone.Model {
 
-	initialize( data = {} ) {
-		// super();
-	}
+	initialize( data = {} ) {}
 
 	defaults() {
 		return {
 			settings : {
 				element: 'pa_element'
 			},
-			mask	 : {}
+			mask	 : {},
+			editing  : false
 		};
 	}
 

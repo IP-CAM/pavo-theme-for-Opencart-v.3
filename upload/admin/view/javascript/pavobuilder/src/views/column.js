@@ -21,7 +21,6 @@ export default class Column extends Backbone.View {
 		this.listenTo( this.column, 'destroy', this.remove );
 		// re-render html layout
 		// because if is index > 0, we need resize column control
-		// this.listenTo( this.column, 'change:editabled', this._reRender );
 		this.listenTo( this.column, 'change:reRender', this._reRender );
 		this.listenTo( this.column.get( 'elements' ), 'remove', this._onRemoveElement );
 		this.listenTo( this.column.get( 'elements' ), 'add', this.addElement );
@@ -35,7 +34,6 @@ export default class Column extends Backbone.View {
 	 * Render html
 	 */
 	render() {
-
 		var data = this.column.toJSON();
 		data.cid = this.column.cid;
 

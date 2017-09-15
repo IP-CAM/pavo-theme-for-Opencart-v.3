@@ -14,7 +14,7 @@ export default class ColumnModel extends Backbone.Model {
 				element: 'pa_column'
 			},
 			elements: new ElementsCollection(),
-			editabled: false,
+			editing: false,
 			adding: false
 		};
 	}

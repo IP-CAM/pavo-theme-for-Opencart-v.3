@@ -100,7 +100,6 @@ export default class EditForm extends Backbone.View {
 	 */
 	_updateHandler( e ) {
 		e.preventDefault();
-
 		new Promise( ( resolve, reject ) => {
 			let settings = this.$el.find( '#pa-edit-form-settings' ).serializeJSON();
 			settings = { ...this.data.get('settings'), ...settings };

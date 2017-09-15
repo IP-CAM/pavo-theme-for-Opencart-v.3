@@ -2,18 +2,18 @@ import Backbone from 'Backbone';
 import _ from 'underscore';
 import EditForm from './globals/edit-form';
 
-export default class Column extends Backbone.View {
+export default class Element extends Backbone.View {
 
 	initialize( element = {} ) {
 		this.element = element;
-		this.listenTo( this.element, 'destroy', this.remove );
-		this.listenTo( this.element, 'change', this.render );
-		this.listenTo( this.element, 'change:editing', this.renderElementEditForm );
 
 		this.events = {
 			'click .pa-delete'		: '_removeHandler',
 			'click .pa-edit'		: '_editHandler'
 		};
+		this.listenTo( this.element, 'destroy', this.remove );
+		this.listenTo( this.element, 'change', this.reRender );
+		this.listenTo( this.element, 'change:editing', this.renderElementEditForm );
 	}
 
 	/**
@@ -44,16 +44,23 @@ export default class Column extends Backbone.View {
 	 */
 	_editHandler( e ) {
 		e.preventDefault();
-		this.element.set( 'editing', true );
+		this.element.set( 'editing', ! this.element.get( 'editing' ) );
 		return false;
+	}
+
+	/**
+	 * re-render if model has changed
+	 */
+	reRender() {
+		this.$el.replaceWith( this.render().el );
 	}
 
 	/**
 	 * Render Edit Element Form
 	 */
 	renderElementEditForm( model ) {
-		if ( model.get( 'editing' ) ) {
-			new EditForm( model, PA_VARS.entry_edit_element_text );
+		if ( model.get( 'editing' ) === true ) {
+			let editForm = new EditForm( model, PA_VARS.entry_edit_element_text );
 		}
 	}
 
