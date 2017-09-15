@@ -16,7 +16,10 @@ export default class Row extends Backbone.View {
 			'click .pa-delete-row'		: '_deleteRowHandler',
 			'click .pa-add-column'		: '_addColumnHandler',
 			'click .pa-edit-column-num'	: '_changeColumnsHandler',
-			'click .pa-edit-row'		: '_setEditRowHandler'
+			'click .pa-edit-row'		: '_setEditRowHandler',
+			'click .pa-reorder'			: () => {
+				return false;
+			}
 		}
 
 		// listen this.row model
@@ -183,7 +186,7 @@ export default class Row extends Backbone.View {
 	renderEditRowForm( model ) {
 		if ( model.get( 'editing' ) === true ) {
 			// row edit form
-			let editForm = new EditForm( model, PA_VARS.entry_edit_row_text, window.PA_ROW_FIELDS );
+			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_row_text, PA_PARAMS.row_fields );
 		}
 	}
 

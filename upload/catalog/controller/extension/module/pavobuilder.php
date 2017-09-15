@@ -22,6 +22,7 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 	private function renderElement( $data = array(), $content = '', $set = 0 ) {
 		$settings = ! empty( $data['settings'] ) ? $data['settings'] : array();
 		if ( ! empty( $settings['element'] ) ) {
+			$this->load->model( 'setting/module' );
 			$content = '';
 			if ( ! empty( $data['columns'] ) || ! empty( $data['elements'] ) ) {
 				$subElements = ! empty( $data['columns'] ) ? $data['columns'] : ( ! empty( $data['elements'] ) ? $data['elements'] : array() );
@@ -31,7 +32,8 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 					$subs = ! empty( $data['columns'] ) ? $data['columns'] : ( ! empty( $data['elements'] ) ? $data['elements'] : array() );
 					
 					if ( ! empty( $element['element_type'] ) && $element['element_type'] === 'module' && ! empty( $element['moduleCode'] ) ) {
-						echo $this->load->controller( 'extension/module/' . $element['moduleCode'], $sts );
+						$moduleSettings = ! empty( $element['moduleId'] ) ? $this->model_setting_module->getModule( $element['moduleId'] ) : array();
+						echo $this->load->controller( 'extension/module/' . $element['moduleCode'], $moduleSettings ); // $sts
 					} else {
 						echo $this->renderElement( $element, $subs, 1 );
 					}

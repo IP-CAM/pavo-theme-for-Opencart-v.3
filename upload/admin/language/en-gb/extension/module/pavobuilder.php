@@ -45,6 +45,7 @@ $_['confirm_element_column']	= 'Delete this elements. Are you sure?';
 $_['entry_general_text']		= 'General';
 $_['entry_animate_text']		= 'Animate';
 $_['entry_row_id_text']			= 'Row ID';
+$_['entry_column_id_text']		= 'Column ID';
 $_['entry_extra_class_text']	= 'Extra Class';
 $_['entry_layout_type_text']	= 'Layout';
 $_['entry_wide_text']			= 'Wide';

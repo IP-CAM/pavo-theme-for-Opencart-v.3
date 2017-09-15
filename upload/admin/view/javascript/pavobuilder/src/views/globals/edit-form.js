@@ -17,6 +17,7 @@ export default class EditForm extends Backbone.View {
 
 		this.template = _.template( $( '#pa-edit-form-template' ).html(), { variable: 'data' } );
 		this.listenTo( this.data, 'change:editing', this._toggle_form );
+		// this.listenTo( this.data, 'change:fields', this.renderFields );
 		this.listenTo( this.data, 'destroy', this.remove );
 
 		this.events = {
@@ -42,17 +43,26 @@ export default class EditForm extends Backbone.View {
 			$( 'body' ).find( this.$el ).on( 'hidden.bs.modal', ( e ) => {
 				this.data.set( 'editing', false );
 			} );
+			// render fields
+			this.renderFields();
+		}
+		return this;
+	}
 
-			let tabs = [];
-			_.map( this.fields, ( fields, tab ) => {
-				tabs.push({
-					tab: tab,
-					label: fields.label
-				});
-			} );
+	/**
+	 * render edit fields
+	 */
+	renderFields() {
+		let tabs = [];
+		_.map( this.fields, ( fields, tab ) => {
+			tabs.push({
+				tab: tab,
+				label: fields.label
+			});
+		} );
 
+		if ( tabs.length > 0 ) {
 			this.$( '#pa-edit-form-settings' ).html( _.template( $( '#pa-modal-panel' ).html(), { variable: 'data' } )( { tabs: tabs } ) );
-
 			let settings = this.data.get( 'settings' );
 			// render fields inside modal content
 			_.map( this.fields, ( fields, tab ) => {
@@ -60,11 +70,10 @@ export default class EditForm extends Backbone.View {
 					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + field.type + '-form-field' ).html(), { variable: 'data' } )( { field: field, settings: settings } ) );
 				} );
 			} );
-
-			// init thirparty scripts
-			Common.init_thirparty_scripts();
 		}
-		return this;
+
+		// init thirparty scripts
+		Common.init_thirparty_scripts();
 	}
 
 	/**
@@ -72,6 +81,7 @@ export default class EditForm extends Backbone.View {
 	 */
 	_toggle_form( model ) {
 		if ( ! model.get( 'editing' ) ) {
+			$( 'body' ).find( this.$el ).modal( 'hide' );
 			this.remove();
 		}
 	}

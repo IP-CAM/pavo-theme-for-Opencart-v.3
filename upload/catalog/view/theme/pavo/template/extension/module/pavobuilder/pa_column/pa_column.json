@@ -1,0 +1,69 @@
+{
+	"general": {
+		"label"		: "entry_general_text",
+		"fields"	: [
+			{
+				"type"		: "text",
+				"name"		: "uniqid_id",
+				"label"		: "entry_column_id_text"
+			},
+			{
+				"type"		: "text",
+				"name"		: "extra_class",
+				"label"		: "entry_extra_class_text"
+			}
+		]
+	},
+	"background": {
+		"label"		: "entry_background_text",
+		"fields"	: [
+			{
+				"type"		: "colorpicker",
+				"name"		: "background-color",
+				"label"		: "entry_background_color_text"
+			},
+			{
+				"type"		: "image",
+				"name"		: "background-image",
+				"label"		: "entry_background_image_text"
+			},
+			{
+				"type"		: "colorpicker",
+				"name"		: "background-video",
+				"label"		: "entry_video_url_text"
+			}
+		]
+	},
+	"style"		: {
+		"label"		: "entry_effect_text",
+		"fields"	: [
+			{
+				"type"		: "animate",
+				"name"		: "",
+				"label"		: "heading_title"
+			},
+			{
+				"type"		: "select-animate",
+				"name"		: "effect",
+				"id"		: "animate-select",
+				"label"		: "entry_effect_text"
+			}
+		]
+	},
+	"animate"		: {
+		"label"		: "entry_effect_text",
+		"fields"	: [
+			{
+				"type"		: "animate",
+				"name"		: "",
+				"label"		: "heading_title"
+			},
+			{
+				"type"		: "select-animate",
+				"name"		: "effect",
+				"id"		: "animate-select",
+				"label"		: "entry_effect_text"
+			}
+		]
+	}
+}

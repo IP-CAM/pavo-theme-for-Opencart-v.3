@@ -1,8 +1,13 @@
 <script type="text/javascript">
-	var PA_PARAMS = window.PA_PARAMS = {{ layout.content|json_encode() }};
-	var PA_VARS = window.PA_VARS = {{ languages }};
-	var PA_ROW_FIELDS = window.PA_ROW_FIELDS = {{ row_edit_fields | json_encode() }}
-	var PA_SITE_URL = window.PA_SITE_URL = '{{ site_url }}';
+	var PA_PARAMS = window.PA_PARAMS = {
+		content 		: {{ layout.content|json_encode() }},
+		element_fields 	: {{ element_fields|json_encode() }},
+		row_fields 		: {{ row_edit_fields|json_encode() }},
+		column_fields 	: {{ column_edit_fields|json_encode() }},
+		site_url 		: '{{ site_url }}',
+		languages 		: {{ languages }},
+		user_token 		: '{{ user_token }}'
+	}
 </script>
 
 <script type="text/html" id="pa-modal-panel">
@@ -20,7 +25,6 @@
 		</div>
 	<% } %>
 </script>
-
 <script type="text/html" id="pa-animate-form-field">
 	<div class="form-group text-center">
 		<div id="animate-preview" class="animated">
@@ -112,7 +116,7 @@
 			var lastIndex = new File( [''], data.settings[data.field.name] ).name.lastIndexOf('.');
 			var name = data.settings[data.field.name].slice( 0, lastIndex );
 			var ext = data.settings[data.field.name].slice( lastIndex );
-			image = PA_SITE_URL + 'image/cache/' + name + '-100x100' + ext;
+			image = PA_PARAMS.site_url + 'image/cache/' + name + '-100x100' + ext;
 		}
 	%>
 	<div class="form-group">
@@ -178,7 +182,7 @@
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-danger pa-close" aria-hidden="true">{{ entry_cancel_text }}</button>
-					<button type="button" class="btn btn-info pa-update" aria-hidden="updateform="pa-edit-form-settings">{{ entry_update_text }}</button>
+					<button type="button" class="btn btn-info pa-update" aria-hidden="true" form="pa-edit-form-settings">{{ entry_update_text }}</button>
 				</div>
 			</div>
 		</div>
@@ -191,39 +195,39 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title text-info"><i class="fa fa-exclamation-triangle"></i> {{ entry_add_element_text }}</h4>
+					<h4 class="modal-title text-info"><i class="fa fa-exclamation-triangle"></i> {{ entry_add_element_text }}</h4>
 				</div>
 				<div class="modal-body">
 					{% if ( groups ) %}
 						<ul class="nav nav-tabs">
 							<li class="active"><a href="#nav-elements-all" data-toggle="tab" aria-expanded="true">{{ entry_all_text }}</a></li>
-				  		{% for tab in groups %}
-				  			<li><a href="#nav-{{ tab.slug }}" data-toggle="tab" aria-expanded="true">{{ tab.name }}</a></li>
-				  		{% endfor %}
-			  		</ul>
-			  		<div class="tab-content">
-			  			<div id="nav-elements-all" class="tab-pane active"></div>
-			  			{% for tab in groups %}
-			  				<div id="nav-{{ tab.slug }}" class="tab-pane">
-				  				{% for element in elements %}
-				  					{% if ( element.group_slug == tab.slug ) %}
-				  						<div class="pa-col-sm-3">
-						  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-settings="{{ element.settings | escape }}" data-mask="{{ element | json_encode() | escape }}">
-					  							<i class="{{ element.icon }}"></i>
-					  							<span>{{ element.name }}</span>
-					  							{% if ( element.type == 'shortcode' and element.shortcode ) %}
-					  								<code>{{ element.shortcode }}</code>
-					  							{% else %}
-					  								<code>{{ element.code }}.{{ element.module_id }}</code>
-					  							{% endif %}
-					  						</a>
-				  						</div>
-				  					{% endif %}
-				  				{% endfor %}
-			  				</div>
-			  			{% endfor %}
-			  		</div>
-		  		{% endif %}
+					  		{% for tab in groups %}
+					  			<li><a href="#nav-{{ tab.slug }}" data-toggle="tab" aria-expanded="true">{{ tab.name }}</a></li>
+					  		{% endfor %}
+			  			</ul>
+				  		<div class="tab-content">
+				  			<div id="nav-elements-all" class="tab-pane active"></div>
+				  			{% for tab in groups %}
+				  				<div id="nav-{{ tab.slug }}" class="tab-pane">
+					  				{% for element in elements %}
+					  					{% if ( element.group_slug == tab.slug ) %}
+					  						<div class="pa-col-sm-3">
+							  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-settings="{{ element.settings | escape }}" data-mask="{{ element | json_encode() | escape }}">
+						  							<i class="{{ element.icon }}"></i>
+						  							<span>{{ element.name }}</span>
+						  							{% if ( element.type == 'shortcode' and element.shortcode ) %}
+						  								<code>{{ element.shortcode }}</code>
+						  							{% else %}
+						  								<code>{{ element.code }}.{{ element.module_id }}</code>
+						  							{% endif %}
+						  						</a>
+					  						</div>
+					  					{% endif %}
+					  				{% endfor %}
+				  				</div>
+				  			{% endfor %}
+				  		</div>
+		  			{% endif %}
 				</div>
 			</div>
 		</div>
@@ -286,7 +290,7 @@
 
 <script type="text/html" id="pa-element-template">
 
-	<div class="pa-element-content<%= data.element ? ' ' + data.element : '' %>" data-element_type="<%= data.element_type %>" data-shortcode="<%= data.shortcode %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
+	<div class="pa-element-content<%= data.element ? ' ' + data.element : '' %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
 		<div class="pa-controls element-controls">
 			<a href="#" class="pa-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
 			<a href="#" class="pa-edit" title="{{ entry_edit_element_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
@@ -294,7 +298,7 @@
 			<a href="#" class="pa-delete" title="{{ entry_delete_element_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 		</div>
 		<div class="pa-element-wrapper">
-			<a class="element element-item element-item-<%= data.mask.code ? data.mask.code : '' %>" href="#" data-group="<%= data.mask.slug %>" data-shortcode="<%= data.mask.shortcode %>" data-module-id="<%= data.mask.module_id %>" data-module-code="<%= data.mask.code %>" data-settings="<%= data.mask.settings %>">
+			<a class="element element-item element-item-<%= data.mask.code ? data.mask.code : '' %>" href="#">
 				<i class="<%= data.mask.icon %>"></i>
 				<span><%= data.mask.name %></span>
 				<% if ( data.mask.type == 'shortcode' || data.mask.shortcode ) { %>

@@ -4,7 +4,7 @@ import Common from './src/common/functions';
 
 $( document ).ready(() => {
 	// init view
-	let HomePageBuilder = new Builder( window.PA_PARAMS );
+	let HomePageBuilder = new Builder( window.PA_PARAMS.content );
 	HomePageBuilder.render();
 
 	$( document ).on( 'submit', '#pavohomebuilder-layout-edit', ( e ) => {

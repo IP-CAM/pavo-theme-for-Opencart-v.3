@@ -33,7 +33,6 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			);
 			$this->data['create_new_module_url'] = $this->url->link( 'extension/module/pavobuilder/add', 'user_token=' . $this->session->data['user_token'], true );
 
-
 			// set page document title
 			if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
 
@@ -167,15 +166,17 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->cache->set( 'pavobuilder_animate_effects', $this->data['animates'] );
 		}
 
-		// DEVING
+		// fields
+		$this->data['element_fields'] = array();
 		$this->data['row_edit_fields'] = $this->rowEditFields();
+		$this->data['column_edit_fields'] = $this->columnEditFields();
 
 		if ( $shortcodes ) {
 			$this->data['groups'][] = array(
 					'name'		=> $this->language->get( 'entry_pavo_shortcodes' ),
 					'slug'		=> 'pa-shortcodes-list'
 				);
-			foreach ( $shortcodes as $shortcode ) {
+			foreach ( $shortcodes as $shortcode => $param ) {
 				$this->data['elements'][] = array(
 						'type'		=> 'shortcode',
 						'settings'	=> '',
@@ -183,9 +184,11 @@ class ControllerExtensionModulePavobuilder extends Controller {
 						'group' 	=> strip_tags( $this->language->get( 'heading_title' ) ),
 						'group_slug'=> 'pa-shortcodes-list'
 					);
+				$this->data['element_fields'][$shortcode] = $param ? json_decode( $param, true ) : array();
 			}
 		}
 
+		$this->data['user_token'] = $this->session->data['user_token'];
 		// layout data
 		$this->data['layout'] = $id ? $this->model_setting_module->getModule( $id ) : array();
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
@@ -235,6 +238,21 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		$this->session->data['success'] = $this->language->get('text_success');
 
 		$this->response->redirect( $this->url->link( 'extension/module/pavobuilder/edit', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
+	}
+
+	/**
+	 * Edit module
+	 */
+	public function editModule() {
+		$module = ! empty( $this->request->get['moduleCode'] ) ? $this->request->get['moduleCode'] : '';
+		$file = DIR_APPLICATION . 'controller/extension/module/' . $module . '.php';
+		// $file_content = file_get_contents( $file );
+		// preg_match( "/this->load->view\([\s+]*[\'|\"{1}]{1}(.+)[\'|\"{1}]{1}/i", $file_content, $matches );
+		// $this->load->language( 'extension/module/' . $this->request->post['moduleCode'] );
+		// $this->response->setOutput( $this->load->view( $matches[1] ), $this->request->post['settings'] );
+		if ( $module && file_exists( $file ) ) {
+			$this->load->controller( 'extension/module/' . $module );
+		}
 	}
 
 	/**
@@ -288,6 +306,83 @@ class ControllerExtensionModulePavobuilder extends Controller {
 										'type'		=> 'checkbox',
 										'name'		=> 'parallax',
 										'label'		=> $this->language->get( 'entry_parallax_text' )
+									)
+							)
+					),
+				'style'	=> array(
+						'label'	=> $this->language->get( 'entry_styles_text' ),
+						'fields'	=> array(
+								array(
+										'type'		=> 'layout-onion',
+										'name'		=> 'layout_onion',
+										'label'		=> $this->language->get( 'entry_box_text' )
+									),
+								array(
+										'type'		=> 'colorpicker',
+										'name'		=> 'color',
+										'label'		=> $this->language->get( 'entry_color_text' )
+									)
+							)
+					),
+				'animate'	=> array(
+						'label'	=> $this->language->get( 'entry_effect_text' ),
+						'fields'	=> array(
+								array(
+										'type'	=> 'animate',
+										'name'	=> '',
+										'label'	=> $this->language->get( 'heading_title' )
+									),
+								array(
+										'type'		=> 'select',
+										'name'		=> 'effect',
+										'id'		=> 'animate-select',
+										'label'		=> $this->language->get( 'entry_effect_text' ),
+										'groups'	=> $this->data['animate_groups'] ? true : false,
+										'options'	=> $this->data['animate_groups'] ? $this->data['animate_groups'] : $this->data['animates']
+									)
+							)
+					)
+			);
+		return $fields;
+	}
+
+	/**
+	 * column edit fields
+	 */
+	private function columnEditFields() {
+		$fields = array(
+				'general'	=> array(
+						'label'		=> $this->language->get( 'entry_general_text' ),
+						'fields'	=> array(
+								array(
+										'type'	=> 'text',
+										'name'	=> 'uniqid_id',
+										'label'	=> $this->language->get( 'entry_column_id_text' )
+									),
+								array(
+										'type'	=> 'text',
+										'name'	=> 'extra_class',
+										'label'	=> $this->language->get( 'entry_extra_class_text' )
+									)
+							)
+					),
+				'background'	=> array(
+						'label'	=> $this->language->get( 'entry_background_text' ),
+						'fields'	=> array(
+								array(
+										'type'		=> 'colorpicker',
+										'name'		=> 'background-color',
+										'label'		=> $this->language->get( 'entry_background_color_text' )
+									),
+								array(
+										'type'		=> 'image',
+										'name'		=> 'background-image',
+										'label'		=> $this->language->get( 'entry_background_image_text' )
+									),
+								array(
+										'type'		=> 'text',
+										'name'		=> 'background-video',
+										'label'		=> $this->language->get( 'entry_video_url_text' )
 									)
 							)
 					),
