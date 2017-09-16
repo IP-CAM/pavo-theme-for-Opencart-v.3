@@ -28,25 +28,24 @@
 				"label"		: "entry_background_image_text"
 			},
 			{
-				"type"		: "colorpicker",
+				"type"		: "text",
 				"name"		: "background-video",
 				"label"		: "entry_video_url_text"
 			}
 		]
 	},
 	"style"		: {
-		"label"		: "entry_effect_text",
+		"label"		: "entry_styles_text",
 		"fields"	: [
 			{
-				"type"		: "animate",
-				"name"		: "",
-				"label"		: "heading_title"
+				"type"		: "layout-onion",
+				"name"		: "layout_onion",
+				"label"		: "entry_box_text"
 			},
 			{
-				"type"		: "select-animate",
-				"name"		: "effect",
-				"id"		: "animate-select",
-				"label"		: "entry_effect_text"
+				"type"		: "colorpicker",
+				"name"		: "color",
+				"label"		: "entry_color_text"
 			}
 		]
 	},

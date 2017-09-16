@@ -63,3 +63,20 @@ $_['entry_box_text']			= 'Box';
 $_['entry_styles_text']			= 'Styles';
 $_['entry_padding_text']		= 'Padding';
 $_['entry_margin_text']			= 'Margin';
+
+// maps
+$_['entry_maptype_id_text']				= 'Map Type';
+$_['entry_height_text'] 				= 'Height';
+$_['entry_unit_text']					= 'Unit';
+$_['entry_px_text']						= 'px';
+$_['entry_percent_text']				= '%';
+$_['entry_enabled_zoom_text'] 			= 'Enable zoom Control';
+$_['entry_enabled_scrollwheel_text'] 	= 'Enable Scrollwheel';
+$_['entry_enabled_map_typecontrols_text']		= 'Enable Map Type Controls';
+$_['entry_enabled_draggable_text']		= 'Enable Draggable';
+$_['entry_zoom_level_text']				= 'Zoom Level';
+$_['entry_enter_place_text']			= 'Enter place';
+$_['entry_preview_text']				= 'Preview';
+
+// Warning
+$_['entry_missing_google_map_key']		= 'ERROR: Please go to Pavothemer -> Settings and enter Google Map Api Key';

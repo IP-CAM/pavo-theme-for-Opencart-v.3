@@ -2,8 +2,8 @@
 	var PA_PARAMS = window.PA_PARAMS = {
 		content 		: {{ layout.content|json_encode() }},
 		element_fields 	: {{ element_fields|json_encode() }},
-		row_fields 		: {{ row_edit_fields|json_encode() }},
-		column_fields 	: {{ column_edit_fields|json_encode() }},
+		animate_groups 	: {{ animate_groups|json_encode() }},
+		animates 		: {{ animates|json_encode() }},
 		site_url 		: '{{ site_url }}',
 		languages 		: {{ languages }},
 		user_token 		: '{{ user_token }}'
@@ -38,16 +38,16 @@
 		<div class="col-sm-10">
 			<select name="<%= data.field.name %>" id="<%= data.field.id ? data.field.id : data.field.name %>" class="form-control">
 				<% if ( data.field.groups ) { %>
-					<% _.each( data.field.options, function( options, name ){ %>
+					<% _.each( data.field.options, function( options, name ) { %>
 						<optgroup label="<%= name %>">
-							<% _.each( options, function( name, val ){ %>
-								<option value="<%= val %>"<%= val == data.settings[data.field.name] ? ' selected' : '' %>><%= name %></option>
+							<% _.each( options, function( label, val ){ %>
+								<option value="<%= val %>"<%= val == data.settings[data.field.name] ? ' selected' : '' %>><%= label %></option>
 							<% }) %>
 						</optgroup>
 					<% }); %>
 				<% } else { %>
-					<% _.each( data.field.options, function( name, value ){ %>
-						<option value="<%= value %>"<%= value == data.settings[data.field.name] ? ' selected' : '' %>><%= name %></option>
+					<% _.each( data.field.options, function( f ) { %>
+						<option value="<%= f.value %>"<%= f.value == data.settings[data.field.name] ? ' selected' : '' %>><%= f.label %></option>
 					<% }); %>
 				<% } %>
 			</select>
@@ -68,12 +68,23 @@
 		</div>
 	</div>
 </script>
+<script type="text/html" id="pa-number-form-field">
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><%= data.field.label %></label>
+		<div class="col-sm-10">
+			<input type="number" step="<%= data.field.step %>" min="<%= data.field.min %>" max="<%= data.field.max %>" name="<%= data.field.name %>" id="<%= data.field.name %>" value="<%= data.settings[data.field.name] %>" class="form-control" />
+			<% if ( data.field.desc ) { %>
+				<p style="font-style: italic"><%= data.field.desc %></p>
+			<% } %>
+		</div>
+	</div>
+</script>
 <script type="text/html" id="pa-checkbox-form-field">
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
 			<label class="checkbox-inline">
-				<input type="hidden" name="<%= data.field.name %>" id="<%= data.field.name %>" value="0" class="form-control" />
+				<input type="hidden" name="<%= data.field.name %>" value="0" class="form-control" />
 				<input type="checkbox" name="<%= data.field.name %>" id="<%= data.field.name %>" value="1" class="form-control"<%= data.settings[data.field.name] == 1 ? ' checked' : '' %>/>
 			</label>
 			<% if ( data.field.desc ) { %>
@@ -86,9 +97,9 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<% _.each( data.field.options, function( name, value ) { %>
+			<% _.each( data.field.options, function( value ) { %>
 				<label class="radio-inline">
-					<input type="radio" name="<%= data.field.name %>" value="<%= value %>" <%= data.settings[data.field.name] == value ? ' checked' : '' %>/> <%= name %>
+					<input type="radio" name="<%= data.field.name %>" value="<%= value.value %>" <%= data.settings[data.field.name] == value.value ? ' checked' : '' %>/> <%= value.label %>
 			    </label>
 			<% } ); %>
 			<% if ( data.field.desc ) { %>
@@ -129,6 +140,17 @@
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
+		</div>
+	</div>
+</script>
+<script type="text/html" id="pa-map-preview-form-field">
+	<div class="form-group">
+		<div class="col-sm-12">
+			<div class="pa-google-map-wrapper">
+				<div class="pa-google-map"></div>
+				<input type="hidden" name="lat" value="<%= data.field.lat %>" />
+				<input type="hidden" name="lng" value="<%= data.field.lng %>" />
+			</div>
 		</div>
 	</div>
 </script>

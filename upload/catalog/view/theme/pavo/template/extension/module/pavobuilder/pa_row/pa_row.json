@@ -18,10 +18,12 @@
 				"label"		: "entry_layout_type_text",
 				"options"	: [
 					{
-						"wide"	: "entry_wide_text"
+						"value"	: "wide",
+						"label"	: "entry_wide_text"
 					},
 					{
-						"wide"	: "entry_boxed_text"
+						"value"	: "boxed",
+						"label"	: "entry_boxed_text"
 					}
 				]
 			}
@@ -41,7 +43,7 @@
 				"label"		: "entry_background_image_text"
 			},
 			{
-				"type"		: "colorpicker",
+				"type"		: "text",
 				"name"		: "background-video",
 				"label"		: "entry_video_url_text"
 			},
@@ -79,6 +81,7 @@
 				"type"		: "select-animate",
 				"name"		: "effect",
 				"id"		: "animate-select",
+				"group"		: true,
 				"label"		: "entry_effect_text"
 			}
 		]

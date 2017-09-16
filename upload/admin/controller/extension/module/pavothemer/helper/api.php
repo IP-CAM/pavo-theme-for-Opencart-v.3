@@ -31,7 +31,7 @@ class PavothemerApiHelper {
 				'method'		=> 'GET',
 				'headers'		=> array(),
 				'body'			=> array(),
-				'timeout'		=> 30,
+				'timeout'		=> 300,
 				'user-agent'	=> '',
 				'httpversion'	=> '1.0',
 				'filename'		=> false

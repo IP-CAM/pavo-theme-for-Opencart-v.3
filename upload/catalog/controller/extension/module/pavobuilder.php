@@ -40,7 +40,7 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 				}
 				$content = ob_get_clean();
 			}
-			return $this->load->view( 'extension/module/pavobuilder/' . $settings['element'], array( 'settings' => $settings, 'content' => $content ) );
+			return $this->load->view( 'extension/module/pavobuilder/' . $settings['element'] . '/' . $settings['element'], array( 'settings' => $settings, 'content' => $content ) );
 		}
 	}
 

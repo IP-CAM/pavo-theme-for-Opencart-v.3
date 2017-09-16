@@ -28,7 +28,6 @@ export default class Element extends Backbone.View {
 		data.cid = this.element.cid;
 		this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 		this.setElement( this.template );
-
 		return this;
 	}
 
@@ -52,7 +51,7 @@ export default class Element extends Backbone.View {
 		if ( this.element.get( 'element_type' ) == 'module' ) {
 			let url = PA_PARAMS.site_url + 'admin/index.php?route=extension/module/' + this.element.get( 'moduleCode' ) + '&module_id='+ this.element.get( 'moduleId' ) + '&user_token=' + PA_PARAMS.user_token;
 			let html = '<div class="loading text-center"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>';
-			html += '<iframe id="pa-iframe-edit-module" src="'+url+'"></iframe>';
+			html += '<iframe id="pa-iframe-edit-module" src="' + url + '"></iframe>';
 			this.editForm.$( '#pa-edit-form-settings' ).replaceWith( html );
 			let loaded = true;
 			this.editForm.$( '#pa-iframe-edit-module' ).on( 'load', () => {

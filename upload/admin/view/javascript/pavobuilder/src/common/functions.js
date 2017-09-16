@@ -3,6 +3,7 @@ import _ from 'underscore';
 import $ from 'jquery';
 import spectrum from 'spectrum-colorpicker';
 import 'spectrum-colorpicker/spectrum.css';
+import GoogleMap from '../views/globals/google-map';
 
 function toJSON( data = {}, ignores = [] ) {
 	if ( data instanceof Backbone.Model || data instanceof Backbone.Collection ) {
@@ -24,7 +25,7 @@ function toJSON( data = {}, ignores = [] ) {
  * init thirparty script
  * ex: colorpicker, datepicker ..
  */
-function init_thirparty_scripts() {
+function init_thirdparty_scripts( model ) {
 	// colorPicker
 	let inputs = $( '.pa-colorpicker-input' );
 	for ( let i = 0; i < inputs.length; i++ ) {
@@ -33,9 +34,16 @@ function init_thirparty_scripts() {
 			color: $( input ).val()
 		});
 	}
+
+	// maps
+	let maps = $( '.pa_google_map.form-horizontal' );
+	for ( let i = 0; i < maps.length; i++ ) {
+		let map = maps[i];
+		new GoogleMap( $( map ), model ).render();
+	}
 }
 
 export default {
 	toJSON,
-	init_thirparty_scripts
+	init_thirdparty_scripts
 }

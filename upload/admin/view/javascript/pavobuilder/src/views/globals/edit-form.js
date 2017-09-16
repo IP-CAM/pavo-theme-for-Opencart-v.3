@@ -15,6 +15,7 @@ export default class EditForm extends Backbone.View {
 		this.title = title;
 		this.fields = fields;
 
+		// this.data.set( 'fields', fields );
 		this.template = _.template( $( '#pa-edit-form-template' ).html(), { variable: 'data' } );
 		this.listenTo( this.data, 'change:editing', this._toggle_form );
 		// this.listenTo( this.data, 'change:fields', this.renderFields );
@@ -53,27 +54,64 @@ export default class EditForm extends Backbone.View {
 	 * render edit fields
 	 */
 	renderFields() {
+		if ( this.data.get( 'shortcode' ) !== undefined && this.fields.length == 0 ) {
+			let settings = this.data.get( 'settings' );
+			if ( PA_PARAMS.element_fields[ this.data.get( 'shortcode' ) ] !== undefined ) {
+				this.fields = PA_PARAMS.element_fields[ this.data.get( 'shortcode' ) ];
+				this.$( '#pa-edit-form-settings' ).addClass( this.data.get( 'shortcode' ) )
+			}
+		}
+
 		let tabs = [];
 		_.map( this.fields, ( fields, tab ) => {
 			tabs.push({
 				tab: tab,
-				label: fields.label
+				label: fields.label != undefined ? PA_PARAMS.languages[fields.label] : ''
 			});
 		} );
 
 		if ( tabs.length > 0 ) {
 			this.$( '#pa-edit-form-settings' ).html( _.template( $( '#pa-modal-panel' ).html(), { variable: 'data' } )( { tabs: tabs } ) );
 			let settings = this.data.get( 'settings' );
+			// clone new settings
+			let cloneSettings = {...settings};
 			// render fields inside modal content
 			_.map( this.fields, ( fields, tab ) => {
-				_.map( fields.fields, ( field, key ) => {
-					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + field.type + '-form-field' ).html(), { variable: 'data' } )( { field: field, settings: settings } ) );
+				// clone to new object is required
+				let clonefields = { ...fields };
+				if ( clonefields.label != undefined ){
+					clonefields.label = PA_PARAMS.languages[clonefields.label];
+				}
+				_.map( clonefields.fields, ( field, key ) => {
+					let cloneField = { ...field };
+					if ( cloneField.label != undefined ){
+						cloneField.label = PA_PARAMS.languages[cloneField.label];
+					}
+
+					if ( cloneField.options != undefined ) {
+						for ( let i = 0; i < cloneField.options.length; i++ ) {
+							if ( cloneField.options[i].label !== undefined ) {
+								cloneField.options[i].label = PA_PARAMS.languages[cloneField.options[i].label] !== undefined ? PA_PARAMS.languages[cloneField.options[i].label] : cloneField.options[i].label;
+							}
+						}
+					}
+					if ( cloneField.type == 'select-animate' ) {
+						cloneField.type = 'select';
+						cloneField.groups = true;
+						cloneField.options = PA_PARAMS.animate_groups ? PA_PARAMS.animate_groups : PA_PARAMS.animates;
+					}
+
+					// set default values
+					if ( ( cloneSettings[cloneField.name] == undefined || cloneField.value == '' ) && cloneField.default !== undefined ) {
+						cloneSettings[cloneField.name] = cloneField.default;
+					}
+					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + cloneField.type + '-form-field' ).html(), { variable: 'data' } )( { field: cloneField, settings: cloneSettings } ) );
 				} );
 			} );
 		}
 
-		// init thirparty scripts
-		Common.init_thirparty_scripts();
+		// init thirdparty scripts
+		Common.init_thirdparty_scripts( this.data );
 	}
 
 	/**

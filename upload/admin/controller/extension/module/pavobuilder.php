@@ -168,8 +168,6 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		// fields
 		$this->data['element_fields'] = array();
-		$this->data['row_edit_fields'] = $this->rowEditFields();
-		$this->data['column_edit_fields'] = $this->columnEditFields();
 
 		if ( $shortcodes ) {
 			$this->data['groups'][] = array(
@@ -188,15 +186,18 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			}
 		}
 
-		$this->data['user_token'] = $this->session->data['user_token'];
+		$this->data['user_token'] 	= $this->session->data['user_token'];
 		// layout data
-		$this->data['layout'] = $id ? $this->model_setting_module->getModule( $id ) : array();
+		$this->data['layout'] 		= $id ? $this->model_setting_module->getModule( $id ) : array();
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
 		$this->data['underscore_template'] = $this->load->view( 'extension/module/pavobuilder/_template', $this->data );
 
 		// addScripts
 		$this->document->addScript( 'view/javascript/pavobuilder/dist/pavobuilder.min.js' );
 		$this->document->addScript( 'view/javascript/jquery/jquery-ui/jquery-ui.min.js' );
+		if ( $key = $this->config->get( 'pavothemer_google_map_api_key' ) ) {
+			$this->document->addScript( '//maps.googleapis.com/maps/api/js?key=' . $this->config->get( 'pavothemer_google_map_api_key' ) . '&libraries=places' );
+		}
 		// addStyles
 		$this->document->addStyle( 'view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
 		$this->document->addStyle( 'view/javascript/jquery/jquery-ui/jquery-ui.min.css' );
@@ -253,174 +254,6 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		if ( $module && file_exists( $file ) ) {
 			$this->load->controller( 'extension/module/' . $module );
 		}
-	}
-
-	/**
-	 * rows edit fields
-	 */
-	private function rowEditFields() {
-		$fields = array(
-				'general'	=> array(
-						'label'		=> $this->language->get( 'entry_general_text' ),
-						'fields'	=> array(
-								array(
-										'type'	=> 'text',
-										'name'	=> 'uniqid_id',
-										'label'	=> $this->language->get( 'entry_row_id_text' )
-									),
-								array(
-										'type'	=> 'text',
-										'name'	=> 'extra_class',
-										'label'	=> $this->language->get( 'entry_extra_class_text' )
-									),
-								array(
-										'type'	=> 'select',
-										'name'	=> 'layout',
-										'label'	=> $this->language->get( 'entry_layout_type_text' ),
-										'options'	=> array(
-												'wide'	=> $this->language->get( 'entry_wide_text' ),
-												'boxed'	=> $this->language->get( 'entry_boxed_text' )
-											)
-									),
-							)
-					),
-				'background'	=> array(
-						'label'	=> $this->language->get( 'entry_background_text' ),
-						'fields'	=> array(
-								array(
-										'type'		=> 'colorpicker',
-										'name'		=> 'background-color',
-										'label'		=> $this->language->get( 'entry_background_color_text' )
-									),
-								array(
-										'type'		=> 'image',
-										'name'		=> 'background-image',
-										'label'		=> $this->language->get( 'entry_background_image_text' )
-									),
-								array(
-										'type'		=> 'text',
-										'name'		=> 'background-video',
-										'label'		=> $this->language->get( 'entry_video_url_text' )
-									),
-								array(
-										'type'		=> 'checkbox',
-										'name'		=> 'parallax',
-										'label'		=> $this->language->get( 'entry_parallax_text' )
-									)
-							)
-					),
-				'style'	=> array(
-						'label'	=> $this->language->get( 'entry_styles_text' ),
-						'fields'	=> array(
-								array(
-										'type'		=> 'layout-onion',
-										'name'		=> 'layout_onion',
-										'label'		=> $this->language->get( 'entry_box_text' )
-									),
-								array(
-										'type'		=> 'colorpicker',
-										'name'		=> 'color',
-										'label'		=> $this->language->get( 'entry_color_text' )
-									)
-							)
-					),
-				'animate'	=> array(
-						'label'	=> $this->language->get( 'entry_effect_text' ),
-						'fields'	=> array(
-								array(
-										'type'	=> 'animate',
-										'name'	=> '',
-										'label'	=> $this->language->get( 'heading_title' )
-									),
-								array(
-										'type'		=> 'select',
-										'name'		=> 'effect',
-										'id'		=> 'animate-select',
-										'label'		=> $this->language->get( 'entry_effect_text' ),
-										'groups'	=> $this->data['animate_groups'] ? true : false,
-										'options'	=> $this->data['animate_groups'] ? $this->data['animate_groups'] : $this->data['animates']
-									)
-							)
-					)
-			);
-		return $fields;
-	}
-
-	/**
-	 * column edit fields
-	 */
-	private function columnEditFields() {
-		$fields = array(
-				'general'	=> array(
-						'label'		=> $this->language->get( 'entry_general_text' ),
-						'fields'	=> array(
-								array(
-										'type'	=> 'text',
-										'name'	=> 'uniqid_id',
-										'label'	=> $this->language->get( 'entry_column_id_text' )
-									),
-								array(
-										'type'	=> 'text',
-										'name'	=> 'extra_class',
-										'label'	=> $this->language->get( 'entry_extra_class_text' )
-									)
-							)
-					),
-				'background'	=> array(
-						'label'	=> $this->language->get( 'entry_background_text' ),
-						'fields'	=> array(
-								array(
-										'type'		=> 'colorpicker',
-										'name'		=> 'background-color',
-										'label'		=> $this->language->get( 'entry_background_color_text' )
-									),
-								array(
-										'type'		=> 'image',
-										'name'		=> 'background-image',
-										'label'		=> $this->language->get( 'entry_background_image_text' )
-									),
-								array(
-										'type'		=> 'text',
-										'name'		=> 'background-video',
-										'label'		=> $this->language->get( 'entry_video_url_text' )
-									)
-							)
-					),
-				'style'	=> array(
-						'label'	=> $this->language->get( 'entry_styles_text' ),
-						'fields'	=> array(
-								array(
-										'type'		=> 'layout-onion',
-										'name'		=> 'layout_onion',
-										'label'		=> $this->language->get( 'entry_box_text' )
-									),
-								array(
-										'type'		=> 'colorpicker',
-										'name'		=> 'color',
-										'label'		=> $this->language->get( 'entry_color_text' )
-									)
-							)
-					),
-				'animate'	=> array(
-						'label'	=> $this->language->get( 'entry_effect_text' ),
-						'fields'	=> array(
-								array(
-										'type'	=> 'animate',
-										'name'	=> '',
-										'label'	=> $this->language->get( 'heading_title' )
-									),
-								array(
-										'type'		=> 'select',
-										'name'		=> 'effect',
-										'id'		=> 'animate-select',
-										'label'		=> $this->language->get( 'entry_effect_text' ),
-										'groups'	=> $this->data['animate_groups'] ? true : false,
-										'options'	=> $this->data['animate_groups'] ? $this->data['animate_groups'] : $this->data['animates']
-									)
-							)
-					)
-			);
-		return $fields;
 	}
 
 	/**

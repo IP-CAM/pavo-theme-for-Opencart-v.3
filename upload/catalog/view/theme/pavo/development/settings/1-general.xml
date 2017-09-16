@@ -18,7 +18,7 @@
 		<type>text</type>
 		<default>auto</default>
 		<placeholder>0</placeholder>
-		<required>1</required>
+		<required>0</required>
 		<desc>Enter Layout width, such as 940px or 96%. Put value "auto" -> Layout width is used in stylesheet.css of theme</desc>
 	</item>
 	<item>
@@ -42,6 +42,13 @@
 		<label>Copyright</label>
 		<type>textarea</type>
 		<default><![CDATA[Copyright 2017 pavothemes.com]]></default>
+	</item>
+	<item>
+		<id>google_map_api_key</id>
+		<group>Global</group>
+		<label>Google Map API Key</label>
+		<type>text</type>
+		<default><![CDATA[]]></default>
 	</item>
 	<item>
 		<label>Enable Quickview</label>

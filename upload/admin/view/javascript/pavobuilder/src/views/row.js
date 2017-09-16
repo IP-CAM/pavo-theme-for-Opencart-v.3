@@ -186,7 +186,7 @@ export default class Row extends Backbone.View {
 	renderEditRowForm( model ) {
 		if ( model.get( 'editing' ) === true ) {
 			// row edit form
-			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_row_text, PA_PARAMS.row_fields );
+			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_row_text, PA_PARAMS.element_fields.pa_row );
 		}
 	}
 

@@ -202,7 +202,7 @@ export default class Column extends Backbone.View {
 	_renderEditColumnForm( model ) {
 		if ( model.get( 'editing' ) === true ) {
 			// row edit form
-			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_column_text, PA_PARAMS.column_fields );
+			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_column_text, PA_PARAMS.element_fields.pa_column );
 		}
 	}
 

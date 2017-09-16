@@ -1,7 +1,7 @@
 (function($){
 
 	$( document ).ready(function(){
-    	console.log( 1 );
+    	console.log( 'Customize javascript was initialized!!!' );
     });
 
 })(jQuery);

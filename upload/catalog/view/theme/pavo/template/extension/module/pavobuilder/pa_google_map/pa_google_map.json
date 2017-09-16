@@ -1,0 +1,105 @@
+{
+	"general": {
+		"label"		: "entry_general_text",
+		"fields"	: [
+				{
+					"type"		: "checkbox",
+					"name"		: "zoom_enabled",
+					"label"		: "entry_enabled_zoom_text",
+					"default"	: 1
+				},
+				{
+					"type"		: "number",
+					"name"		: "zoom",
+					"step"		: 1,
+					"min"		: 1,
+					"label"		: "entry_zoom_level_text",
+					"default"	: 13
+				},
+				{
+					"type"		: "checkbox",
+					"name"		: "scroll_enabled",
+					"label"		: "entry_enabled_scrollwheel_text",
+					"default"	: 1
+				},
+				{
+					"type"		: "checkbox",
+					"name"		: "map_type_control_enabled",
+					"label"		: "entry_enabled_map_typecontrols_text",
+					"default"	: 1
+				},
+				{
+					"type"		: "checkbox",
+					"name"		: "draggable",
+					"label"		: "entry_enabled_draggable_text",
+					"default"	: 1
+				},
+				{
+					"type"		: "select",
+					"name"		: "mapTypeId",
+					"label"		: "entry_maptype_id_text",
+					"default"	: "roadmap",
+					"options"	: [
+						{
+							"value"	: "roadmap",
+							"label"	: "Roadmap"
+						},
+						{
+							"value"	: "satellite",
+							"label"	: "Satellite"
+						},
+						{
+							"value"	: "hybrid",
+							"label"	: "Hybrid"
+						},
+						{
+							"value"	: "terrain",
+							"label"	: "Terrain"
+						}
+					]
+				},
+				{
+					"type"		: "number",
+					"name"		: "height",
+					"label"		: "entry_height_text",
+					"default"	: "roadmap"
+				},
+				{
+					"type"		: "radio",
+					"name"		: "height_unit",
+					"label"		: "entry_unit_text",
+					"default"	: "entry_px_text",
+					"options"	: [
+						{
+							"label"	: "entry_px_text",
+							"value"	: "px"
+						},
+						{
+							"label"	: "entry_percent_text",
+							"value"	: "%"
+						}
+					]
+				},
+				{
+					"type"		: "map-preview",
+					"name"		: "place_name",
+					"label"		: "entry_preview_text"
+				}
+			]
+	},
+	"style"		: {
+		"label"		: "entry_styles_text",
+		"fields"	: [
+			{
+				"type"		: "layout-onion",
+				"name"		: "layout_onion",
+				"label"		: "entry_box_text"
+			},
+			{
+				"type"		: "colorpicker",
+				"name"		: "color",
+				"label"		: "entry_color_text"
+			}
+		]
+	}
+}

@@ -69,7 +69,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 				// css file
 				if ( isset( $this->request->post['pavothemer_custom_css'] ) ) {
-					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/dist/customize.css';
+					$file = DIR_CATALOG . 'view/theme/' . $theme . '/stylesheet/customize.css';
 					$write = $themeHelper->writeFile( $file, $this->request->post['pavothemer_custom_css'] );
 					if ( ! $write ) {
 						$this->addMessage( $this->language->get( 'error_permission_in_directory' ) . ' <strong>' . dirname( $file ) . '</strong>' );
