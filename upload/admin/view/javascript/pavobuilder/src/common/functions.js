@@ -23,7 +23,7 @@ function toJSON( data = {}, ignores = [] ) {
 
 /**
  * init thirparty script
- * ex: colorpicker, datepicker ..
+ * ex: colorpicker, datepicker
  */
 function init_thirdparty_scripts( model ) {
 	// colorPicker

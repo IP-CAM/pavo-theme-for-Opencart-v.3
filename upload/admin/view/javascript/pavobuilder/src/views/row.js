@@ -10,8 +10,8 @@ export default class Row extends Backbone.View {
 	 */
 	initialize( row = { settings: {}, columns: {} } ) {
 		// set backbone model
-		this.row = row;
 
+		this.row = row;
 		this.events = {
 			'click .pa-delete-row'		: '_deleteRowHandler',
 			'click .pa-add-column'		: '_addColumnHandler',
@@ -40,7 +40,7 @@ export default class Row extends Backbone.View {
 		if ( this.row.get( 'columns' ).length > 0 ) {
 			this.row.get( 'columns' ).map( ( model ) => {
 				// map column models add add it to Row View
-				this.addColumn( model );
+				this.addColumn( model, this.row.get( 'columns' ).length );
 			} );
 		}
 
@@ -53,8 +53,9 @@ export default class Row extends Backbone.View {
 	/**
 	 * Add Column
 	 */
-	addColumn( model = {} ) {
-		this.$el.find( '.pav-row-container' ).append( new Column( model ).render().el );
+	addColumn( model = {}, x = 1 ) {
+		console.log( this.$el.find( '.pav-row-container' ) );
+		this.$( '> .pa-element-wrapper > .pav-row-container' ).append( new Column( model ).render().el );
 	}
 
 	/**

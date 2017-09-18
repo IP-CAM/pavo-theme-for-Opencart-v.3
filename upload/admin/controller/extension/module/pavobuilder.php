@@ -18,6 +18,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		if ( ! empty( $this->request->get['module_id'] ) ) {
 			$this->edit();
 		} else {
+			$this->load->model( 'setting/module' );
 			$this->load->language( 'extension/module/pavobuilder' );
 			/**
 			 * breadcrumbs data
@@ -32,7 +33,10 @@ class ControllerExtensionModulePavobuilder extends Controller {
 				'href' => $this->url->link('extension/module/pavobuilder', 'user_token=' . $this->session->data['user_token'], true)
 			);
 			$this->data['create_new_module_url'] = $this->url->link( 'extension/module/pavobuilder/add', 'user_token=' . $this->session->data['user_token'], true );
-
+			$this->data['layouts'] = $this->model_setting_module->getModulesByCode( 'pavobuilder' );
+			foreach ( $this->data['layouts'] as $k => $layout ) {
+				$this->data['layouts'][$k]['edit_link'] = $this->url->link( 'extension/module/pavobuilder', 'module_id=' . $layout['module_id'] . '&user_token=' . $this->session->data['user_token'], true );
+			}
 			// set page document title
 			if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
 
@@ -112,11 +116,12 @@ class ControllerExtensionModulePavobuilder extends Controller {
 						'slug'		=> $code
 					);
 				foreach ( $modules as $module ) {
+					unset( $module['setting'] );
 					$module['type']				= 'module';
 					$module['icon']				= 'fa fa-opencart';
 					$module['group']			= strip_tags( $this->language->get( 'heading_title' ) );
 					$module['group_slug']		= $code;
-					$module['settings']			= $module['setting'];
+					// $module['settings']			= $module['setting'];
 					$this->data['elements'][] 	= $module;
 				}
 			}

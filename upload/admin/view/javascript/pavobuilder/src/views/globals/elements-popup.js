@@ -78,6 +78,20 @@ export default class ElementsPopup extends Backbone.View {
 			delete settings.elements;
 		}
 
+		if ( settings.shortcode === 'pa_row' ) {
+			settings.row = {
+					settings: {},
+					columns: {
+						settings: {
+							class: 'pa-col-sm-12',
+						},
+						elements: []
+					}
+				};
+		} else if ( settings.shortcode === 'pa_column' ) {
+			
+		}
+
 		// add new element to column
 		this.column.get( 'elements' ).add( settings, { at: this.column.get( 'adding_position' ) } );
 		// set 'reRender' true to re-generate column

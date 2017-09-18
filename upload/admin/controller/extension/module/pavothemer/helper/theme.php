@@ -128,6 +128,7 @@ class PavoThemerHelper {
 		$results = array();
 		foreach ( $folders as $folder ) {
 			$filename = basename( $folder );
+			if ( $filename === 'pa_column' ) continue;
 			$file = $folder . '/' . $filename . '.twig';
 			$fieldFile = $folder . '/' . $filename . '.json';
 			$results[ $filename ] = file_exists( $fieldFile ) ? file_get_contents( $fieldFile ) : array();

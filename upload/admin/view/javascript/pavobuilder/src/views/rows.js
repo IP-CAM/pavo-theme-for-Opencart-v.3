@@ -33,7 +33,7 @@ export default class Rows extends Backbone.View {
 		// set sortable
 		this.$el.sortable({
 			placeholder: 'pa-sortable-placeholder',
-			handle: '.pa-reorder-row',
+			handle: '> .row-controls .pa-reorder-row',
 			// sortable updated callback
 			start: this.dragRow,
 			stop: this.dropRown.bind( this )

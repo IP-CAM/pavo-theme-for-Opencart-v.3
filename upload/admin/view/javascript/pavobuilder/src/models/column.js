@@ -5,7 +5,7 @@ export default class ColumnModel extends Backbone.Model {
 
 	initialize( data = { settings: { class: 'pa-col-sm-12' }, elements: {} } ) {
 		// super( data );
-		this.set( 'elements', new ElementsCollection( data.elements ) )
+		this.set( 'elements', new ElementsCollection( data.elements ) );
 	}
 
 	defaults() {

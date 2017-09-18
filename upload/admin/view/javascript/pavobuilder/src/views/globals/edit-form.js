@@ -8,7 +8,7 @@ export default class EditForm extends Backbone.View {
 	/**
 	 * Constructor class
 	 */
-	initialize( data = { settings: {}, columns: {} }, title = '', fields = [] ) {
+	initialize( data = { settings: {} }, title = '', fields = [] ) {
 		// super();
 		// data is a Model
 		this.data = data;

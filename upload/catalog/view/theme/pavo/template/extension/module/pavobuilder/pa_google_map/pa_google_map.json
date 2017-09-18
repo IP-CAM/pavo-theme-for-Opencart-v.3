@@ -3,6 +3,11 @@
 		"label"		: "entry_general_text",
 		"fields"	: [
 				{
+					"type"		: "map-preview",
+					"name"		: "place_name",
+					"label"		: "entry_preview_text"
+				},
+				{
 					"type"		: "checkbox",
 					"name"		: "zoom_enabled",
 					"label"		: "entry_enabled_zoom_text",
@@ -79,11 +84,6 @@
 							"value"	: "%"
 						}
 					]
-				},
-				{
-					"type"		: "map-preview",
-					"name"		: "place_name",
-					"label"		: "entry_preview_text"
 				}
 			]
 	},

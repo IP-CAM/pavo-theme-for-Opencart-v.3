@@ -1,5 +1,6 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
+import Row from './row';
 import $ from 'jquery';
 import EditForm from './globals/edit-form';
 
@@ -11,6 +12,7 @@ export default class Element extends Backbone.View {
 		this.events = {
 			'click .pa-delete'		: '_removeHandler',
 			'click .pa-edit'		: '_editHandler',
+			'click .pa-edit-column-num'	: '_changeColumnsInnerHandler',
 			'click .pa-reorder'		: () => {
 				return false;
 			}
@@ -26,7 +28,11 @@ export default class Element extends Backbone.View {
 	render() {
 		let data = this.element.toJSON();
 		data.cid = this.element.cid;
-		this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
+		if ( this.element.get( 'row' ) !== undefined ) {
+			this.template = new Row( this.element.get( 'row' ) ).render().el;
+		} else {
+			this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
+		}
 		this.setElement( this.template );
 		return this;
 	}
@@ -66,18 +72,6 @@ export default class Element extends Backbone.View {
 			 		this.editForm.$( '.pa-update' ).remove();
 				}
  			} );
-			// $.ajax({
-			// 	url: PA_PARAMS.site_url + 'admin/index.php?route=extension/module/pavobuilder/editModule&module_id='+ this.element.get( 'moduleId' ) +'&user_token=' + PA_PARAMS.user_token,
-			// 	type: 'GET',
-			// 	data: this.element.toJSON(),
-			// 	beforeSend: function(){
-			// 		this.element.set( 'editing', ! this.element.get( 'editing' ) );
-			// 	}.bind( this )
-			// }).done( ( html ) => {
-			// 	this.editForm.$( '#pa-edit-form-settings' ).html( html );
-			// } ).fail( () => {
-
-			// } );
 		}
 		return false;
 	}
@@ -96,6 +90,76 @@ export default class Element extends Backbone.View {
 		if ( model.get( 'editing' ) === true ) {
 			this.editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_element_text );
 		}
+	}
+
+	_changeColumnsInnerHandler( e ) {
+		e.preventDefault();
+		if ( ! this.element.get( 'shortcode' ) || this.element.get( 'shortcode' ) != 'pa_row' )
+			return false;
+		let button = $( e.target );
+		let columns_count = button.data('columns');
+		let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns_count ) );
+
+		let newColumnsObject = [];
+		for ( let i = 0; i < columns_count; i++ ) {
+			newColumnsObject.push({
+				class: classWrapper
+			});
+		}
+
+		if ( newColumnsObject.length >= this.element.get( 'row' ).get( 'columns' ).length ) {
+			// current columns < columns number selected
+			for ( let i = 0; i < newColumnsObject.length; i++ ) {
+				let model = this.element.get( 'row' ).get( 'columns' ).at( i );
+				if ( typeof model !== 'undefined' ) {
+					let settings = model.get( 'settings' );
+					settings.class = newColumnsObject[i].class;
+					model.set( 'settings', settings );
+					model.set( 'reRender', true );
+				} else {
+					let newModel = {
+						settings: {
+							class: newColumnsObject[i].class,
+							elements: []
+						}
+					};
+					this.element.get( 'row' ).get( 'columns' ).add( newModel );
+				}
+			}
+		} else {
+			// current columns > columns number selected
+			var elements = [];
+			var lastest_column_index = false;
+			this.element.get( 'row' ).get( 'columns' ).map( ( model, index ) => {
+				if ( typeof newColumnsObject[index] !== 'undefined' ) {
+					let settings = model.get( 'settings' );
+					settings.class = newColumnsObject[index].class;
+					model.set( 'settings', settings );
+					model.set( 'reRender', true );
+
+					// lastest index if columns collection 
+					lastest_column_index = index;
+				} else if ( lastest_column_index !== false ) {
+					new Promise(function(resolve, reject) {
+						var cloneModel = model;
+						// check elements inside column if > 0, we will add it to lastest column
+						if ( typeof cloneModel.get( 'elements' ) !== 'undefined' && cloneModel.get( 'elements' ).length > 0 ) {
+							elements.push( cloneModel.get( 'elements' ).toJSON() );
+						}
+
+						if ( index == lastest_column_index ) {
+							this.element.get( 'row' ).get( 'columns' ).at( lastest_column_index ).set( 'elements', elements );
+						}
+
+						// call destroy method after update columns collection
+						resolve();
+				    }).then( () => {
+				    	model.destroy();
+				    });
+				}
+			} );
+		}
+		return false;
 	}
 
 }

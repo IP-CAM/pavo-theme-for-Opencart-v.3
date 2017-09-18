@@ -147,9 +147,10 @@
 	<div class="form-group">
 		<div class="col-sm-12">
 			<div class="pa-google-map-wrapper">
+				<input name="place_name" value="<% data.settings.place_name %>" placeholder="{{ entry_enter_place_text }}" class="form-control" />
 				<div class="pa-google-map"></div>
-				<input type="hidden" name="lat" value="<%= data.field.lat %>" />
-				<input type="hidden" name="lng" value="<%= data.field.lng %>" />
+				<input type="hidden" name="lat" value="<%= data.settings.lat %>" />
+				<input type="hidden" name="lng" value="<%= data.settings.lng %>" />
 			</div>
 		</div>
 	</div>
@@ -234,7 +235,7 @@
 					  				{% for element in elements %}
 					  					{% if ( element.group_slug == tab.slug ) %}
 					  						<div class="pa-col-sm-3">
-							  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-settings="{{ element.settings | escape }}" data-mask="{{ element | json_encode() | escape }}">
+							  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-mask="{{ element | json_encode() | escape }}">
 						  							<i class="{{ element.icon }}"></i>
 						  							<span>{{ element.name }}</span>
 						  							{% if ( element.type == 'shortcode' and element.shortcode ) %}
@@ -311,7 +312,6 @@
 </script>
 
 <script type="text/html" id="pa-element-template">
-
 	<div class="pa-element-content<%= data.element ? ' ' + data.element : '' %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
 		<div class="pa-controls element-controls">
 			<a href="#" class="pa-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>

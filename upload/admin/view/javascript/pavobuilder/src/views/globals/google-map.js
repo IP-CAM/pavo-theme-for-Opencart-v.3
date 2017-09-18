@@ -56,17 +56,127 @@ export default class GoogleMap extends Backbone.View {
 		if ( google === undefined ) {
 			this.$( '.pa-google-map' ).append( '<div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> ' + PA_PARAMS.languages.entry_missing_google_map_key + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>' );
 		} else {
-			let mapData = Object.assign( this.defaults(), this.model.get( 'settings' ) );
 			let settings = this.model.get( 'settings' );
+
+			let mapData = Object.assign( this.defaults(), settings );
 			mapData.center = {
 				lat: settings.lat !== undefined && ! isNaN( settings.lat ) && settings.lat ? parseFloat( settings.lat ) : -33.8688,
 				lng: settings.lng !== undefined && ! isNaN( settings.lng ) && settings.lng ? parseFloat( settings.lng ) : 151.2195
 			}
+
 			mapData.zoom = parseInt( mapData.zoom );
 			mapData.draggable = parseInt( mapData.draggable );
 
+			this.markers = [];
 			this.map = new google.maps.Map( this.$( '.pa-google-map' ).get( 0 ), mapData );
+			this.map.addListener( 'zoom_changed', () => {
+			    this.$( 'input[name="zoom"]' ).val( this.map.getZoom() );
+		  	});
+		  	this.$( 'input[name="zoom"]' ).on( 'change', ( e ) => {
+		  		e.preventDefault();
+		  		this.map.setZoom( parseInt( $( e.target ).val() ) );
+		  		return false;
+		  	} );
+
+          	// For each place, get the icon, name and location.
+          	this.bounds = new google.maps.LatLngBounds();
+
+			if ( settings.place_name !== undefined ) {
+				// Create a marker for each place.
+				let markerOptions = {
+		     	 	map 		: this.map,
+		          	// icon: icon,
+		          	title 		: settings.place_name,
+		          	position	: {
+		          		lat: mapData.center.lat,
+		          		lng: mapData.center.lng
+		          	}
+		        };
+		        let marker = new google.maps.Marker( markerOptions );
+
+		        this.bounds.extend( markerOptions.position );
+		        this.markers.push( marker );
+
+	          	this.map.fitBounds( this.bounds );
+          		// this.map.panToBounds( this.bounds );
+			}
+
+			this.map.setZoom( mapData.zoom );
+			let input = this.$( 'input[name="place_name"]' ).get( 0 );
+			this.searchBox = new google.maps.places.SearchBox( input );
+
+			// Bias the SearchBox results towards current map's viewport.
+	        this.map.addListener('bounds_changed', () => {
+	          	this.searchBox.setBounds( this.map.getBounds() );
+	        });
+
+	        this.searchBox.addListener( 'places_changed', () => {
+	          	var places = this.searchBox.getPlaces();
+
+	      		if ( places.length == 0 ) {
+		            return;
+	          	}
+
+	          	// Clear out the old markers.
+	          	this.markers.forEach( function( marker ) {
+		            marker.setMap( null );
+	          	} );
+
+	          	_.map( places, ( place, i ) => {
+	          		if ( i === 0 )
+		            	this.setMarker( place );
+	          	} );
+	          	this.map.fitBounds( this.bounds );
+          		// this.map.panToBounds( this.bounds );
+	        });
 		}
+	}
+
+	/**
+	 * Set marker inside google map initialized
+	 */
+	setMarker( place ) {
+		if ( ! place.geometry ) {
+          	console.log("Returned place contains no geometry");
+          	return;
+        }
+
+        var icon = {
+          	url: place.icon,
+          	size: new google.maps.Size( 71, 71 ),
+          	origin: new google.maps.Point( 0, 0 ),
+          	anchor: new google.maps.Point( 17, 34 ),
+          	scaledSize: new google.maps.Size( 25, 25 )
+        };
+
+        // Create a marker for each place.
+        let marker = new google.maps.Marker({
+     	 	map: this.map,
+          	// icon: icon,
+          	title: place.name,
+          	position: place.geometry.location
+        });
+		let lat = marker.position.lat();
+		let lng = marker.position.lng();
+		// set input value
+		this.$( '.pa-google-map-wrapper input[name="lat"]' ).val( lat );
+		this.$( '.pa-google-map-wrapper input[name="lng"]' ).val( lng );
+
+        this.markers.push( marker );
+
+        let infowindow = new google.maps.InfoWindow({
+		    content: marker.getTitle()
+		});
+
+        marker.addListener('click', ( e ) => {
+			infowindow.open( this.map, marker );
+		});
+
+	    if ( place.geometry.viewport ) {
+	    	this.bounds.extend( place.geometry.viewport );
+	    } else {
+	    	this.bounds.extend( place.geometry.location );
+	    }
 	}
 
 }
