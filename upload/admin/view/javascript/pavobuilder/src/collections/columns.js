@@ -25,7 +25,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 	_editabled() {
 		this.models.map( ( model ) => {
 			let editabled = model.get( 'editabled' );
-			let nextEditabled = this.indexOf( model ) > 0;
+			let nextEditabled = this.indexOf( model ) < this.length - 1;
 			model.set( 'editabled', nextEditabled );
 			if ( editabled != nextEditabled ) {
 				model.set( 'reRender', true );

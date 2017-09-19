@@ -10,10 +10,10 @@ export default class Element extends Backbone.View {
 		this.element = element;
 
 		this.events = {
-			'click .pa-delete'		: '_removeHandler',
-			'click .pa-edit'		: '_editHandler',
-			'click .pa-edit-column-num'	: '_changeColumnsInnerHandler',
-			'click .pa-reorder'		: () => {
+			'click .pa-delete'											: '_removeHandler',
+			'click .pa-edit:not(".pa-edit-row")'											: '_editHandler',
+			'click .pa-edit-column-num'									: '_changeColumnsInnerHandler',
+			'click .pa-reorder'											: () => {
 				return false;
 			}
 		};
@@ -45,6 +45,12 @@ export default class Element extends Backbone.View {
 		if ( confirm( this.$el.data( 'confirm' ) ) ) {
 			this.element.destroy();
 		}
+		return false;
+	}
+
+	_setEditRowHandler( e ) {
+		e.preventDefault();
+		this.element.get( 'row' ).set( 'editing', true );
 		return false;
 	}
 

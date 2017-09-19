@@ -2,6 +2,7 @@ import Backbone from 'Backbone';
 import _ from 'underscore';
 import Column from './column';
 import EditForm from './globals/edit-form';
+import resizable from 'jquery-ui/ui/widgets/resizable';
 
 export default class Row extends Backbone.View {
 
@@ -16,7 +17,7 @@ export default class Row extends Backbone.View {
 			'click .pa-delete-row'		: '_deleteRowHandler',
 			'click .pa-add-column'		: '_addColumnHandler',
 			'click .pa-edit-column-num'	: '_changeColumnsHandler',
-			'click .pa-edit-row'		: '_setEditRowHandler',
+			'click > .pa-row-container > .row-controls > .left-controls > .pa-edit-row, > .row-controls > .left-controls > .pa-edit-row'		: '_setEditRowHandler',
 			'click .pa-reorder'			: () => {
 				return false;
 			}
@@ -36,13 +37,19 @@ export default class Row extends Backbone.View {
 		data.cid = this.row.cid;
 		this.template = _.template( $( '#pa-row-template' ).html(), { variable: 'data' } )( data );
 		this.setElement( this.template );
-		// each collection
-		if ( this.row.get( 'columns' ).length > 0 ) {
-			this.row.get( 'columns' ).map( ( model ) => {
-				// map column models add add it to Row View
-				this.addColumn( model, this.row.get( 'columns' ).length );
-			} );
-		}
+
+		new Promise( ( resolve, reject ) => {
+			// each collection
+			if ( this.row.get( 'columns' ).length > 0 ) {
+				this.row.get( 'columns' ).map( ( model ) => {
+					// map column models add add it to Row View
+					this.addColumn( model );
+				} );
+			}
+			resolve();
+		} ).then( () => {
+			
+		} );
 
 		setTimeout( () => {
 			this.$el.removeClass( 'row-fade-in' );
@@ -53,9 +60,24 @@ export default class Row extends Backbone.View {
 	/**
 	 * Add Column
 	 */
-	addColumn( model = {}, x = 1 ) {
-		console.log( this.$el.find( '.pav-row-container' ) );
-		this.$( '> .pa-element-wrapper > .pav-row-container' ).append( new Column( model ).render().el );
+	addColumn( model = {} ) {
+		new Promise( ( resolve, reject ) => {
+			let column = new Column( model ).render().el;
+			this.$( '> .pa-element-wrapper > .pav-row-container' ).append( column );
+
+			resolve();
+		} ).then( () => {
+			
+		} );
+	}
+
+	/**
+	 * column settings
+	 */
+	updateColumnSettings( at = false, settings = {} ) {
+		let model = this.row.get( 'columns' ).at( at );
+		settings = Object.assign( model.get( 'settings' ), settings );
+		model.set( 'settings', settings );
 	}
 
 	/**
@@ -121,15 +143,19 @@ export default class Row extends Backbone.View {
 				if ( typeof model !== 'undefined' ) {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[i].class;
+					settings.resizable = newColumnsObject.length == i + 1 ? false : true;
+
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 				} else {
 					let newModel = {
 						settings: {
 							class: newColumnsObject[i].class,
-							elements: []
+							elements: [],
+							resizable: newColumnsObject.length == i + 1 ? false : true
 						}
 					};
+
 					this.row.get( 'columns' ).add( newModel );
 				}
 			}
@@ -141,20 +167,22 @@ export default class Row extends Backbone.View {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[index].class;
+					settings.resizable = newColumnsObject.length == i + 1 ? false : true;
+
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 
-					// lastest index if columns collection 
+					// lastest index if columns collection
 					lastest_column_index = index;
 				} else if ( lastest_column_index !== false ) {
 					new Promise(function(resolve, reject) {
 						var cloneModel = model;
 						// check elements inside column if > 0, we will add it to lastest column
 						if ( typeof cloneModel.get( 'elements' ) !== 'undefined' && cloneModel.get( 'elements' ).length > 0 ) {
-							elements.push( cloneModel.get( 'elements' ).toJSON() );
+							let settings = cloneModel.get( 'elements' ).toJSON();
+							settings.resizable = newColumnsObject.length == index + 1 ? false : true;
+							elements.push( settings );
 						}
-						// don't destroy here
-						// model.destroy();
 
 						if ( index == lastest_column_index ) {
 							this.row.get( 'columns' ).at( lastest_column_index ).set( 'elements', elements );
