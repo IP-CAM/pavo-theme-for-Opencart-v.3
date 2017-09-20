@@ -6,6 +6,7 @@ import EditForm from './globals/edit-form';
 import ElementsPopup from './globals/elements-popup';
 import Element from './element';
 import resizable from 'jquery-ui/ui/widgets/resizable';
+import common from '../common/functions';
 
 export default class Column extends Backbone.View {
 
@@ -13,15 +14,14 @@ export default class Column extends Backbone.View {
 		this.column = column;
 
 		this.events = {
-			'click .pa-delete-column'	: '_deleteColumnHandler',
-			'click .pa-add-element'		: '_renderElementsPopup',
-			'click .pa-clone'			: '_cloneHandler',
-			'click .pa-edit-column'		: '_editHandler',
-			'resize'					: ( e, ui ) => {
-
+			'click .pa-delete-column'						: '_deleteColumnHandler',
+			'click .pa-add-element'							: '_renderElementsPopup',
+			'click .pa-clone:not(.pa-clone-row)'			: '_cloneHandler',
+			'click .pa-clone.pa-clone-row'					: '_cloneElementRowHandler',
+			'click .pa-edit-column'							: '_editHandler',
+			'resize'										: ( e, ui ) => {
 				let columns = 12;
 				let fullWidth = this.$el.parent().width();
-				if ( fullWidth == 0 ) return;
 				let columnWidth = fullWidth / columns;
 				let totalCol;
 				let target = ui.element;
@@ -31,7 +31,6 @@ export default class Column extends Backbone.View {
         		let nextColumnCount = Math.round( next.width() / columnWidth );
 
         		let settings = this.column.get( 'settings' );
-
         		settings = Object.assign( settings, {
     				class : 'pa-col-sm-' + currentCol,
         			width : ( ui.size.width * 100 ) / fullWidth
@@ -85,7 +84,7 @@ export default class Column extends Backbone.View {
 			resolve();
 		} ).then( () => {
 			// sortable
-			this.$( '.pa-column-container' ).sortable({
+			this.$( '> .pa-column-container' ).sortable({
 				connectWith : '.pa-column-container',
 				items 		: '.pa-element-content',
 				handle 		: '.pa-reorder, > .right-controls > .pa-reorder-row',
@@ -100,7 +99,7 @@ export default class Column extends Backbone.View {
 			// resizable
 			if ( this.column.get( 'editabled' ) ) {
 				let columns = 12;
-				let fullWidth = this.$el.parent().outerWidth();
+				let fullWidth = this.$el.parent().innerWidth();
 				if ( fullWidth == 0 ) return;
 				let columnWidth = fullWidth / columns;
 				let totalCol;
@@ -114,12 +113,10 @@ export default class Column extends Backbone.View {
 				        let nextCol = Math.floor( next.outerWidth() / columnWidth );
 				      	// set totalColumns globally
 				      	totalCol = targetCol + nextCol;
-				      	// ui.size.nextCol = nextCol;
-				      	// ui.size.currentCol = targetCol;
-				      	ui.size.nextOriginWidth = next.outerWidth();
 
+				      	ui.size.nextOriginWidth = next.outerWidth();
 				      	target.resizable( 'option', 'minWidth', columnWidth );
-				      	target.resizable( 'option', 'maxWidth', ( ( totalCol - 1 ) * columnWidth ) );
+				      	target.resizable( 'option', 'maxWidth', ( target.outerWidth() + next.outerWidth() - columnWidth ) );
 				    },
 				    resize: ( event, ui ) => {
 				      	let target = ui.element,
@@ -129,16 +126,11 @@ export default class Column extends Backbone.View {
 
 			        	if ( ui.size.width > ui.originalSize.width ) {
 			        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
-			        		// next.width( ( ( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) ) * 100 / fullWidth ) + '%' );
 			        	} else {
 			        		next.width( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) );
-		        			// next.width( ( ( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) ) * 100 / fullWidth ) + '%' );
 			        	}
 				    },
 				    stop: ( event, ui ) => {
-				    	let columns = 12;
-						let fullWidth = this.$el.parent().width();
-						let columnWidth = fullWidth / columns;
 				    	let target = ui.element;
 				        let next = target.next();
         				let nextColumnCount = Math.round( next.width() / columnWidth );
@@ -150,7 +142,7 @@ export default class Column extends Backbone.View {
 			        			cid: next.data( 'cid' ),
 			    				settings: {
 			    					class : 'pa-col-sm-' + nextColumnCount,
-			        				width : ( next.width() * 100 ) / fullWidth
+			        				width : ( next.outerWidth() * 100 ) / fullWidth
 			    				}
 			        		} );
 
@@ -232,10 +224,25 @@ export default class Column extends Backbone.View {
 		let button = $( e.target ).parents( '.pa-element-content:first' );
 		let cid = button.data( 'cid' );
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
-
 		let index = this.column.get( 'elements' ).indexOf( model );
-
 		let newModel = model.clone();
+
+		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
+		return false;
+	}
+
+	/**
+	 * Clone element 'pa_row' handler
+	 */
+	_cloneElementRowHandler( e ) {
+		e.preventDefault();
+		let target = $( e.target ).parents( '.pa-element-content.pa_row' );
+		let cid = target.data( 'cid' );
+		// let cid = this.$( '.pa-element-content.pa_row' )
+		let model = this.column.get( 'elements' ).get( { cid: cid } );
+		let index = this.column.get( 'elements' ).indexOf( model );
+		// let newModel = model.clone();
+		let newModel = common.toJSON( model );
 
 		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
 		return false;

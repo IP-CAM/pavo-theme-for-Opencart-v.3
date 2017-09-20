@@ -126,7 +126,7 @@
 			padding: 30px 0;
 		}
 
-		.pa-element-content{
+		.pa-element-content:not(.pa_row){
 			box-shadow: 1px 1px 1px rgba(0, 0, 0, .08);
 			text-align: left;
 			background-color: #fff;
@@ -169,6 +169,9 @@
 			background-color: $pv_ele_background;
 			p{
 				font-size: 10px;
+			}
+			.pa-row{
+				margin: 0;
 			}
 		}
 	}
@@ -243,7 +246,7 @@
 		}
 	}
 
-	.pa-element-content{
+	.pa-element-content:not(.pa_row){
 		position: relative;
 		> .pa-controls{
 			position: absolute;

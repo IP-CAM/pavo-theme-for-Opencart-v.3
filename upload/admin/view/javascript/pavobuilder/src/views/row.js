@@ -11,12 +11,11 @@ export default class Row extends Backbone.View {
 	 */
 	initialize( row = { settings: {}, columns: {} } ) {
 		// set backbone model
-
 		this.row = row;
 		this.events = {
-			'click .pa-delete-row'		: '_deleteRowHandler',
-			'click .pa-add-column'		: '_addColumnHandler',
-			'click .pa-edit-column-num'	: '_changeColumnsHandler',
+			'click > .pa-controls .pa-delete-row'					: '_deleteRowHandler',
+			'click > .pa-row-column-control .pa-add-column'			: '_addColumnHandler',
+			'click > .pa-row-column-control .pa-edit-column-num'	: '_changeColumnsHandler',
 			'click > .pa-row-container > .row-controls > .left-controls > .pa-edit-row, > .row-controls > .left-controls > .pa-edit-row'		: '_setEditRowHandler',
 			'click .pa-reorder'			: () => {
 				return false;
@@ -83,7 +82,8 @@ export default class Row extends Backbone.View {
 	/**
 	 * Delete row handler
 	 */
-	_deleteRowHandler() {
+	_deleteRowHandler( e ) {
+		e.preventDefault();
 		// this.
 		if ( confirm( this.$( '.pa-delete-row' ).data( 'confirm' ) ) ) {
 			// this.remove();
@@ -144,7 +144,8 @@ export default class Row extends Backbone.View {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[i].class;
 					settings.resizable = newColumnsObject.length == i + 1 ? false : true;
-
+					// delete width style
+					delete settings.width;
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 				} else {
@@ -167,8 +168,9 @@ export default class Row extends Backbone.View {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[index].class;
-					settings.resizable = newColumnsObject.length == i + 1 ? false : true;
-
+					settings.resizable = newColumnsObject.length == index + 1 ? false : true;
+					// delete width style
+					delete settings.width;
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 

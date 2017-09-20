@@ -10,8 +10,8 @@ export default class Element extends Backbone.View {
 		this.element = element;
 
 		this.events = {
-			'click .pa-delete'											: '_removeHandler',
-			'click .pa-edit:not(".pa-edit-row")'											: '_editHandler',
+			'click .pa-delete:not(.pa-delete-row)'						: '_removeHandler',
+			'click .pa-edit:not(.pa-edit-row)'							: '_editHandler',
 			'click .pa-edit-column-num'									: '_changeColumnsInnerHandler',
 			'click .pa-reorder'											: () => {
 				return false;
@@ -20,6 +20,9 @@ export default class Element extends Backbone.View {
 		this.listenTo( this.element, 'destroy', this.remove );
 		this.listenTo( this.element, 'change', this.reRender );
 		this.listenTo( this.element, 'change:editing', this.renderElementEditForm );
+		this.listenTo( this.element.get( 'row' ), 'destroy', () => {
+			this.element.destroy();
+		} );
 	}
 
 	/**
@@ -29,7 +32,8 @@ export default class Element extends Backbone.View {
 		let data = this.element.toJSON();
 		data.cid = this.element.cid;
 		if ( this.element.get( 'row' ) !== undefined ) {
-			this.template = new Row( this.element.get( 'row' ) ).render().el;
+			let wrapper = '<div class="pa-element-content pa_row" data-cid="' + data.cid + '" data-confirm="' + PA_PARAMS.languages.confirm_element_column + '">';
+			this.template = $( wrapper ).append( new Row( this.element.get( 'row' ) ).render().el );
 		} else {
 			this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 		}
