@@ -90,24 +90,71 @@ export default class Row extends Backbone.View {
 	_addColumnHandler( e ) {
 		// stop event default
 		e.preventDefault();
-		let columns = this.row.get( 'columns' ).length + 1;
-		let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns ) );
-		if ( this.row.get( 'columns' ).length >= 12 ) {
-			classWrapper = 'pa-col-sm-12';
-		}
 
-		this.row.get( 'columns' ).map( ( model ) => {
-			let settings = model.get( 'settings' );
-			settings.class = classWrapper;
-			model.set( 'settings', settings );
-			model.set( 'reRender', true );
+		let cols = 0;
+		this.row.get( 'columns' ).map( ( column ) => {
+			let settings = column.get( 'settings' );
+			let columnWidth = settings.class.match( /pa-col-sm-([0-9]{1,2})/gi );
+			cols = cols + parseInt( columnWidth[0].replace( 'pa-col-sm-', '' ) );
 		} );
-		this.row.get( 'columns' ).add({
-			settings: {
-				element: 'pa_column',
-				class: classWrapper
+
+		if ( cols < 12 ) {
+			let columns = this.row.get( 'columns' ).length + 1;
+			let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns ) );
+			if ( this.row.get( 'columns' ).length >= 12 ) {
+				classWrapper = 'pa-col-sm-12';
 			}
-		});
+			this.row.get( 'columns' ).map( ( model ) => {
+				let settings = model.get( 'settings' );
+				settings.class = classWrapper;
+				model.set( 'settings', settings );
+				model.set( 'reRender', true );
+			} );
+			this.row.get( 'columns' ).add({
+				settings: {
+					element: 'pa_column',
+					class: classWrapper
+				}
+			});
+		} else {
+			new Promise( ( resolve, reject ) => {
+				let data = false;
+				this.row.get( 'columns' ).map( ( column ) => {
+					let settings = column.get( 'settings' );
+					let className = settings.class;
+					let col = className.replace( 'pa-col-sm-', '' );
+					if ( col >= 2 ) {
+						data = {
+							column 	: column,
+							col 	: col - 1
+						};
+					}
+				} );
+				resolve( data );
+			} ).then( ( data = false ) => {
+
+				if ( data == false ) {
+					alert( PA_PARAMS.languages.entry_column_is_maximum );
+				} else {
+					// change width old column
+					let settings = data.column.get( 'settings' );
+					settings.class = 'pa-col-sm-' + data.col;
+					if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
+						delete settings.styles.width;
+					}
+					data.column.set( 'settings', settings );
+					data.column.set( 'reRender', true );
+
+					// new column
+					this.row.get( 'columns' ).add({
+						settings: {
+							element: 'pa_column',
+							class: 'pa-col-sm-1'
+						}
+					});
+				}
+			} );
+		}
 		return false;
 	}
 
@@ -135,17 +182,20 @@ export default class Row extends Backbone.View {
 				if ( typeof model !== 'undefined' ) {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[i].class;
-					settings.resizable = newColumnsObject.length == i + 1 ? false : true;
+					// settings.editabled = newColumnsObject.length == i + 1 ? false : true;
 					// delete width style
-					delete settings.width;
+					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
+						delete settings.styles.width;
+					}
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 				} else {
 					let newModel = {
 						settings: {
 							class: newColumnsObject[i].class,
-							elements: [],
-							resizable: newColumnsObject.length == i + 1 ? false : true
+							elements: []
+							// ,
+							// editabled: newColumnsObject.length == i + 1 ? false : true
 						}
 					};
 
@@ -160,9 +210,11 @@ export default class Row extends Backbone.View {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
 					let settings = model.get( 'settings' );
 					settings.class = newColumnsObject[index].class;
-					settings.resizable = newColumnsObject.length == index + 1 ? false : true;
+					// settings.editabled = newColumnsObject.length == index + 1 ? false : true;
 					// delete width style
-					delete settings.width;
+					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
+						delete settings.styles.width;
+					}
 					model.set( 'settings', settings );
 					model.set( 'reRender', true );
 
@@ -174,7 +226,7 @@ export default class Row extends Backbone.View {
 						// check elements inside column if > 0, we will add it to lastest column
 						if ( typeof cloneModel.get( 'elements' ) !== 'undefined' && cloneModel.get( 'elements' ).length > 0 ) {
 							let settings = cloneModel.get( 'elements' ).toJSON();
-							settings.resizable = newColumnsObject.length == index + 1 ? false : true;
+							// settings.editabled = newColumnsObject.length == index + 1 ? false : true;
 							elements.push( settings );
 						}
 

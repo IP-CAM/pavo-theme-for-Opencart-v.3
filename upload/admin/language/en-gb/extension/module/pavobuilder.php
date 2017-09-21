@@ -81,3 +81,4 @@ $_['entry_preview_text']				= 'Preview';
 
 // Warning
 $_['entry_missing_google_map_key']		= 'ERROR: Please go to Pavothemer -> Settings and enter Google Map Api Key';
+$_['entry_column_is_maximum']			= 'Columns is maximum';

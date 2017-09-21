@@ -233,7 +233,7 @@
 				  			{% for tab in groups %}
 				  				<div id="nav-{{ tab.slug }}" class="tab-pane">
 					  				{% for element in elements %}
-					  					{% if ( element.group_slug == tab.slug ) %}
+					  					{% if ( element.group_slug == tab.slug and element.shortcode != 'pa_column' ) %}
 					  						<div class="pa-col-sm-3">
 							  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-mask="{{ element | json_encode() | escape }}">
 						  							<i class="{{ element.icon }}"></i>
@@ -293,7 +293,7 @@
 </script>
 
 <script type="text/html" id="pa-column-template">
-	<div class="pa-column <%= data.settings.class %>" style="<%= data.settings.width ? 'width:' + data.settings.width + '%' : '' %>" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
+	<div class="pa-column <%= data.settings.class %>" style="<%= data.settings.styles !== undefined && data.settings.styles.width !== undefined ? 'width:' + data.settings.styles.width + '%' : '' %>" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
 		<div class="pa-controls column-controls top">
 			<a href="#" class="pa-add pa-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
 			<a href="#" class="pa-edit pa-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
