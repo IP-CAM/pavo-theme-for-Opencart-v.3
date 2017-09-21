@@ -12,6 +12,7 @@ export default class Row extends Backbone.View {
 	initialize( row = { settings: {}, columns: {} } ) {
 		// set backbone model
 		this.row = row;
+
 		this.events = {
 			'click > .pa-controls .pa-delete-row'					: '_deleteRowHandler',
 			'click > .pa-row-column-control .pa-add-column'			: '_addColumnHandler',
@@ -40,7 +41,8 @@ export default class Row extends Backbone.View {
 		new Promise( ( resolve, reject ) => {
 			// each collection
 			if ( this.row.get( 'columns' ).length > 0 ) {
-				this.row.get( 'columns' ).map( ( model ) => {
+				this.row.get( 'columns' ).map( ( model, index ) => {
+					model.set( 'editabled', index < this.row.get( 'columns' ).length - 1 );
 					// map column models add add it to Row View
 					this.addColumn( model );
 				} );
@@ -63,20 +65,10 @@ export default class Row extends Backbone.View {
 		new Promise( ( resolve, reject ) => {
 			let column = new Column( model ).render().el;
 			this.$( '> .pa-element-wrapper > .pav-row-container' ).append( column );
-
 			resolve();
 		} ).then( () => {
 			
 		} );
-	}
-
-	/**
-	 * column settings
-	 */
-	updateColumnSettings( at = false, settings = {} ) {
-		let model = this.row.get( 'columns' ).at( at );
-		settings = Object.assign( model.get( 'settings' ), settings );
-		model.set( 'settings', settings );
 	}
 
 	/**
@@ -177,7 +169,7 @@ export default class Row extends Backbone.View {
 					// lastest index if columns collection
 					lastest_column_index = index;
 				} else if ( lastest_column_index !== false ) {
-					new Promise(function(resolve, reject) {
+					new Promise( ( resolve, reject ) => {
 						var cloneModel = model;
 						// check elements inside column if > 0, we will add it to lastest column
 						if ( typeof cloneModel.get( 'elements' ) !== 'undefined' && cloneModel.get( 'elements' ).length > 0 ) {

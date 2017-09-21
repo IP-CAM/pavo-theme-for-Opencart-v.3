@@ -23,9 +23,9 @@ export default class ColumnsCollection extends Backbone.Collection {
 	 * And change reRender status allow view change
 	 */
 	_editabled() {
-		this.models.map( ( model ) => {
+		this.models.map( ( model, index ) => {
 			let editabled = model.get( 'editabled' );
-			let nextEditabled = this.indexOf( model ) < this.length - 1;
+			let nextEditabled = index < this.length - 1;
 			model.set( 'editabled', nextEditabled );
 			if ( editabled != nextEditabled ) {
 				model.set( 'reRender', true );
@@ -37,6 +37,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 		let settings = model.get( 'settings' );
 		settings.element = 'pa_column';
 		model.set( 'settings', settings );
+		model.set( 'editabled', this.indexOf( model ) < this.length );
 	}
 
 }

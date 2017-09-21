@@ -13,7 +13,7 @@ export default class Rows extends Backbone.View {
 		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
 		this.events = {
-			'click .pa-clone-row' 					: '_cloneRowHandler'
+			'click > .pa-row-container > .row-controls > .left-controls > .pa-clone-row' 					: '_cloneRowHandler'
 		};
 
 		// add event
@@ -38,9 +38,6 @@ export default class Rows extends Backbone.View {
 			start: this.dragRow,
 			stop: this.dropRown.bind( this )
 		});
-
-		// this.$el.find('.pa-element-content').sortable();
-
 		return this;
 	}
 
@@ -51,7 +48,7 @@ export default class Rows extends Backbone.View {
 		if ( typeof status.at === 'undefined' ) {
 			this.$el.append( new Row( model ).render().el );
 		} else {
-			let rows = this.$( '.pa-row-container' );
+			let rows = this.$( '> .pa-row-container' );
 			rows.map( ( i, row ) => {
 				let newIndex = parseInt( status.at ) - 1;
 				if ( newIndex == i ) {
@@ -68,8 +65,10 @@ export default class Rows extends Backbone.View {
 		e.preventDefault();
 		let cid = $( e.target ).parents( '.pa-row-container:first' ).data( 'cid' );
 		let model = this.rows.get( { cid: cid } );
+
 		let index = this.rows.indexOf( model );
-		let newModel = Common.toJSON( model );
+		let mmodel = model.clone();
+		let newModel = Common.toJSON( model.toJSON() );
 
 		this.rows.add( newModel, { at: parseInt( index ) + 1 } );
 		return false;

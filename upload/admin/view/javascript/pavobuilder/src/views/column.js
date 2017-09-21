@@ -6,7 +6,7 @@ import EditForm from './globals/edit-form';
 import ElementsPopup from './globals/elements-popup';
 import Element from './element';
 import resizable from 'jquery-ui/ui/widgets/resizable';
-import common from '../common/functions';
+import Common from '../common/functions';
 
 export default class Column extends Backbone.View {
 
@@ -20,27 +20,33 @@ export default class Column extends Backbone.View {
 			'click .pa-clone.pa-clone-row'					: '_cloneElementRowHandler',
 			'click .pa-edit-column'							: '_editHandler',
 			'resize'										: ( e, ui ) => {
-				let columns = 12;
-				let fullWidth = this.$el.parent().width();
-				let columnWidth = fullWidth / columns;
-				let totalCol;
-				let target = ui.element;
-		        let next = target.next();
 
-				let currentCol = Math.round( target.width() / columnWidth );
-        		let nextColumnCount = Math.round( next.width() / columnWidth );
+				new Promise( ( resolve, reject ) => {
+					if ( ui.element.column !== this.column )  return;
+					let columns = 12;
+					let fullWidth = this.$el.parent().width();
+					let columnWidth = fullWidth / columns;
+					let totalCol;
+					let target = ui.element;
+			        let next = target.next();
 
-        		let settings = this.column.get( 'settings' );
-        		settings = Object.assign( settings, {
-    				class : 'pa-col-sm-' + currentCol,
-        			width : ( ui.size.width * 100 ) / fullWidth
-        		} );
-        		this.column.set( 'settings', settings );
+					let currentCol = Math.round( target.width() / columnWidth );
+	        		let nextColumnCount = Math.round( next.width() / columnWidth );
+
+	        		let settings = Object.assign( ...this.column.get( 'settings' ), {
+	    				class : 'pa-col-sm-' + currentCol,
+	        			width : ( ui.size.width * 100 ) / fullWidth
+	        		} );
+
+	        		resolve( settings );
+				} ).then( ( settings = {} ) => {
+        			this.column.set( 'settings', settings );
+				} );
 			},
 			// trigger save next column when resize events
 			'trigger_save_next_column'			: ( e, data = { cid: '', settings: {} } ) => {
 				if ( data.cid == this.column.cid ) {
-					let settings = Object.assign( this.column.get( 'settings' ), data.settings );
+					let settings = Object.assign( ...this.column.get( 'settings' ), data.settings );
 					this.column.set( 'settings', data.settings );
 					this.column.set( 'reRender', true );
 				}
@@ -64,9 +70,8 @@ export default class Column extends Backbone.View {
 	 * Render html
 	 */
 	render() {
-
 		new Promise( ( resolve, reject ) => {
-			var data = this.column.toJSON();
+			let data = this.column.toJSON();
 			data.cid = this.column.cid;
 
 			this.template = _.template( $( '#pa-column-template' ).html(), { variable: 'data' } )( data );
@@ -84,7 +89,7 @@ export default class Column extends Backbone.View {
 			resolve();
 		} ).then( () => {
 			// sortable
-			this.$( '> .pa-column-container' ).sortable({
+			this.$( '.pa-column-container' ).sortable({
 				connectWith : '.pa-column-container',
 				items 		: '.pa-element-content',
 				handle 		: '.pa-reorder, > .right-controls > .pa-reorder-row',
@@ -100,13 +105,14 @@ export default class Column extends Backbone.View {
 			if ( this.column.get( 'editabled' ) ) {
 				let columns = 12;
 				let fullWidth = this.$el.parent().innerWidth();
-				if ( fullWidth == 0 ) return;
 				let columnWidth = fullWidth / columns;
 				let totalCol;
 
 				this.$el.resizable({
 				    handles: 'e',
 				    start: ( event, ui ) => {
+				    	ui.element.column = this.column;
+
 				      	let target = ui.element;
 				        let next = target.next();
 				        let targetCol = Math.floor( target.outerWidth() / columnWidth );
@@ -119,9 +125,8 @@ export default class Column extends Backbone.View {
 				      	target.resizable( 'option', 'maxWidth', ( target.outerWidth() + next.outerWidth() - columnWidth ) );
 				    },
 				    resize: ( event, ui ) => {
-				      	let target = ui.element,
-				        	next = target.next();
-
+				      	let target = ui.element;
+			        	let next = target.next();
 						let currentCol = Math.floor( target.outerWidth() / columnWidth );
 
 			        	if ( ui.size.width > ui.originalSize.width ) {
@@ -136,7 +141,6 @@ export default class Column extends Backbone.View {
         				let nextColumnCount = Math.round( next.width() / columnWidth );
 
 		        		new Promise( ( resolve, reject ) => {
-
 			        		// trigger save next column
 			        		next.trigger( 'trigger_save_next_column', {
 			        			cid: next.data( 'cid' ),
@@ -145,7 +149,6 @@ export default class Column extends Backbone.View {
 			        				width : ( next.outerWidth() * 100 ) / fullWidth
 			    				}
 			        		} );
-
 			        		resolve();
 		        		} ).then( () => {
 				    		this.column.set( 'reRender', true );
@@ -242,7 +245,7 @@ export default class Column extends Backbone.View {
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
 		let index = this.column.get( 'elements' ).indexOf( model );
 		// let newModel = model.clone();
-		let newModel = common.toJSON( model );
+		let newModel = Common.toJSON( model );
 
 		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
 		return false;
@@ -267,12 +270,12 @@ export default class Column extends Backbone.View {
 	}
 
 	/**
-	 * Recieved element from other column
+	 * Received element from other column
 	 */
 	_receive( e, ui ) {
 		new Promise( ( resolve, reject ) => {
 			let index = ui.item.index();
-			this.column.get( 'elements' ).add( ui.item.element.toJSON(), { at: index } );
+			this.column.get( 'elements' ).add( Common.toJSON( ui.item.element.toJSON() ), { at: index } );
 			resolve();
 		} ).then( () => {
 			ui.item.element.destroy();

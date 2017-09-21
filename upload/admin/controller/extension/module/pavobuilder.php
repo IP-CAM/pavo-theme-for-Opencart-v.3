@@ -96,7 +96,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		}
 
 		if ( $this->request->server['REQUEST_METHOD'] === 'POST' ) {
-			$this->saveModule();
+			$this->saveModule( $id );
 		}
 
 		// languages
@@ -227,7 +227,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	/**
 	 * save module
 	 */
-	private function saveModule() {
+	private function saveModule( $id = 0 ) {
 		$this->load->model( 'setting/extension' );
 		$this->load->model( 'setting/module' );
 		$this->load->language( 'extension/module/pavobuilder' );

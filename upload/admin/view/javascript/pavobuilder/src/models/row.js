@@ -16,5 +16,5 @@ export default class RowModel extends Backbone.Model {
 			editing: false
 		}
 	}
-	
+
 }
