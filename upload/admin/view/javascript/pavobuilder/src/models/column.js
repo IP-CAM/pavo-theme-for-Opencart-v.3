@@ -12,7 +12,9 @@ export default class ColumnModel extends Backbone.Model {
 		return {
 			settings: {
 				element: 'pa_column',
-				styles: {}
+				styles: {
+					width: '100%'
+				}
 			},
 			elements: new ElementsCollection(),
 			editing: false,

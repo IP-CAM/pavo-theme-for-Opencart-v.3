@@ -8,6 +8,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 		this.model = ColumnModel;
 		this.on( 'update', this._editabled, this );
 		this.on( 'add', this._addParam, this );
+		this.on( 'remove', this._calculatorColumnWidth );
 	}
 
 	/**
@@ -38,6 +39,24 @@ export default class ColumnsCollection extends Backbone.Collection {
 		settings.element = 'pa_column';
 		model.set( 'settings', settings );
 		model.set( 'editabled', this.indexOf( model ) < this.length );
+	}
+
+	/**
+	 * re-calculator column width
+	 */
+	_calculatorColumnWidth( model ) {
+		let numberColumn = this.length;
+		let percentWidth = 100 / numberColumn;
+		this.map( ( model ) => {
+			let settings = Object.assign( ...model.get( 'settings' ), {
+				class: 'pa-col-sm-' + Math.floor( 12 / numberColumn ),
+				styles: {
+					width: percentWidth
+				}
+			} );
+			model.set( 'settings', settings );
+			model.set( 'reRender', true );
+		} );
 	}
 
 }

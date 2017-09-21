@@ -21,11 +21,9 @@ export default class Column extends Backbone.View {
 			'click .pa-edit-column'							: '_editHandler',
 			'resize'										: ( e, ui ) => {
 				new Promise( ( resolve, reject ) => {
-					if ( ui.element.column !== this.column )  return;
 					let columns = 12;
 					let fullWidth = this.$el.parent().width();
 					let columnWidth = fullWidth / columns;
-					let totalCol;
 					let target = ui.element;
 			        let next = target.next();
 
@@ -34,7 +32,6 @@ export default class Column extends Backbone.View {
 
 	        		let settings = Object.assign( ...this.column.get( 'settings' ), {
 	    				class : 'pa-col-sm-' + currentCol,
-	        			// width : ( ui.size.width * 100 ) / fullWidth
 	        			styles: {
 	        				width: ( ui.size.width * 100 ) / fullWidth
 	        			}
@@ -108,20 +105,14 @@ export default class Column extends Backbone.View {
 				let columns = 12;
 				let fullWidth = this.$el.parent().innerWidth();
 				let columnWidth = fullWidth / columns;
-				let totalCol;
 
 				this.$el.resizable({
 				    handles: 'e',
 				    start: ( event, ui ) => {
-				    	ui.element.column = this.column;
-
 				      	let target = ui.element;
 				        let next = target.next();
-				        let targetCol = Math.floor( target.outerWidth() / columnWidth );
-				        let nextCol = Math.floor( next.outerWidth() / columnWidth );
-				      	// set totalColumns globally
-				      	totalCol = targetCol + nextCol;
 
+				      	ui.size.currentOriginWidth = target.outerWidth();
 				      	ui.size.nextOriginWidth = next.outerWidth();
 				      	target.resizable( 'option', 'minWidth', columnWidth );
 
@@ -134,23 +125,23 @@ export default class Column extends Backbone.View {
 				      		cols = className[0] !== undefined ? cols + parseInt( className[0].replace( 'pa-col-sm-', '' ) ) : 1;
 				      	}
 
-				      	let settings = this.column.get( 'settings' )
+				      	let settings = this.column.get( 'settings' );
 				      	let ownerClass = settings.class.match( /pa-col-sm-([0-9]{1,2})/gi );
 				      	cols = cols + parseInt( ownerClass[0].replace( 'pa-col-sm-', '' ) );
 
 				      	ui.element.totalCols = cols;
 				      	if ( cols < 12 ) {
-				      		let allowCols = 12 - cols;
-				      		target.resizable( 'option', 'maxWidth', ( target.outerWidth() + next.outerWidth() + allowCols * columnWidth - columnWidth ) );
+				      		target.resizable( 'option', 'maxWidth', target.outerWidth() + next.outerWidth() + ( 11 - cols ) * columnWidth );
 				      	} else {
 				      		target.resizable( 'option', 'maxWidth', ( target.outerWidth() + next.outerWidth() - columnWidth ) );
 				      	}
 				    },
 				    resize: ( event, ui ) => {
 				      	let target = ui.element;
-			        	let next = target.next();
+				        let next = target.next();
+		        		let misWidth = ( 12 - ui.element.totalCols ) * columnWidth;
 
-			        	if ( ui.element.totalCols == 12 ) {
+			        	if ( ui.element.totalCols >= 12 ) {
 				        	if ( ui.size.width > ui.originalSize.width ) {
 				        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
 				        	} else {
@@ -169,7 +160,6 @@ export default class Column extends Backbone.View {
 			        			cid: next.data( 'cid' ),
 			    				settings: {
 			    					class : 'pa-col-sm-' + nextColumnCount,
-			        				// width : ( next.outerWidth() * 100 ) / fullWidth
 			        				styles: {
 			        					width: ( next.outerWidth() * 100 ) / fullWidth
 			        				}
