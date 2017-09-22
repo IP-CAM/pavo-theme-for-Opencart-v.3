@@ -236,6 +236,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		$is_ajax = ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest';
 		$content = $is_ajax ? $this->request->post['content'] : ( ! empty( $this->request->post['content'] ) ? json_decode( htmlspecialchars_decode( $this->request->post['content'] ), true ) : array() );
 		$this->request->post['content'] = $content;
+		$id = ! $id && ! empty( $this->request->get['module_id'] ) ? $this->request->get['module_id'] : $id;
 
 		if ( ! $id ) {
 			$this->model_setting_module->addModule( 'pavobuilder', $this->request->post );

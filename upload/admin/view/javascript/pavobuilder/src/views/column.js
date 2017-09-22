@@ -116,37 +116,19 @@ export default class Column extends Backbone.View {
 				      	ui.size.nextOriginWidth = next.outerWidth();
 				      	target.resizable( 'option', 'minWidth', columnWidth );
 
-				      	let siblings = this.$el.siblings();
-				      	let cols = 0;
-
-				      	for ( let item of siblings ) {
-				      		let className = $( item ).attr( 'class' );
-				      		className = className.match( /pa-col-sm-([0-9]{1,2})/gi );
-				      		cols = className[0] !== undefined ? cols + parseInt( className[0].replace( 'pa-col-sm-', '' ) ) : 1;
-				      	}
-
-				      	let settings = this.column.get( 'settings' );
-				      	let ownerClass = settings.class.match( /pa-col-sm-([0-9]{1,2})/gi );
-				      	cols = cols + parseInt( ownerClass[0].replace( 'pa-col-sm-', '' ) );
-
-				      	ui.element.totalCols = cols;
-				      	if ( cols < 12 ) {
-				      		target.resizable( 'option', 'maxWidth', target.outerWidth() + next.outerWidth() + ( 11 - cols ) * columnWidth );
-				      	} else {
-				      		target.resizable( 'option', 'maxWidth', ( target.outerWidth() + next.outerWidth() - columnWidth ) );
-				      	}
+				      	let maxWidth = target.outerWidth() + next.outerWidth();
+				      	target.resizable( 'option', 'maxWidth', maxWidth - columnWidth );
 				    },
 				    resize: ( event, ui ) => {
 				      	let target = ui.element;
 				        let next = target.next();
-		        		let misWidth = ( 12 - ui.element.totalCols ) * columnWidth;
+				        let maxWidth = target.outerWidth() + next.outerWidth();
+				      	maxWidth = Math.floor( maxWidth / columnWidth ) * columnWidth;
 
-			        	if ( ui.element.totalCols >= 12 ) {
-				        	if ( ui.size.width > ui.originalSize.width ) {
-				        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
-				        	} else {
-				        		next.width( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) );
-				        	}
+				      	if ( ui.size.width > ui.originalSize.width ) {
+			        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
+			        	} else {
+			        		next.width( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) );
 			        	}
 				    },
 				    stop: ( event, ui ) => {
