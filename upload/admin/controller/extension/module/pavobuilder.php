@@ -195,6 +195,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		// layout data
 		$this->data['layout'] 		= $id ? $this->model_setting_module->getModule( $id ) : array();
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
+		$this->data['edit_layout_url'] = str_replace( '&amp;', '&', $this->url->link( 'extension/module/pavobuilder/saveModule', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
 		$this->data['underscore_template'] = $this->load->view( 'extension/module/pavobuilder/_template', $this->data );
 
 		// addScripts
@@ -227,11 +228,13 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	/**
 	 * save module
 	 */
-	private function saveModule( $id = 0 ) {
+	public function saveModule( $id = 0 ) {
 		$this->load->model( 'setting/extension' );
 		$this->load->model( 'setting/module' );
 		$this->load->language( 'extension/module/pavobuilder' );
-		$content = ! empty( $this->request->post['content'] ) ? json_decode( htmlspecialchars_decode( $this->request->post['content'] ), true ) : array();
+
+		$is_ajax = ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest';
+		$content = $is_ajax ? $this->request->post['content'] : ( ! empty( $this->request->post['content'] ) ? json_decode( htmlspecialchars_decode( $this->request->post['content'] ), true ) : array() );
 		$this->request->post['content'] = $content;
 
 		if ( ! $id ) {
@@ -241,9 +244,18 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->model_setting_module->editModule( $id, $this->request->post );
 		}
 
-		$this->session->data['success'] = $this->language->get('text_success');
-
-		$this->response->redirect( $this->url->link( 'extension/module/pavobuilder/edit', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
+		// ajax save
+		if ( $is_ajax ) {
+			$this->response->addHeader( 'Content-Type: application/json' );
+			$this->response->setOutput( json_encode( array(
+				'status'	=> true,
+				'success'	=> $this->language->get( 'text_success' )
+			) ) );
+		} else {
+			$this->session->data['success'] = $this->language->get( 'text_success' );
+			// redirect
+			$this->response->redirect( $this->url->link( 'extension/module/pavobuilder/edit', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
+		}
 	}
 
 	/**

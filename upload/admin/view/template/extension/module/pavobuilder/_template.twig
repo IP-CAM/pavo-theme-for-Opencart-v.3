@@ -1,5 +1,6 @@
 <script type="text/javascript">
 	var PA_PARAMS = window.PA_PARAMS = {
+		editLayoutURL 	: '{{ edit_layout_url }}',
 		content 		: {{ layout.content|json_encode() }},
 		element_fields 	: {{ element_fields|json_encode() }},
 		animate_groups 	: {{ animate_groups|json_encode() }},
@@ -328,4 +329,7 @@
 			</a>
 		</div>
 	</div>
+</script>
+<script type="text/html" id="pa-loading-template">
+	<div id="pa-loading"></div>
 </script>
