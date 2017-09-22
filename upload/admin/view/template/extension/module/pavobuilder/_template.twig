@@ -10,7 +10,6 @@
 		user_token 		: '{{ user_token }}'
 	}
 </script>
-
 <script type="text/html" id="pa-modal-panel">
 
 	<% if ( data.tabs.length ) { %>
@@ -187,9 +186,28 @@
 		</div>
 	</div>
 </script>
-
+<script type="text/html" id="pa-editor-form-field">
+	<% var uniqid = new Date().getTime() + '-' + data.field.name; %>
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><%= data.field.label %></label>
+		<div class="col-sm-10">
+			<textarea id="<%= uniqid %>" name="<%= data.field.name %>" class="form-control pa-editor" data-toggle="summernote"><%= _.unescape( data.settings[data.field.name] ) %></textarea>
+			<% if ( data.field.desc ) { %>
+				<p style="font-style: italic"><%= data.field.desc %></p>
+			<% } %>
+		</div>
+	</div>
+	<script type="text/javascript">
+		( function($) {
+			$( document ).ready( function() {
+				$( '.pa-editor' ).summernote({
+					height: 200
+				});
+			} );
+		} )( jQuery );
+	</script>
+</script>
 <script type="text/html" id="pa-edit-form-template">
-
 	<div id="pa-inspector" class="modal">
 		<div class="modal-dialog modal-lg">
 			<div class="modal-content">
@@ -212,7 +230,6 @@
 		</div>
 	</div>
 </script>
-
 <script type="text/html" id="pa-elements-panel">
 	<div id="pa-elements-list" class="pa-elements-list elements-panel modal">
 		<div class="modal-dialog modal-lg">

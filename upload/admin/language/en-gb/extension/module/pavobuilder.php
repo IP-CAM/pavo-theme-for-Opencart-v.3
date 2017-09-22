@@ -1,6 +1,7 @@
 <?php
 // Heading Title
 $_['heading_title'] 		= 'PavoBuilder';
+$_['updating_text'] 		= 'Updating ...';
 $_['text_success']          = 'Success: You have modified layout!';
 $_['text_warning']          = 'ERROR: Permission denied';
 // layouts list
@@ -18,6 +19,7 @@ $_['entry_disabled_text']	= 'Disabled';
 $_['entry_layout_editor'] 	= 'Layout Editor';
 
 // homebuilder
+$_['entry_add_row_text']		= 'Add Row';
 $_['entry_add_element_text']	= 'Add Element';
 $_['entry_edit_row_text']		= 'Edit row';
 $_['entry_delete_row_text']		= 'Delete row';
@@ -49,6 +51,7 @@ $_['entry_row_id_text']			= 'Row ID';
 $_['entry_column_id_text']		= 'Column ID';
 $_['entry_extra_class_text']	= 'Extra Class';
 $_['entry_layout_type_text']	= 'Layout';
+$_['entry_content_text']		= 'Content';
 $_['entry_wide_text']			= 'Wide';
 $_['entry_boxed_text']			= 'Boxed';
 $_['entry_effect_text']			= 'Effect';

@@ -1,6 +1,6 @@
-import Backbone from 'Backbone';
-import _ from 'underscore';
 import $ from 'jquery';
+import _ from 'underscore';
+import Backbone from 'Backbone';
 import spectrum from 'spectrum-colorpicker';
 import 'spectrum-colorpicker/spectrum.css';
 import GoogleMap from '../views/globals/google-map';

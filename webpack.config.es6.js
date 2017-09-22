@@ -54,8 +54,6 @@ module.exports = {
 	      	beautify: false,
 	      	dead_code: true
 	    })
-	 //    ,
-		// new ExtractTextPlugin( './node_modules/spectrum-colorpicker/spectrum.css' )
 	],
 	resolve: {
 		extensions: [ '.js', '.css' ],

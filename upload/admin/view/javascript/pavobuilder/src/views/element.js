@@ -63,7 +63,7 @@ export default class Element extends Backbone.View {
 	 */
 	_editHandler( e ) {
 		e.preventDefault();
-		this.element.set( 'editing', ! this.element.get( 'editing' ) );
+		this.element.set( 'editing', true );
 		if ( this.element.get( 'element_type' ) == 'module' ) {
 			let url = PA_PARAMS.site_url + 'admin/index.php?route=extension/module/' + this.element.get( 'moduleCode' ) + '&module_id='+ this.element.get( 'moduleId' ) + '&user_token=' + PA_PARAMS.user_token;
 			let html = '<div class="loading text-center"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>';

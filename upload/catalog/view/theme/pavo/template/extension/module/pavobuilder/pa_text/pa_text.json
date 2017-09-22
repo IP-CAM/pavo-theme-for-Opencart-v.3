@@ -1,0 +1,34 @@
+{
+	"general": {
+		"label"		: "entry_general_text",
+		"fields"	: [
+				{
+					"type"		: "text",
+					"name"		: "extra_class",
+					"label"		: "entry_extra_class_text",
+					"default"	: ""
+				},
+				{
+					"type"		: "editor",
+					"name"		: "content",
+					"label"		: "entry_content_text",
+					"default"	: ""
+				}
+			]
+	},
+	"style"		: {
+		"label"		: "entry_styles_text",
+		"fields"	: [
+			{
+				"type"		: "layout-onion",
+				"name"		: "layout_onion",
+				"label"		: "entry_box_text"
+			},
+			{
+				"type"		: "colorpicker",
+				"name"		: "color",
+				"label"		: "entry_color_text"
+			}
+		]
+	}
+}

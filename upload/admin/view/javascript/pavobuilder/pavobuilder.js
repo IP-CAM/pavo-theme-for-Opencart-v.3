@@ -8,6 +8,7 @@ let ctrlPress = false;
 $( document ).ready(() => {
 	// init view
 	let HomePageBuilder = new Builder( window.PA_PARAMS.content );
+	let loading = false;
 	HomePageBuilder.render();
 
 	$( document ).on( 'submit', '#pavohomebuilder-layout-edit', ( e ) => {
@@ -24,8 +25,14 @@ $( document ).ready(() => {
 
 		if ( e.keyCode === 83 && ctrlPress ) {
 			e.preventDefault();
+			if ( loading ) {
+				return;
+			}
+
+			loading = true;
 			let data = $( '#pavohomebuilder-layout-edit' ).serializeJSON();
 			data.content = Common.toJSON( HomePageBuilder.rowsCollection, [ 'editabled', 'adding', 'reRender', 'adding_position' ] );
+			let pageTitle = $( 'title' ).text();
 
 			let Loading = new Loader({
 				loading: true,
@@ -36,9 +43,12 @@ $( document ).ready(() => {
 						data: data,
 						beforeSend: () => {
 							Loading.$el.html( '<div id="loader" class="loading"></div>' );
+							$( 'title' ).text( PA_PARAMS.languages.updating_text );
 						}
 					}).always( () => {
+						$( 'title' ).text( pageTitle );
 						setTimeout( () => {
+							loading = false;
 							Loading.model.set( 'loading', false );
 						}, 1500 );
 					} ).done( ( res ) => {

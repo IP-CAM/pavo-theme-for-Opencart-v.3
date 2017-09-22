@@ -204,6 +204,12 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		if ( $key = $this->config->get( 'pavothemer_google_map_api_key' ) ) {
 			$this->document->addScript( '//maps.googleapis.com/maps/api/js?key=' . $this->config->get( 'pavothemer_google_map_api_key' ) . '&libraries=places' );
 		}
+
+		// enqueue scripts, stylesheet needed to display editor
+		$this->document->addScript( 'view/javascript/summernote/summernote.js' );
+		$this->document->addScript( 'view/javascript/summernote/opencart.js' );
+		$this->document->addStyle( 'view/javascript/summernote/summernote.css' );
+
 		// addStyles
 		$this->document->addStyle( 'view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
 		$this->document->addStyle( 'view/javascript/jquery/jquery-ui/jquery-ui.min.css' );

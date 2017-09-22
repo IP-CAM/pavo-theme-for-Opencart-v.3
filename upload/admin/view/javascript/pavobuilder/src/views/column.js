@@ -123,7 +123,7 @@ export default class Column extends Backbone.View {
 				      	let target = ui.element;
 				        let next = target.next();
 				        let maxWidth = target.outerWidth() + next.outerWidth();
-				      	maxWidth = Math.floor( maxWidth / columnWidth ) * columnWidth;
+				      	maxWidth = Math.ceil( maxWidth / columnWidth ) * columnWidth;
 
 				      	if ( ui.size.width > ui.originalSize.width ) {
 			        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
@@ -210,7 +210,7 @@ export default class Column extends Backbone.View {
 		}
 
 		// toggle 'adding'
-		this.column.set( 'adding', ! this.column.get( 'adding' ) );
+		this.column.set( 'adding', true );
 		// elements for select
 		this.elementsList = new ElementsPopup( this.column );
 		return false;
