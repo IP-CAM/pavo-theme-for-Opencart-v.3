@@ -35,8 +35,13 @@ export default class ColumnsCollection extends Backbone.Collection {
 	}
 
 	_addParam( model ) {
-		let settings = model.get( 'settings' );
-		settings.element = 'pa_column';
+		let settings = {
+			...model.get( 'settings' ),
+			...{
+				element: 'pa_column'
+			}
+		};
+
 		model.set( 'settings', settings );
 		model.set( 'editabled', this.indexOf( model ) < this.length );
 	}
@@ -48,12 +53,19 @@ export default class ColumnsCollection extends Backbone.Collection {
 		let numberColumn = this.length;
 		let percentWidth = 100 / numberColumn;
 		this.map( ( model ) => {
-			let settings = Object.assign( ...model.get( 'settings' ), {
-				class: 'pa-col-sm-' + Math.floor( 12 / numberColumn ),
-				styles: {
-					width: percentWidth
+			let settings = {
+				...model.get( 'settings' ),
+				...{
+					element: 'pa_column',
+					class: 'pa-col-sm-' + Math.floor( 12 / numberColumn ),
+					styles: {
+						width : percentWidth
+					}
 				}
-			} );
+			};
+			// settings.element = 'pa_column';
+			// settings.class = 'pa-col-sm-' + Math.floor( 12 / numberColumn );
+			// settings.styles.width = percentWidth;
 			model.set( 'settings', settings );
 			model.set( 'reRender', true );
 		} );

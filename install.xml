@@ -95,7 +95,7 @@
             'customize'
         );
 
-        $this->document->addStyle( 'admin/view/stylesheet/pavobuilder/dist/pavobuilder.min.css' );
+        $this->document->addStyle( 'view/javascript/pavobuilder/dist/pavobuilder.min.css' );
         foreach ( $styles as $style ) {
             if ( ! $style ) continue;
             $style = DIR_TEMPLATE . $theme . '/stylesheet/' . $style;
@@ -111,12 +111,26 @@
             }
         }
 
+        $google_api_key = $this->config->get( 'pavothemer_google_map_api_key' );
+        $this->document->addScript( '//maps.googleapis.com/maps/api/js?key=' .$google_api_key );
         /**
          * script files
          *
          * common script
          * customize script
          */
+        $coreScripts = array(
+            'pavobuilder/dist/pavobuilder.min.js',
+            'pavothemer/dist/pavothemer.min.js'
+        );
+
+        foreach ( $coreScripts as $script ) {
+            $file = dirname ( DIR_TEMPLATE ) . '/javascript/' . $script;
+            if ( file_exists( $file ) ) {
+                $file = str_replace( DIR_APPLICATION, basename( DIR_APPLICATION ) . '/', $file );
+                $this->document->addScript( $file );
+            }
+        }
         $scripts = array(
             'common',
             'customize'

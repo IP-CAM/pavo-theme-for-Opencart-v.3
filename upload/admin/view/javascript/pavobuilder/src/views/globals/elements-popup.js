@@ -80,16 +80,17 @@ export default class ElementsPopup extends Backbone.View {
 
 		if ( settings.shortcode === 'pa_row' ) {
 			settings.row = {
-					settings: {},
+					settings: {
+						element: 'pa_row'
+					},
 					columns: {
 						settings: {
 							class: 'pa-col-sm-12',
+							element: 'pa_column'
 						},
 						elements: []
 					}
 				};
-		} else if ( settings.shortcode === 'pa_column' ) {
-			
 		}
 
 		// add new element to column

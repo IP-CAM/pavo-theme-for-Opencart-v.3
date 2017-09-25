@@ -21,7 +21,7 @@ export default class GoogleMap extends Backbone.View {
 		this.model = model;
 
 		this.events = {
-			'change input[name="zoom_enabled"]' : ( e ) => {
+			'change input[name="zoomControl"]' : ( e ) => {
 				if ( ! this.map ) return false;
 				this.map.setOptions({ zoomControl : $( e.target ).is( ':checked' ) });
 			},
@@ -29,7 +29,7 @@ export default class GoogleMap extends Backbone.View {
 				if ( ! this.map ) return false;
 				this.map.setZoom( parseInt( $( e.target ).val() ) );
 			},
-			'change input[name="scroll_enabled"]' : ( e ) => {
+			'change input[name="scrollwheel"]' : ( e ) => {
 				if ( ! this.map ) return false;
 				this.map.setOptions({ scrollwheel : $( e.target ).is( ':checked' ) });
 			},
@@ -41,7 +41,7 @@ export default class GoogleMap extends Backbone.View {
 				if ( ! this.map ) return false;
 				this.map.setMapTypeId( $( e.target ).val() );
 			},
-			'change input[name="map_type_control_enabled"]' : ( e ) => {
+			'change input[name="mapTypeControl"]' : ( e ) => {
 				if ( ! this.map ) return false;
 				this.map.setOptions({ mapTypeControl : $( e.target ).is( ':checked' ) });
 			}
@@ -58,7 +58,8 @@ export default class GoogleMap extends Backbone.View {
 		} else {
 			let settings = this.model.get( 'settings' );
 
-			let mapData = Object.assign( this.defaults(), settings );
+			let mapData = Object.assign( {}, this.defaults(), settings );
+
 			mapData.center = {
 				lat: settings.lat !== undefined && ! isNaN( settings.lat ) && settings.lat ? parseFloat( settings.lat ) : -33.8688,
 				lng: settings.lng !== undefined && ! isNaN( settings.lng ) && settings.lng ? parseFloat( settings.lng ) : 151.2195
@@ -66,6 +67,9 @@ export default class GoogleMap extends Backbone.View {
 
 			mapData.zoom = parseInt( mapData.zoom );
 			mapData.draggable = parseInt( mapData.draggable );
+			mapData.scrollwheel = parseInt( mapData.scrollwheel );
+			mapData.mapTypeControl = parseInt( mapData.mapTypeControl );
+			mapData.zoomControl = parseInt( mapData.zoomControl );
 
 			this.markers = [];
 			this.map = new google.maps.Map( this.$( '.pa-google-map' ).get( 0 ), mapData );
@@ -97,7 +101,7 @@ export default class GoogleMap extends Backbone.View {
 		        this.bounds.extend( markerOptions.position );
 		        this.markers.push( marker );
 
-	          	this.map.fitBounds( this.bounds );
+	          	// this.map.fitBounds( this.bounds );
           		// this.map.panToBounds( this.bounds );
 			}
 
@@ -118,7 +122,7 @@ export default class GoogleMap extends Backbone.View {
 	          	}
 
 	          	// Clear out the old markers.
-	          	this.markers.forEach( function( marker ) {
+	          	this.markers.map( ( marker ) => {
 		            marker.setMap( null );
 	          	} );
 
@@ -172,11 +176,11 @@ export default class GoogleMap extends Backbone.View {
 			infowindow.open( this.map, marker );
 		});
 
-	    if ( place.geometry.viewport ) {
-	    	this.bounds.extend( place.geometry.viewport );
-	    } else {
+	    // if ( place.geometry.viewport ) {
+	    // 	this.bounds.extend( place.geometry.viewport );
+	    // } else {
 	    	this.bounds.extend( place.geometry.location );
-	    }
+	    // }
 	}
 
 }

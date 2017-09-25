@@ -180,9 +180,9 @@ export default class Row extends Backbone.View {
 			for ( let i = 0; i < newColumnsObject.length; i++ ) {
 				let model = this.row.get( 'columns' ).at( i );
 				if ( typeof model !== 'undefined' ) {
-					let settings = Object.assign( ...model.get( 'settings' ), {} );
+					let settings = Object.assign( {}, model.get( 'settings' ) );
 					settings.class = newColumnsObject[i].class;
-					// settings.editabled = newColumnsObject.length == i + 1 ? false : true;
+
 					// delete width style
 					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
 						delete settings.styles.width;
@@ -194,8 +194,6 @@ export default class Row extends Backbone.View {
 						settings: {
 							class: newColumnsObject[i].class,
 							elements: []
-							// ,
-							// editabled: newColumnsObject.length == i + 1 ? false : true
 						}
 					};
 
@@ -208,9 +206,8 @@ export default class Row extends Backbone.View {
 			var lastest_column_index = false;
 			this.row.get( 'columns' ).map( ( model, index ) => {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
-					let settings = Object.assign( ...model.get( 'settings' ), {} );
+					let settings = Object.assign( {}, model.get( 'settings' ) );
 					settings.class = newColumnsObject[index].class;
-					// settings.editabled = newColumnsObject.length == index + 1 ? false : true;
 					// delete width style
 					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
 						delete settings.styles.width;
@@ -226,7 +223,6 @@ export default class Row extends Backbone.View {
 						// check elements inside column if > 0, we will add it to lastest column
 						if ( typeof cloneModel.get( 'elements' ) !== 'undefined' && cloneModel.get( 'elements' ).length > 0 ) {
 							let settings = cloneModel.get( 'elements' ).toJSON();
-							// settings.editabled = newColumnsObject.length == index + 1 ? false : true;
 							elements.push( settings );
 						}
 

@@ -1,0 +1,14 @@
+{% set height = settings.height ? settings.height : '100' %}
+{% set unit = settings.height_unit ? settings.height_unit : '%' %}
+{% set height = height ? [ height, '', unit ] | join : false %}
+
+<div class="pa-element pa_google_map" data-place_name="{{ settings.place_name }}"
+data-lat="{{ settings.lat }}"
+data-lng="{{ settings.lng }}"
+data-zoomControl="{{ settings.zoomControl }}"
+data-zoom="{{ settings.zoom }}"
+data-scrollwheel="{{ settings.scrollwheel }}"
+data-mapTypeControl="{{ settings.mapTypeControl }}"
+data-draggable="{{ settings.draggable }}"
+data-mapTypeId="{{ settings.mapTypeId }}"
+style="height: {{ height }}"></div>

@@ -8,7 +8,10 @@ var files = [];
 var adminFiles = glob.sync( 'upload/*/view/stylesheet/pavothemer/*.scss' );
 var catalogFiles = glob.sync( 'upload/*/view/theme/*/sass/stylesheet*.scss' );
 files = adminFiles.concat( catalogFiles );
-var builderFiles = glob.sync( 'upload/*/view/stylesheet/pavobuilder/*.scss' );
+var builderFiles = [];
+var builderThemeFiles = glob.sync( 'upload/*/view/stylesheet/pavobuilder/*.scss' );
+var builderFilesCore = glob.sync( 'upload/*/view/javascript/pavobuilder/*.scss' );
+builderFiles = builderThemeFiles.concat( builderFilesCore );
 files = files.concat( builderFiles );
 var skinsFiles = glob.sync( 'upload/*/view/theme/*/sass/skins/*.scss' );
 

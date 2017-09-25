@@ -31,7 +31,7 @@ export default class Builder extends Backbone.View {
 		} );
 		this.rows.render().el;
 
-		this.$el.find( '.pa-element-content' ).sortable();
+		// this.$el.find( '.pa-element-content' ).sortable();
 		return this;
 	}
 

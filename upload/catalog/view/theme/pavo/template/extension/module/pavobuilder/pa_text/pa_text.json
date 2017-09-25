@@ -12,7 +12,8 @@
 					"type"		: "editor",
 					"name"		: "content",
 					"label"		: "entry_content_text",
-					"default"	: ""
+					"default"	: "",
+					"filter"	: "html_entity_decode"
 				}
 			]
 	},

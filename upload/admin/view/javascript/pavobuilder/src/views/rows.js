@@ -24,20 +24,26 @@ export default class Rows extends Backbone.View {
 	 * Render html method
 	 */
 	render() {
-		if ( this.rows.length > 0 ) {
-			this.rows.map( ( model ) => {
-				this.addRow( model );
-			} );
-		}
+		new Promise( ( resolve, reject ) => {
+			if ( this.rows.length > 0 ) {
+				this.rows.map( ( model ) => {
+					this.addRow( model );
+				} );
+			}
 
-		// set sortable
-		this.$el.sortable({
-			placeholder: 'pa-sortable-placeholder',
-			handle: '> .row-controls .pa-reorder-row',
-			// sortable updated callback
-			start: this.dragRow,
-			stop: this.dropRown.bind( this )
-		});
+			resolve();
+		} ).then( () => {
+
+			// set sortable
+			this.$el.sortable({
+				placeholder 	: 'pa-sortable-placeholder',
+				items 			: '> .pa-row-container',
+				handle 			: '> .pa-row-container > .row-controls > .right-controls > .pa-reorder-row',
+				// sortable updated callback
+				start 			: this.dragRow,
+				stop 			: this.dropRown.bind( this )
+			});
+		} );
 		return this;
 	}
 

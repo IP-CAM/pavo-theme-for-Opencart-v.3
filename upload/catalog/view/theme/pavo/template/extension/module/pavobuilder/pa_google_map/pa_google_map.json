@@ -9,7 +9,7 @@
 				},
 				{
 					"type"		: "checkbox",
-					"name"		: "zoom_enabled",
+					"name"		: "zoomControl",
 					"label"		: "entry_enabled_zoom_text",
 					"default"	: 1
 				},
@@ -23,13 +23,13 @@
 				},
 				{
 					"type"		: "checkbox",
-					"name"		: "scroll_enabled",
+					"name"		: "scrollwheel",
 					"label"		: "entry_enabled_scrollwheel_text",
 					"default"	: 1
 				},
 				{
 					"type"		: "checkbox",
-					"name"		: "map_type_control_enabled",
+					"name"		: "mapTypeControl",
 					"label"		: "entry_enabled_map_typecontrols_text",
 					"default"	: 1
 				},

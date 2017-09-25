@@ -20,6 +20,9 @@ export default class Column extends Backbone.View {
 			'click .pa-clone.pa-clone-row'					: '_cloneElementRowHandler',
 			'click .pa-edit-column'							: '_editHandler',
 			'resize'										: ( e, ui ) => {
+				if ( ui.element.cid !== this.column.cid ) {
+					return;
+				}
 				new Promise( ( resolve, reject ) => {
 					let columns = 12;
 					let fullWidth = this.$el.parent().width();
@@ -30,12 +33,16 @@ export default class Column extends Backbone.View {
 					let currentCol = Math.round( target.width() / columnWidth );
 	        		let nextColumnCount = Math.round( next.width() / columnWidth );
 
-	        		let settings = Object.assign( ...this.column.get( 'settings' ), {
-	    				class : 'pa-col-sm-' + currentCol,
-	        			styles: {
-	        				width: ( ui.size.width * 100 ) / fullWidth
-	        			}
-	        		} );
+	        		let settings = {
+	        			...this.column.get( 'settings' ),
+	        			...{
+		    				class : 'pa-col-sm-' + currentCol,
+		    				element: 'pa_column',
+		        			styles: {
+		        				width: ( ui.size.width * 100 ) / fullWidth
+		        			}
+		        		}
+	        		};
 
 	        		resolve( settings );
 				} ).then( ( settings = {} ) => {
@@ -45,7 +52,7 @@ export default class Column extends Backbone.View {
 			// trigger save next column when resize events
 			'trigger_save_next_column'			: ( e, data = { cid: '', settings: {} } ) => {
 				if ( data.cid == this.column.cid ) {
-					let settings = Object.assign( ...this.column.get( 'settings' ), data.settings );
+					let settings = { ...this.column.get( 'settings' ), ...data.settings };
 					this.column.set( 'settings', data.settings );
 					this.column.set( 'reRender', true );
 				}
@@ -88,10 +95,10 @@ export default class Column extends Backbone.View {
 			resolve();
 		} ).then( () => {
 			// sortable
-			this.$( '.pa-column-container' ).sortable({
+			this.$( '> .pa-element-wrapper > .pa-column-container' ).sortable({
 				connectWith : '.pa-column-container',
-				items 		: '.pa-element-content',
-				handle 		: '.pa-reorder, > .right-controls > .pa-reorder-row',
+				items 		: '> .pa-element-wrapper > .pa-column-container > .pa-element-content',
+				handle 		: '.pa-reorder:not(.pa-reorder-row), .pa-reorder.pa-reorder-row',
 				cursor 		: 'move',
 				placeholder : 'pa-sortable-placeholder',
 				receive 	: this._receive.bind( this ),
@@ -112,6 +119,7 @@ export default class Column extends Backbone.View {
 				      	let target = ui.element;
 				        let next = target.next();
 
+				        ui.element.cid = $( target ).data( 'cid' );
 				      	ui.size.currentOriginWidth = target.outerWidth();
 				      	ui.size.nextOriginWidth = next.outerWidth();
 				      	target.resizable( 'option', 'minWidth', columnWidth );
@@ -142,6 +150,7 @@ export default class Column extends Backbone.View {
 			        			cid: next.data( 'cid' ),
 			    				settings: {
 			    					class : 'pa-col-sm-' + nextColumnCount,
+			    					element: 'pa_column',
 			        				styles: {
 			        					width: ( next.outerWidth() * 100 ) / fullWidth
 			        				}
