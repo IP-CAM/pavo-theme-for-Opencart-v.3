@@ -1,5 +1,5 @@
 <div class="pa-element pa_text pa_text_element">
 	{% autoescape %}
-		{{ settings.content }}
+		{{ settings.content | raw }}
 	{% endautoescape %}
 </div>

@@ -95,10 +95,11 @@ export default class Column extends Backbone.View {
 			resolve();
 		} ).then( () => {
 			// sortable
+			console.log( this.$( '> .pa-element-wrapper > .pa-column-container > .pa-element-content' ) );
 			this.$( '> .pa-element-wrapper > .pa-column-container' ).sortable({
 				connectWith : '.pa-column-container',
-				items 		: '> .pa-element-wrapper > .pa-column-container > .pa-element-content',
-				handle 		: '.pa-reorder:not(.pa-reorder-row), .pa-reorder.pa-reorder-row',
+				items 		: '.pa-element-content',
+				handle 		: '.pa-reorder, .pa-reorder:not(.pa-reorder-row), .pa-reorder.pa-reorder-row',
 				cursor 		: 'move',
 				placeholder : 'pa-sortable-placeholder',
 				receive 	: this._receive.bind( this ),
