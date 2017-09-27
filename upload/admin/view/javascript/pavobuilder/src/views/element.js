@@ -34,6 +34,7 @@ export default class Element extends Backbone.View {
 		if ( this.element.get( 'row' ) !== undefined ) {
 			let wrapper = '<div class="pa-element-content pa_row" data-cid="' + data.cid + '" data-confirm="' + PA_PARAMS.languages.confirm_element_column + '"></div>';
 			this.template = $( wrapper ).append( new Row( this.element.get( 'row' ) ).render().el ).get( 0 );
+			$( this.template ).find( '.pa-row-container' ).addClass( 'disable-sortable' );
 		} else {
 			let widget = this.element.get( 'widget' );
 			if ( widget && PA_PARAMS.element_mask[widget] !== undefined ) {

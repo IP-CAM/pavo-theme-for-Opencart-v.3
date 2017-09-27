@@ -36,13 +36,36 @@ export default class Rows extends Backbone.View {
 
 			// set sortable
 			this.$el.sortable({
-				items 			: '.pa-row-container',
+				items 			: '.pa-row-container:not(.disable-sortable)',
 				placeholder 	: 'pa-sortable-placeholder',
 				handle 			: '> .row-controls > .right-controls > .pa-reorder-row', // > .pa-row-container > .row-controls > .right-controls > .pa-reorder-row
 				// sortable updated callback
 				start 			: this.dragRow,
-				stop 			: this.dropRown.bind( this )
-			});
+				stop 			: this.dropRown.bind( this ),
+				sort 		: ( event, ui ) => {
+					ui.helper.width( 200 );
+					ui.helper.height( 50 );
+					$( ui.helper ).offset({
+						top 	: event.pageY - 25,
+						left 	: event.pageX - 100
+					});
+				},
+			    helper 		: ( event, ui ) => {
+			    	let ele = $( ui ).get( 0 );
+			    	let cid = $( ele ).data( 'cid' );
+			    	let model = this.rows.get( { cid: cid } );
+			    	if ( model == undefined ) return ui;
+			    	let data = model.toJSON();
+
+			    	if ( data.widget !== undefined && PA_PARAMS.element_mask.pa_row !== undefined ) {
+			    		data = { ...data, ...PA_PARAMS.element_mask.pa_row };
+			    	}
+					let template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
+					$( template ).find( '.pa-controls' ).remove();
+					event.preventDefault();
+					return $( template );
+			    }
+			}).disableSelection();
 		} );
 		return this;
 	}

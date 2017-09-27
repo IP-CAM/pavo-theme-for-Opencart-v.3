@@ -338,7 +338,7 @@
 		</div>
 		<div class="pa-element-wrapper">
 			<% if ( data.widget !== undefined ) { %>
-				<a class="element element-item element-item-<%= data.code != undefined ? data.code : '' %>" href="#">
+				<a href="#" class="element element-item">
 					<i class="<%= data.icon %>"></i>
 					<span><%= data.label %></span>
 					<% if ( data.code !== undefined ) { %>
@@ -346,7 +346,7 @@
 					<% } %>
 				</a>
 			<% } else { %>
-				<a class="element element-item element-item-<%= data.mask.code != undefined ? data.mask.code : '' %>" href="#">
+				<a href="#" class="element element-item element-item-<%= data.mask.code != undefined ? data.mask.code : '' %>">
 					<i class="<%= data.mask.icon %>"></i>
 					<span><%= data.mask.name %></span>
 					<% if ( data.mask.type == 'widget' || data.mask.widget ) { %>

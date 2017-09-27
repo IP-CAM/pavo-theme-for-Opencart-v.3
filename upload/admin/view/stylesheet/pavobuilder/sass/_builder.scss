@@ -56,8 +56,8 @@
 	color: white;
 	visibility: visible !important;
 	height: auto;
-	max-height: 150px;
-	min-height: 100px;
+	max-height: 50px;
+	min-height: 50px;
   	background: repeating-linear-gradient(
 	    135deg,
 	    #d4d4d4,
@@ -307,6 +307,24 @@
 #pa-elements-list{
 	.tab-content{
 		overflow: hidden;
+	}
+}
+#pa-content{
+	> .pa-element-content{
+		&.ui-sortable-helper{
+			background-color: #fff;
+			overflow: hidden;
+			.pa-controls{
+				display: none;
+			}
+			.pa-element-wrapper{
+			    padding: 10px 0;
+    			background-color: #fff;
+    			.element-item{
+    				margin-bottom: 0;
+    			}
+			}
+		}
 	}
 }
 #pa-elements-list,
