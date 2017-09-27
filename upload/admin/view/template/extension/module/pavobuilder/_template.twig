@@ -328,6 +328,7 @@
 	</div>
 </script>
 <script type="text/html" id="pa-element-template">
+
 	<div class="pa-element-content<%= data.element ? ' ' + data.element : '' %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
 		<div class="pa-controls element-controls">
 			<a href="#" class="pa-reorder" title="{{ entry_reorder_text }}"><i class="fa fa-arrows" aria-hidden="true"></i></a>
@@ -336,7 +337,7 @@
 			<a href="#" class="pa-delete" title="{{ entry_delete_element_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 		</div>
 		<div class="pa-element-wrapper">
-			<% if ( data.widget !== '' ) { %>
+			<% if ( data.widget !== undefined ) { %>
 				<a class="element element-item element-item-<%= data.code != undefined ? data.code : '' %>" href="#">
 					<i class="<%= data.icon %>"></i>
 					<span><%= data.label %></span>

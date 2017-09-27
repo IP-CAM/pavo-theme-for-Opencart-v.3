@@ -202,7 +202,10 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		$this->data['user_token'] 	= $this->session->data['user_token'];
 		// layout data
-		$this->data['layout'] 		= $id ? $this->model_setting_module->getModule( $id ) : array();
+		$layout = $id ? $this->model_setting_module->getModule( $id ) : array();
+		$layout = $layout ? $layout : array();
+		$this->data['layout']['content'] 		= ! empty( $layout['content'] ) ? $this->validateElementData( $layout['content'] ) : array();
+
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
 		$this->data['edit_layout_url'] = str_replace( '&amp;', '&', $this->url->link( 'extension/module/pavobuilder/saveModule', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
 		$this->data['underscore_template'] = $this->load->view( 'extension/module/pavobuilder/_template', $this->data );
@@ -249,7 +252,8 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		$this->load->language( 'extension/module/pavobuilder' );
 
 		$is_ajax = ! empty( $_SERVER['HTTP_X_REQUESTED_WITH'] ) && strtolower( $_SERVER['HTTP_X_REQUESTED_WITH'] ) == 'xmlhttprequest';
-		$content = $is_ajax ? $this->request->post['content'] : ( ! empty( $this->request->post['content'] ) ? json_decode( htmlspecialchars_decode( $this->request->post['content'] ), true ) : array() );
+
+		$content = $is_ajax ? $this->request->post['content'] : ( ! empty( $this->request->post['content'] ) ? json_decode( html_entity_decode( $this->request->post['content'] ), true ) : array() );
 		$this->request->post['content'] = $content;
 		$id = ! $id && ! empty( $this->request->get['module_id'] ) ? $this->request->get['module_id'] : $id;
 
@@ -287,6 +291,26 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		if ( $module && file_exists( $file ) ) {
 			$this->load->controller( 'extension/module/' . $module );
 		}
+	}
+
+	/**
+	 * validate element data
+	 */
+	public function validateElementData( $content = array() ) {
+		// $data = arr
+		foreach ( $content as $k => $r ) {
+			if ( $k === 'settings' && isset( $content['widget'] ) ) {
+				$widget = $content['widget'];
+				$widget = $this->pavobuilder->widgets->getWidget( $widget );
+				if ( method_exists( $widget, 'validate' ) ) {
+					$content['settings'] = $widget->validate( $r );
+				}
+			} else if ( is_array( $r ) ) {
+				$content[$k] = $this->validateElementData( $r );
+			}
+		}
+
+		return $content;
 	}
 
 	/**

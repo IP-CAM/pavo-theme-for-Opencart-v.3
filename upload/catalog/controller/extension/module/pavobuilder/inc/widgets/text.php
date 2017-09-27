@@ -49,4 +49,14 @@ class PA_Widget_Text extends PA_Widgets {
 		return $this->load->view( 'extension/module/pavobuilder/pa_text/pa_text', array( 'settings' => $settings, 'content' => $content ) );
 	}
 
+	/**
+	 * validate fields
+	 */
+	public function validate( $settings = array() ) {
+		if ( ! empty( $settings['content'] ) ) {
+			$settings['content'] = html_entity_decode( $settings['content'], ENT_QUOTES, 'UTF-8'  );
+		}
+		return $settings;
+	}
+
 }

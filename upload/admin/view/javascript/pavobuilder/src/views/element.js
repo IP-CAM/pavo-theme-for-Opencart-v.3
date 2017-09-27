@@ -37,7 +37,7 @@ export default class Element extends Backbone.View {
 		} else {
 			let widget = this.element.get( 'widget' );
 			if ( widget && PA_PARAMS.element_mask[widget] !== undefined ) {
-				data = PA_PARAMS.element_mask[widget];
+				data = { ...data, ...PA_PARAMS.element_mask[widget] };
 			}
 			this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 		}

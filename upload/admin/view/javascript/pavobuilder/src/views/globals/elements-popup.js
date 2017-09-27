@@ -77,7 +77,7 @@ export default class ElementsPopup extends Backbone.View {
 		if ( settings.elements !== undefined ) {
 			delete settings.elements;
 		}
-console.log( settings );
+
 		if ( settings.widget === 'pa_row' ) {
 			settings.row = {
 					settings: {
