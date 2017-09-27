@@ -1,3 +1,5 @@
-<div class="pa-row">
-	{{ content }}
+<div class="pa-row{{ parallax ? ' parallax' : '' }}{{ extra_class ? ' extra_class' : '' }}{{ effect ? [ ' ', effect ] | join() }}"{{ uniqid_id ? ' id="uniqid_id"' : '' }}>
+	<div class="pa-row-container{{ layout == 'wide' ? ' pa-container' : '' }}">
+		{{ content }}
+	</div>
 </div>

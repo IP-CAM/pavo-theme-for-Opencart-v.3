@@ -22,6 +22,7 @@ export default class GoogleMap {
 		}
 		data.mapTypeControl = data.maptypecontrol;
 		data.zoomControl = data.zoomcontrol;
+		data.mapTypeId = data.maptypeid;
 
 		this.mapData = data;
 		this.map = new google.maps.Map( this.el, this.mapData );
