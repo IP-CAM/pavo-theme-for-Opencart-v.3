@@ -95,7 +95,6 @@ export default class Column extends Backbone.View {
 			resolve();
 		} ).then( () => {
 			// sortable
-			console.log( this.$( '> .pa-element-wrapper > .pa-column-container > .pa-element-content' ) );
 			this.$( '> .pa-element-wrapper > .pa-column-container' ).sortable({
 				connectWith : '.pa-column-container',
 				items 		: '.pa-element-content',

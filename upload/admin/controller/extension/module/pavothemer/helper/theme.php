@@ -121,22 +121,6 @@ class PavoThemerHelper {
 	}
 
 	/**
-	 * shortcodes list supported by Pavotheme
-	 */
-	public function getShortcodes() {
-		$folders = glob( DIR_CATALOG . 'view/theme/' . $this->theme . '/template/extension/module/pavobuilder/*', GLOB_ONLYDIR );
-		$results = array();
-		foreach ( $folders as $folder ) {
-			$filename = basename( $folder );
-			$file = $folder . '/' . $filename . '.twig';
-			$fieldFile = $folder . '/' . $filename . '.json';
-			$results[ $filename ] = file_exists( $fieldFile ) ? file_get_contents( $fieldFile ) : array();
-		}
-
-		return $results;
-	}
-
-	/**
 	 * get animate effects
 	 */
 	public function getAnimates() {

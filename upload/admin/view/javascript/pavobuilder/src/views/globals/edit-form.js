@@ -54,11 +54,11 @@ export default class EditForm extends Backbone.View {
 	 * render edit fields
 	 */
 	renderFields() {
-		if ( this.data.get( 'shortcode' ) !== undefined && this.fields.length == 0 ) {
+		if ( this.data.get( 'widget' ) !== undefined && this.fields.length == 0 ) {
 			let settings = this.data.get( 'settings' );
-			if ( PA_PARAMS.element_fields[ this.data.get( 'shortcode' ) ] !== undefined ) {
-				this.fields = PA_PARAMS.element_fields[ this.data.get( 'shortcode' ) ];
-				this.$( '#pa-edit-form-settings' ).addClass( this.data.get( 'shortcode' ) )
+			if ( PA_PARAMS.element_fields[ this.data.get( 'widget' ) ] !== undefined ) {
+				this.fields = PA_PARAMS.element_fields[ this.data.get( 'widget' ) ];
+				this.$( '#pa-edit-form-settings' ).addClass( this.data.get( 'widget' ) )
 			}
 		}
 
@@ -66,7 +66,7 @@ export default class EditForm extends Backbone.View {
 		_.map( this.fields, ( fields, tab ) => {
 			tabs.push({
 				tab: tab,
-				label: fields.label != undefined ? PA_PARAMS.languages[fields.label] : ''
+				label: fields.label// != undefined ? PA_PARAMS.languages[fields.label] : ''
 			});
 		} );
 
@@ -79,22 +79,22 @@ export default class EditForm extends Backbone.View {
 			_.map( this.fields, ( fields, tab ) => {
 				// clone to new object is required
 				let clonefields = { ...fields };
-				if ( clonefields.label != undefined ){
-					clonefields.label = PA_PARAMS.languages[clonefields.label];
-				}
+				// if ( clonefields.label != undefined ){
+				// 	clonefields.label = PA_PARAMS.languages[clonefields.label];
+				// }
 				_.map( clonefields.fields, ( field, key ) => {
 					let cloneField = { ...field };
-					if ( cloneField.label != undefined ){
-						cloneField.label = PA_PARAMS.languages[cloneField.label];
-					}
+					// if ( cloneField.label != undefined ){
+					// 	cloneField.label = PA_PARAMS.languages[cloneField.label];
+					// }
 
-					if ( cloneField.options != undefined ) {
-						for ( let i = 0; i < cloneField.options.length; i++ ) {
-							if ( cloneField.options[i].label !== undefined ) {
-								cloneField.options[i].label = PA_PARAMS.languages[cloneField.options[i].label] !== undefined ? PA_PARAMS.languages[cloneField.options[i].label] : cloneField.options[i].label;
-							}
-						}
-					}
+					// if ( cloneField.options != undefined ) {
+					// 	for ( let i = 0; i < cloneField.options.length; i++ ) {
+					// 		if ( cloneField.options[i].label !== undefined ) {
+					// 			cloneField.options[i].label = PA_PARAMS.languages[cloneField.options[i].label] !== undefined ? PA_PARAMS.languages[cloneField.options[i].label] : cloneField.options[i].label;
+					// 		}
+					// 	}
+					// }
 					if ( cloneField.type == 'select-animate' ) {
 						cloneField.type = 'select';
 						cloneField.groups = true;

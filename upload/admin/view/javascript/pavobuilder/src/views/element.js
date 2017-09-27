@@ -35,6 +35,10 @@ export default class Element extends Backbone.View {
 			let wrapper = '<div class="pa-element-content pa_row" data-cid="' + data.cid + '" data-confirm="' + PA_PARAMS.languages.confirm_element_column + '"></div>';
 			this.template = $( wrapper ).append( new Row( this.element.get( 'row' ) ).render().el ).get( 0 );
 		} else {
+			let widget = this.element.get( 'widget' );
+			if ( widget && PA_PARAMS.element_mask[widget] !== undefined ) {
+				data = PA_PARAMS.element_mask[widget];
+			}
 			this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 		}
 		this.setElement( this.template );
@@ -104,7 +108,7 @@ export default class Element extends Backbone.View {
 
 	_changeColumnsInnerHandler( e ) {
 		e.preventDefault();
-		if ( ! this.element.get( 'shortcode' ) || this.element.get( 'shortcode' ) != 'pa_row' )
+		if ( ! this.element.get( 'widget' ) || this.element.get( 'widget' ) != 'pa_row' )
 			return false;
 		let button = $( e.target );
 		let columns_count = button.data('columns');

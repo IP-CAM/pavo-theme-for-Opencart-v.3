@@ -2,6 +2,7 @@
 
 if ( ! defined( 'DIR_SYSTEM' ) ) exit();
 
+require_once DIR_CATALOG . 'controller/extension/module/pavobuilder/pavobuilder.php';
 /**
  * Homebuilder Controller
  */
@@ -11,6 +12,16 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	 * data pass to view
 	 */
 	private $data = array();
+	private $pavobuilder = null;
+
+	public function __construct( $registry ) {
+		parent::__construct( $registry );
+
+		/**
+		 * pavobuilder object
+		 */
+		$this->pavobuilder = PavoBuilder::instance( $registry );
+	}
 
 	public function index() {
 		$this->load->language( 'extension/module/pavobuilder' );
@@ -134,7 +145,6 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		// theme helper
 		$theme = $this->config->get( 'config_theme' );
 		$themeHelper = PavoThemerHelper::instance( $theme );
-		$shortcodes = $themeHelper->getShortcodes();
 
 		/**
 		 * 'pavobuilder_animate_effects_groups' animate groups cache key
@@ -173,22 +183,21 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		// fields
 		$this->data['element_fields'] = array();
-
-		if ( $shortcodes ) {
-			$this->data['groups'][] = array(
-					'name'		=> $this->language->get( 'entry_pavo_shortcodes' ),
-					'slug'		=> 'pa-shortcodes-list'
-				);
-			foreach ( $shortcodes as $shortcode => $param ) {
-				$this->data['elements'][] = array(
-						'type'		=> 'shortcode',
-						'settings'	=> '',
-						'shortcode'	=> $shortcode,
-						'group' 	=> strip_tags( $this->language->get( 'heading_title' ) ),
-						'group_slug'=> 'pa-shortcodes-list'
-					);
-				$this->data['element_fields'][$shortcode] = $param ? json_decode( $param, true ) : array();
-			}
+		$this->data['element_mask']  = array();
+		$widgets = $this->pavobuilder->widgets->getWidgets();
+		$this->data['elements']	= array_merge( $this->data['elements'], $this->pavobuilder->widgets->getWidgets() );
+		$this->data['groups'][] = array(
+			'name'		=> strip_tags( $this->language->get( 'heading_title' ) ),
+			'slug'		=> 'pa-widgets-list'
+		);
+		// var_dump($this->data['elements']); die();
+		foreach ( $widgets as $key => $widget ) {
+			$widget = $this->pavobuilder->widgets->getWidget( $key );
+			$widgetFields = $widget->fields();
+			$this->data['element_mask'][$key] = ! empty( $widgetFields['mask'] ) ? $widgetFields['mask'] : array();
+			$this->data['element_fields'][$key] = ! empty( $widgetFields[ 'tabs' ] ) ? $widgetFields[ 'tabs' ] : array();
+			$this->data['elements'][$key]['icon'] = $this->data['element_mask'][$key]['icon'];
+			$this->data['elements'][$key]['name'] = $this->data['element_mask'][$key]['label'];
 		}
 
 		$this->data['user_token'] 	= $this->session->data['user_token'];
@@ -284,7 +293,11 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	 * validate method
 	 */
 	private function validate() {
+		if ( ! $this->user->hasPermission('modify', 'extension/module/pavobuilder' ) ) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		}
 
+		return !$this->error;
 	}
 
 }

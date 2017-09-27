@@ -19,8 +19,8 @@ export default class ColumnModel extends Backbone.Model {
 			elements: new ElementsCollection(),
 			editing: false,
 			adding: false,
-			element_type: 'shortcode',
-			shortcode: 'pa_column'
+			element_type: 'widget',
+			widget: 'pa_column'
 		};
 	}
 

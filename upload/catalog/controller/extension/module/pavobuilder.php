@@ -1,6 +1,13 @@
 <?php
 
+require_once dirname( __FILE__ ) . '/pavobuilder/pavobuilder.php';
+
 class ControllerExtensionModulePavoBuilder extends Controller {
+
+	public function __construct( $registry ) {
+		parent::__construct( $registry );
+		$this->pavobuilder = PavoBuilder::instance( $registry );
+	}
 
 	/**
 	 * render layout
@@ -43,21 +50,7 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 			$content = ob_get_clean();
 		}
 
-		$settings = $this->unescapeData( $settings );
-		return $this->load->view( 'extension/module/pavobuilder/' . $data['shortcode'] . '/' . $data['shortcode'], array( 'settings' => $settings, 'content' => $content ) );
+		return $this->pavobuilder->widgets->renderWidget( $data['widget'], $settings, $content );
 	}
 
-	private function unescapeData( $settings = array() ) {
-		$data = array();
-		foreach ( $settings as $k => $value ) {
-			if ( is_array( $value ) || is_object( $value ) ) {
-				$data[ $k ] = $this->unescapeData( $value );
-			} else if ( is_string( $value ) ) {
-				$data[ $k ] = html_entity_decode( htmlspecialchars_decode( $value ), ENT_QUOTES, 'UTF-8' );
-			} else {
-				$data[$k] = $value;
-			}
-		}
-		return $data;
-	}
 }

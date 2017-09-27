@@ -3,15 +3,16 @@
 		editLayoutURL 	: '{{ edit_layout_url }}',
 		content 		: {{ layout.content|json_encode() }},
 		element_fields 	: {{ element_fields|json_encode() }},
+		element_mask 	: {{ element_mask|json_encode() }},
 		animate_groups 	: {{ animate_groups|json_encode() }},
 		animates 		: {{ animates|json_encode() }},
 		site_url 		: '{{ site_url }}',
 		languages 		: {{ languages }},
-		user_token 		: '{{ user_token }}'
+		user_token 		: '{{ user_token }}',
+		elements 		: {{ elements|json_encode() }}
 	}
 </script>
 <script type="text/html" id="pa-modal-panel">
-
 	<% if ( data.tabs.length ) { %>
 		<ul class="nav nav-tabs">
 			<% for ( var i = 0; i < data.tabs.length; i++ ) { %>
@@ -191,7 +192,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<textarea id="<%= uniqid %>" name="<%= data.field.name %>" class="form-control pa-editor" data-toggle="summernote"><%= _.unescape( data.settings[data.field.name] ) %></textarea>
+			<textarea id="<%= uniqid %>" name="<%= data.field.name %>" class="form-control pa-editor" data-toggle="summernote"><% print( _.unescape( data.settings[data.field.name] ) ) %></textarea>
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -251,17 +252,20 @@
 				  			{% for tab in groups %}
 				  				<div id="nav-{{ tab.slug }}" class="tab-pane">
 					  				{% for element in elements %}
-					  					{% if ( element.group_slug == tab.slug and element.shortcode != 'pa_column' ) %}
+					  					{% if ( element.group_slug == tab.slug and element.widget != 'pa_column' ) %}
 					  						<div class="pa-col-sm-3">
-							  					<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="{{ element.shortcode ? 'shortcode' : 'module' }}" data-group="{{ tab.slug }}" data-shortcode="{{ element.shortcode }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-mask="{{ element | json_encode() | escape }}">
-						  							<i class="{{ element.icon }}"></i>
-						  							<span>{{ element.name }}</span>
-						  							{% if ( element.type == 'shortcode' and element.shortcode ) %}
-						  								<code>{{ element.shortcode }}</code>
-						  							{% else %}
-						  								<code>{{ element.code }}.{{ element.module_id }}</code>
-						  							{% endif %}
-						  						</a>
+						  						{% if ( element.type == 'widget' and element.widget ) %}
+													<a href="#"  class="element element-item element-item-{{ element.code ? element.code : element.widget }}" data-widget="{{ element.widget }}">
+														<i class="{{ element.icon }}"></i>
+														<span>{{ element.name }}</span>
+													</a>
+												{% else %}
+													<a href="#" class="element element-item element-item-{{ element.code ? element.code : '' }}" data-element_type="module" data-group="{{ tab.slug }}" data-module-id="{{ element.module_id }}" data-module-code="{{ element.code }}" data-mask="{{ element | json_encode() | escape }}">
+							  							<i class="{{ element.icon }}"></i>
+							  							<span>{{ element.name }}</span>
+							  							<code>{{ element.code }}.{{ element.module_id }}</code>
+							  						</a>
+												{% endif %}
 					  						</div>
 					  					{% endif %}
 					  				{% endfor %}
@@ -274,7 +278,6 @@
 		</div>
 	</div>
 </script>
-
 <script type="text/html" id="pa-row-template">
 	<div class="pa-row-container row-fade-in" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>">
 		<div class="pa-controls row-controls">
@@ -309,7 +312,6 @@
 		</div>
 	</div>
 </script>
-
 <script type="text/html" id="pa-column-template">
 	<div class="pa-column <%= data.settings.class %>" style="<%= data.settings.styles !== undefined && data.settings.styles.width !== undefined ? 'width:' + data.settings.styles.width + '%' : '' %>" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
 		<div class="pa-controls column-controls top">
@@ -325,7 +327,6 @@
 		</div>
 	</div>
 </script>
-
 <script type="text/html" id="pa-element-template">
 	<div class="pa-element-content<%= data.element ? ' ' + data.element : '' %>" data-cid="<%= data.cid %>" data-confirm="{{ confirm_element_column }}">
 		<div class="pa-controls element-controls">
@@ -335,15 +336,25 @@
 			<a href="#" class="pa-delete" title="{{ entry_delete_element_text }}"><i class="fa fa-trash" aria-hidden="true"></i></a>
 		</div>
 		<div class="pa-element-wrapper">
-			<a class="element element-item element-item-<%= data.mask.code ? data.mask.code : '' %>" href="#">
-				<i class="<%= data.mask.icon %>"></i>
-				<span><%= data.mask.name %></span>
-				<% if ( data.mask.type == 'shortcode' || data.mask.shortcode ) { %>
-					<code><%= data.mask.shortcode %></code>
-				<% } else { %>
-					<code><%= data.mask.code %>.<%= data.mask.module_id %></code>
-				<% } %>
-			</a>
+			<% if ( data.widget !== '' ) { %>
+				<a class="element element-item element-item-<%= data.code != undefined ? data.code : '' %>" href="#">
+					<i class="<%= data.icon %>"></i>
+					<span><%= data.label %></span>
+					<% if ( data.code !== undefined ) { %>
+							<code><%= data.code %>.<%= data.module_id %></code>
+					<% } %>
+				</a>
+			<% } else { %>
+				<a class="element element-item element-item-<%= data.mask.code != undefined ? data.mask.code : '' %>" href="#">
+					<i class="<%= data.mask.icon %>"></i>
+					<span><%= data.mask.name %></span>
+					<% if ( data.mask.type == 'widget' || data.mask.widget ) { %>
+						<code><%= data.mask.widget %></code>
+					<% } else if ( data.mask.code !== undefined ) { %>
+						<code><%= data.mask.code %>.<%= data.mask.module_id %></code>
+					<% } %>
+				</a>
+			<% } %>
 		</div>
 	</div>
 </script>

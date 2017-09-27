@@ -19,6 +19,7 @@ $_['entry_disabled_text']	= 'Disabled';
 $_['entry_layout_editor'] 	= 'Layout Editor';
 
 // homebuilder
+$_['entry_row_text'] 			= 'Row';
 $_['entry_add_row_text']		= 'Add Row';
 $_['entry_add_element_text']	= 'Add Element';
 $_['entry_edit_row_text']		= 'Edit row';
@@ -26,6 +27,7 @@ $_['entry_delete_row_text']		= 'Delete row';
 $_['entry_clone_row_text']		= 'Clone row';
 $_['entry_reorder_text']		= 'Reorder';
 
+$_['entry_Column_text'] 		= 'Column';
 $_['entry_edit_column_text']	= 'Edit column';
 $_['entry_delete_column_text']	= 'Delete column';
 $_['entry_clone_column_text']	= 'Clone column';
@@ -35,7 +37,7 @@ $_['entry_delete_element_text']	= 'Delete element';
 $_['entry_clone_element_text']	= 'Clone element';
 
 $_['entry_all_text']			= 'All';
-$_['entry_pavo_shortcodes']		= 'Pavo Shortcodes';
+$_['entry_pavo_widgets']		= 'Pavo Shortcodes';
 $_['entry_cancel_text']			= 'Cancel';
 $_['entry_update_text']			= 'Update';
 
@@ -67,6 +69,8 @@ $_['entry_box_text']			= 'Box';
 $_['entry_styles_text']			= 'Styles';
 $_['entry_padding_text']		= 'Padding';
 $_['entry_margin_text']			= 'Margin';
+$_['entry_text_block']			= 'Text Block';
+$_['entry_google_map']			= 'Google Map';
 
 // maps
 $_['entry_maptype_id_text']				= 'Map Type';
