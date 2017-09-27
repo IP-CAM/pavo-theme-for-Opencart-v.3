@@ -117,7 +117,7 @@ export default class Column extends Backbone.View {
 			    	let ele = $( ui ).get( 0 );
 			    	let cid = $( ele ).data( 'cid' );
 			    	let model = this.column.get( 'elements' ).get( { cid: cid } );
-			    	let data = model.toJSON();
+			    	let data = Common.toJSON( model.toJSON() );
 
 			    	if ( data.widget !== undefined && PA_PARAMS.element_mask[data.widget] !== undefined ) {
 			    		data = { ...data, ...PA_PARAMS.element_mask[data.widget] };
@@ -255,9 +255,9 @@ export default class Column extends Backbone.View {
 		let cid = button.data( 'cid' );
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
 		let index = this.column.get( 'elements' ).indexOf( model );
-		let newModel = model.clone();
+		// let newModel = model.clone();
 
-		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
+		this.column.get( 'elements' ).add( Common.toJSON( model.toJSON() ), { at: parseInt( index ) + 1 } );
 		return false;
 	}
 
@@ -268,12 +268,9 @@ export default class Column extends Backbone.View {
 		e.preventDefault();
 		let target = $( e.target ).parents( '.pa-element-content.pa_row' );
 		let cid = target.data( 'cid' );
-		// let cid = this.$( '.pa-element-content.pa_row' )
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
 		let index = this.column.get( 'elements' ).indexOf( model );
-		// let newModel = model.clone();
-		let newModel = Common.toJSON( model );
-
+		let newModel = Common.toJSON( model.toJSON() );
 		this.column.get( 'elements' ).add( newModel, { at: parseInt( index ) + 1 } );
 		return false;
 	}
@@ -302,7 +299,8 @@ export default class Column extends Backbone.View {
 	_receive( e, ui ) {
 		new Promise( ( resolve, reject ) => {
 			let index = ui.item.index();
-			this.column.get( 'elements' ).add( Common.toJSON( ui.item.element.toJSON() ), { at: index } );
+			let model = Common.toJSON( ui.item.element.toJSON() );
+			this.column.get( 'elements' ).add( model, { at: index } );
 			resolve();
 		} ).then( () => {
 			ui.item.element.destroy();

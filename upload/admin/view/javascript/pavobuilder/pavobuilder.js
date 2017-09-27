@@ -12,7 +12,7 @@ $( document ).ready(() => {
 	HomePageBuilder.render();
 
 	$( document ).on( 'submit', '#pavohomebuilder-layout-edit', ( e ) => {
-		// e.preventDefault();
+		e.preventDefault();
 		let textarea = $( '#pavo-home-pagebuilder-content' );
 		textarea.text( JSON.stringify( Common.toJSON( HomePageBuilder.rowsCollection, [ 'editabled', 'adding', 'reRender', 'adding_position' ] ) ) );
 		return true;

@@ -32,17 +32,19 @@ export default class Element extends Backbone.View {
 		let data = this.element.toJSON();
 		data.cid = this.element.cid;
 		if ( this.element.get( 'row' ) !== undefined ) {
-			let wrapper = '<div class="pa-element-content pa_row" data-cid="' + data.cid + '" data-confirm="' + PA_PARAMS.languages.confirm_element_column + '"></div>';
-			this.template = $( wrapper ).append( new Row( this.element.get( 'row' ) ).render().el ).get( 0 );
-			$( this.template ).find( '.pa-row-container' ).addClass( 'disable-sortable' );
+			this.template = '<div class="pa-element-content pa_row" data-cid="' + data.cid + '" data-confirm="' + PA_PARAMS.languages.confirm_element_column + '"></div>';
+			this.setElement( this.template );
+
+			this.$el.html( new Row( this.element.get( 'row' ) ).render().el );
+			this.$( '.pa-row-container' ).addClass( 'disable-sortable' );
 		} else {
 			let widget = this.element.get( 'widget' );
 			if ( widget && PA_PARAMS.element_mask[widget] !== undefined ) {
 				data = { ...data, ...PA_PARAMS.element_mask[widget] };
 			}
 			this.template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
+			this.setElement( this.template );
 		}
-		this.setElement( this.template );
 		return this;
 	}
 

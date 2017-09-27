@@ -6,19 +6,32 @@ import 'spectrum-colorpicker/spectrum.css';
 import GoogleMap from '../views/globals/google-map';
 
 function toJSON( data = {}, ignores = [] ) {
-	if ( data instanceof Backbone.Model || data instanceof Backbone.Collection ) {
-		data = data.toJSON();
-	}
-
-	_.map( data, ( value, name ) => {
-		if ( value instanceof Object ) {
-			data[name] = this.toJSON( value );
-		} else {
-			data[name] = value;
+	if ( data instanceof Backbone.Collection ) {
+		let newData = [];
+		data = data.models;
+		_.map( data, ( model, index ) => {
+			newData[index] = { ...toJSON( model, ignores ) };
+		} );
+		return newData;
+	} else {
+		let newData = {};
+		if ( data instanceof Backbone.Model ) {
+			let cid = data.cid !== undefined ? data.cid : false;
+			data = data.toJSON();
+			data.cid = cid;
 		}
-	} );
 
-	return data;
+		_.map( data, ( value, name ) => {
+			if ( ignores.indexOf( name ) == -1 ) {
+				if ( value instanceof Object ) {
+					newData[name] = toJSON( value, ignores );
+				} else {
+					newData[name] = value;
+				}
+			}
+		} );
+		return newData;
+	}
 }
 
 /**

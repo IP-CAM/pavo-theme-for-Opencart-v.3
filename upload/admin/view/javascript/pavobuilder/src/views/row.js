@@ -38,19 +38,14 @@ export default class Row extends Backbone.View {
 		this.template = _.template( $( '#pa-row-template' ).html(), { variable: 'data' } )( data );
 		this.setElement( this.template );
 
-		new Promise( ( resolve, reject ) => {
-			// each collection
-			if ( this.row.get( 'columns' ).length > 0 ) {
-				this.row.get( 'columns' ).map( ( model, index ) => {
-					model.set( 'editabled', index < this.row.get( 'columns' ).length - 1 );
-					// map column models add add it to Row View
-					this.addColumn( model );
-				} );
-			}
-			resolve();
-		} ).then( () => {
-			
-		} );
+		// each collection
+		if ( this.row.get( 'columns' ).length > 0 ) {
+			this.row.get( 'columns' ).map( ( model, index ) => {
+				model.set( 'editabled', index < this.row.get( 'columns' ).length - 1 );
+				// map column models add add it to Row View
+				this.addColumn( model );
+			} );
+		}
 
 		setTimeout( () => {
 			this.$el.removeClass( 'row-fade-in' );
@@ -62,13 +57,8 @@ export default class Row extends Backbone.View {
 	 * Add Column
 	 */
 	addColumn( model = {} ) {
-		new Promise( ( resolve, reject ) => {
-			let column = new Column( model ).render().el;
-			this.$( '> .pa-element-wrapper > .pav-row-container' ).append( column );
-			resolve();
-		} ).then( () => {
-			
-		} );
+		let column = new Column( model ).render().el;
+		this.$( '> .pa-element-wrapper > .pav-row-container' ).append( column );
 	}
 
 	/**
