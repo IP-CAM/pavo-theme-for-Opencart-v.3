@@ -5,15 +5,14 @@ import Common from '../common/functions';
 
 export default class Rows extends Backbone.View {
 
-	initialize( data = { rows : {} } ) {
+	initialize( rows = {} ) {
 		// set this.rows is a collection
-		this.rows = data.rows;
-		this.$el = $( '#pa-content' );
-
+		this.rows = rows;
+		this.setElement( '<div id="pa-content"></div>' );
 		// listen to collection status
 		this.listenTo( this.rows, 'add', this.addRow );
 		this.events = {
-			'click > .pa-row-container > .row-controls > .left-controls > .pa-clone-row' 					: '_cloneRowHandler'
+			'click > .pa-row-container > .row-controls > .left-controls > .pa-clone-row' : '_cloneRowHandler'
 		};
 
 		// add event
@@ -38,7 +37,7 @@ export default class Rows extends Backbone.View {
 			this.$el.sortable({
 				items 			: '.pa-row-container:not(.disable-sortable)',
 				placeholder 	: 'pa-sortable-placeholder',
-				handle 			: '> .row-controls > .right-controls > .pa-reorder-row', // > .pa-row-container > .row-controls > .right-controls > .pa-reorder-row
+				handle 			: '> .row-controls > .right-controls > .pa-reorder-row',
 				// sortable updated callback
 				start 			: this.dragRow,
 				stop 			: this.dropRown.bind( this ),
@@ -62,7 +61,7 @@ export default class Rows extends Backbone.View {
 			    	}
 					let template = _.template( $( '#pa-element-template' ).html(), { variable: 'data' } )( data );
 					$( template ).find( '.pa-controls' ).remove();
-					event.preventDefault();
+					// event.preventDefault();
 					return $( template );
 			    }
 			}).disableSelection();

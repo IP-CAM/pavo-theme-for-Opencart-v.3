@@ -4,10 +4,10 @@ import _ from 'underscore';
 
 export default class ColumnsCollection extends Backbone.Collection {
 
-	initialize( columns ) {
+	initialize( columns = [] ) {
 		this.model = ColumnModel;
-		this.on( 'update', this._editabled, this );
-		this.on( 'add', this._addParam, this );
+		this.on( 'update', this._update );
+		this.on( 'add', this._addParam );
 		this.on( 'remove', this._calculatorColumnWidth );
 	}
 
@@ -23,7 +23,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 	 * Set Editabled is TRUE
 	 * And change reRender status allow view change
 	 */
-	_editabled() {
+	_update() {
 		this.models.map( ( model, index ) => {
 			let editabled = model.get( 'editabled' );
 			let nextEditabled = index < this.length - 1;
@@ -63,9 +63,6 @@ export default class ColumnsCollection extends Backbone.Collection {
 					}
 				}
 			};
-			// settings.element = 'pa_column';
-			// settings.class = 'pa-col-sm-' + Math.floor( 12 / numberColumn );
-			// settings.styles.width = percentWidth;
 			model.set( 'settings', settings );
 			model.set( 'reRender', true );
 		} );

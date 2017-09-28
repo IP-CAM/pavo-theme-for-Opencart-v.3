@@ -56,12 +56,16 @@
                               </select>
 		            		</div>
 		            	</div>
-		            	<div class="form-group">
-		            		<h4 class="text-center">{{ entry_layout_editor }}</h4>
-		            	</div>
 
 		            	<div id="pa-container">
-			            	<div id="pa-content"></div>
+			            	<div class="form-group text-center">
+			            		<div class="btn-group button-alignments">
+				                    <button class="btn btn-default active" data-option="large-screen" type="button" data-placement="top"><span class="fa fa-desktop"></span></button>
+				                    <button class="btn btn-default" data-option="medium-screen" type="button" data-placement="top"><span class="fa fa-laptop"></span></button>
+				                    <button class="btn btn-default" data-option="tablet-screen" type="button" data-placement="top"> <span class="fa fa-tablet"></span></button>
+				                    <button class="btn btn-default" data-option="mobile-screen" type="button" data-placement="top"><span class="fa fa-mobile"></span> </button>
+				                </div>
+			            	</div>
 			            	<div id="pa-footer">
 			            		<div class="pa-buttons">
 			            			<a href="#" id="pa-add-element" class="pa-add-element pa-button pa-button-info"><i class="fa fa-plus" aria-hidden="true"></i> {{ entry_add_row_text }}</a>

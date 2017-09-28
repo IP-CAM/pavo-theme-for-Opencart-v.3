@@ -255,7 +255,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		$content = $is_ajax ? $this->request->post['content'] : ( ! empty( $this->request->post['content'] ) ? json_decode( html_entity_decode( $this->request->post['content'] ), true ) : array() );
 		$this->request->post['content'] = $content;
-// var_dump($content); die();
+
 		$id = ! $id && ! empty( $this->request->get['module_id'] ) ? $this->request->get['module_id'] : $id;
 
 		if ( ! $id ) {

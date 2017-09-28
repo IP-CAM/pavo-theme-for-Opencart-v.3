@@ -3,7 +3,7 @@ import ColumnsCollection from '../collections/columns';
 
 export default class RowModel extends Backbone.Model {
 
-	initialize( data = { settings: {}, columns: {}, editing: false } ) {
+	initialize( data = { settings: {}, columns: [], editing: false } ) {
 		this.set( 'columns', new ColumnsCollection( data.columns ) );
 	}
 

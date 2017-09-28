@@ -1,24 +1,28 @@
 import Backbone from 'Backbone';
 import _ from 'underscore';
-import RowsCollection from '../collections/rows';
 import Rows from './rows';
+import RowsCollection from '../collections/rows';
 
 export default class Builder extends Backbone.View {
 
-	constructor( rows = [] ) {
-		super();
+	initialize( rows = [] ) {
 		// set data is collection of row, it will pass to Rows View
-		this.rowsCollection = new RowsCollection( rows );
-		// console.log( this.rowsCollection );
-		this.$el = $( '#pa-container' );
+		this.$el = $( '#pavohomebuilder-layout-edit' );
 
+		let collection = new RowsCollection( rows );
+		this.model = new Backbone.Model({
+			rows: collection
+		});
 		// events
 		this.events = {
-			'click #pa-add-element' : 'addRowHandler'
+			'click #pa-add-element' 				: 'addRowHandler',
+			'click .button-alignments .btn-default'	: '_switchScreen'
 		}
 
+		this.listenTo( this.model, 'change:screen', this.switchScreen );
 		// add event
 		this.delegateEvents();
+		this.render();
 	}
 
 	/**
@@ -26,30 +30,45 @@ export default class Builder extends Backbone.View {
 	 */
 	render() {
 		// set rows data
-		this.rows = new Rows( {
-			rows: this.rowsCollection
-		} );
-		this.rows.render().el;
-
-		// this.$el.find( '.pa-element-content' ).sortable();
+		this.$( '#pa-footer' ).before( new Rows( this.model.get( 'rows' ) ).render().el );
 		return this;
 	}
 
 	/**
 	 * Add row event handler
-	 * add empty row to RowsCollection
+	 * add empty row
 	 */
 	addRowHandler( e ) {
 		e.preventDefault();
 		// add row model to collection
-		let model = {
+		let row = {
 			settings: {},
 			columns: [
 				{ settings: { element: 'pa_column', class: 'pa-col-sm-12' } }
 			]
 		};
-		this.rowsCollection.add( model );
+		this.model.get( 'rows' ).add( row );
 		return false;
+	}
+
+	/**
+	 * switch screen
+	 */
+	_switchScreen( e ) {
+		let target = e.target;
+		let button = $( e.target );
+		if ( target.nodeName !== 'BUTTON' ) {
+			button = $( target ).parent();
+		}
+		this.$( '.button-alignments .btn-default' ).removeClass( 'active' );
+		button.addClass( 'active' );
+
+		let screen = button.data( 'option' );
+		this.model.set( 'screen', screen );
+	}
+
+	switchScreen( model ) {
+		console.log( model );
 	}
 
 }

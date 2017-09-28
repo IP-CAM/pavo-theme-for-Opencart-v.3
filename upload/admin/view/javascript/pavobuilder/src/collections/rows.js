@@ -1,11 +1,12 @@
 import Backbone from 'Backbone';
+import _ from 'underscore';
 import RowModel from '../models/row';
 
 export default class RowsCollection extends Backbone.Collection {
 
-	initialize( rows ) {
+	initialize( rows = [] ) {
 		this.model = RowModel;
-		this.on( 'add', this._addParam, this );
+		this.on( 'add', this._addParam );
 	}
 
 	/**

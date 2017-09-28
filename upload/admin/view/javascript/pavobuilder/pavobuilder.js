@@ -9,12 +9,10 @@ $( document ).ready(() => {
 	// init view
 	let HomePageBuilder = new Builder( window.PA_PARAMS.content );
 	let loading = false;
-	HomePageBuilder.render();
 
 	$( document ).on( 'submit', '#pavohomebuilder-layout-edit', ( e ) => {
-		e.preventDefault();
 		let textarea = $( '#pavo-home-pagebuilder-content' );
-		textarea.text( JSON.stringify( Common.toJSON( HomePageBuilder.rowsCollection, [ 'editabled', 'adding', 'reRender', 'adding_position' ] ) ) );
+		textarea.text( JSON.stringify( Common.toJSON( HomePageBuilder.model.get( 'rows' ), [ 'editabled', 'adding', 'reRender', 'adding_position' ] ) ) );
 		return true;
 	} );
 
@@ -31,7 +29,7 @@ $( document ).ready(() => {
 
 			loading = true;
 			let data = $( '#pavohomebuilder-layout-edit' ).serializeJSON();
-			data.content = Common.toJSON( HomePageBuilder.rowsCollection, [ 'editabled', 'adding', 'reRender', 'adding_position' ] );
+			data.content = Common.toJSON( HomePageBuilder.model.get( 'rows' ), [ 'editabled', 'adding', 'reRender', 'adding_position' ] );
 			let pageTitle = $( 'title' ).text();
 
 			let Loading = new Loader({

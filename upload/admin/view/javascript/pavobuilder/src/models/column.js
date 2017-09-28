@@ -3,8 +3,7 @@ import ElementsCollection from '../collections/elements';
 
 export default class ColumnModel extends Backbone.Model {
 
-	initialize( data = { settings: { class: 'pa-col-sm-12', styles: {} }, elements: {} } ) {
-		// super( data );
+	initialize( data = { settings: { class: 'pa-col-sm-12', styles: {} }, elements: [] } ) {
 		this.set( 'elements', new ElementsCollection( data.elements ) );
 	}
 

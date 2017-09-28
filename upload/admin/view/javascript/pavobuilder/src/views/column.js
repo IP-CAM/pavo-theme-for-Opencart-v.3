@@ -82,8 +82,7 @@ export default class Column extends Backbone.View {
 
 			this.template = _.template( $( '#pa-column-template' ).html(), { variable: 'data' } )( data );
 			this.setElement( this.template );
-
-			if ( this.column.get( 'elements' ).length > 0 ) {
+			if ( this.column.get( 'elements' ) && this.column.get( 'elements' ).length > 0 ) {
 				this.column.get( 'elements' ).map( ( element, at, collection ) => {
 					// map element models and add it as Element to ColumnView
 					this.addElement( element, collection, { at: at } );

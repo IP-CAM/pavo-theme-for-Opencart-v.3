@@ -39,7 +39,7 @@ export default class Row extends Backbone.View {
 		this.setElement( this.template );
 
 		// each collection
-		if ( this.row.get( 'columns' ).length > 0 ) {
+		if ( this.row.get( 'columns' ) && this.row.get( 'columns' ).length > 0 ) {
 			this.row.get( 'columns' ).map( ( model, index ) => {
 				model.set( 'editabled', index < this.row.get( 'columns' ).length - 1 );
 				// map column models add add it to Row View
@@ -97,6 +97,9 @@ export default class Row extends Backbone.View {
 			this.row.get( 'columns' ).map( ( model ) => {
 				let settings = model.get( 'settings' );
 				settings.class = classWrapper;
+				if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
+					delete settings.styles.width;
+				}
 				model.set( 'settings', settings );
 				model.set( 'reRender', true );
 			} );
