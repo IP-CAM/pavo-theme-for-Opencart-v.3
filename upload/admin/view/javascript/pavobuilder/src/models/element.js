@@ -11,6 +11,7 @@ export default class ElementModel extends Backbone.Model {
 				this.get( 'row' ).add( data.columns );
 			}
 		}
+
 	}
 
 	defaults() {

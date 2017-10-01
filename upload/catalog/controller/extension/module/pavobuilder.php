@@ -42,7 +42,9 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 				$subs = ! empty( $data['columns'] ) ? $data['columns'] : ( ! empty( $data['elements'] ) ? $data['elements'] : array() );
 				if ( ! empty( $element['element_type'] ) && $element['element_type'] === 'module' && ! empty( $element['moduleCode'] ) ) {
 					$moduleSettings = ! empty( $element['moduleId'] ) ? $this->model_setting_module->getModule( $element['moduleId'] ) : array();
+					ob_start();
 					echo $this->load->controller( 'extension/module/' . $element['moduleCode'], $moduleSettings );
+					echo $this->load->view( 'extension/module/pavobuilder/pa_element_wrapper', array( 'content' => ob_get_clean() ) );
 				} else if ( $subs ) {
 					echo $this->renderElement( $element, $subs );
 				}

@@ -1,5 +1,5 @@
-<div class="pa-row{{ parallax ? ' parallax' : '' }}{{ extra_class ? ' extra_class' : '' }}{{ effect ? [ ' ', effect ] | join() }}"{{ uniqid_id ? ' id="uniqid_id"' : '' }}>
-	<div class="pa-row-container{{ layout == 'wide' ? ' pa-container' : '' }}">
+<div class="row pa-row-container{{ settings.parallax ? ' parallax' : '' }}{{ settings.extra_class ? ' extra_class' : '' }}{{ settings.effect ? [ ' ', settings.effect ] | join() }}"{{ settings.uniqid_id ? [ ' id="pa-unique-id-', settings.uniqid_id, '"' ] | join : '' }} data-uniqueid="{{ settings.specifix_id }}">
+	<div class="row-inner pa-row-container-inner{{ settings.layout == 'wide' ? ' pa-container' : '' }}">
 		{{ content }}
 	</div>
 </div>

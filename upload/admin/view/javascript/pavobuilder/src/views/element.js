@@ -10,16 +10,15 @@ export default class Element extends Backbone.View {
 		this.element = element;
 
 		this.events = {
-			'click .pa-delete:not(.pa-delete-row)'						: '_removeHandler',
-			'click .pa-edit:not(.pa-edit-row)'							: '_editHandler',
-			'click .pa-edit-column-num'									: '_changeColumnsInnerHandler',
-			'click .pa-reorder'											: () => {
+			'click .pa-delete:not(.pa-delete-row)'	: '_removeHandler',
+			'click .pa-edit:not(.pa-edit-row)'		: '_editHandler',
+			'click .pa-edit-column-num'				: '_changeColumnsInnerHandler',
+			'click .pa-reorder'						: () => {
 				return false;
 			}
 		};
 		this.listenTo( this.element, 'destroy', this.remove );
-		this.listenTo( this.element, 'change', this.reRender );
-		this.listenTo( this.element, 'change:editing', this.renderElementEditForm );
+		this.listenTo( this.element, 'change:reRender', this.reRender );
 		this.listenTo( this.element.get( 'row' ), 'destroy', () => {
 			this.element.destroy();
 		} );
@@ -59,18 +58,14 @@ export default class Element extends Backbone.View {
 		return false;
 	}
 
-	_setEditRowHandler( e ) {
-		e.preventDefault();
-		this.element.get( 'row' ).set( 'editing', true );
-		return false;
-	}
-
 	/**
 	 * Edit click handler
 	 */
 	_editHandler( e ) {
 		e.preventDefault();
 		this.element.set( 'editing', true );
+		this.editForm = new EditForm( this.element, PA_PARAMS.languages.entry_edit_element_text );
+
 		if ( this.element.get( 'element_type' ) == 'module' ) {
 			let url = PA_PARAMS.site_url + 'admin/index.php?route=extension/module/' + this.element.get( 'moduleCode' ) + '&module_id='+ this.element.get( 'moduleId' ) + '&user_token=' + PA_PARAMS.user_token;
 			let html = '<div class="loading text-center"><i class="fa fa-spinner fa-spin" aria-hidden="true"></i></div>';
@@ -96,16 +91,10 @@ export default class Element extends Backbone.View {
 	/**
 	 * re-render if model has changed
 	 */
-	reRender() {
-		this.$el.replaceWith( this.render().el );
-	}
-
-	/**
-	 * Render Edit Element Form
-	 */
-	renderElementEditForm( model ) {
-		if ( model.get( 'editing' ) === true ) {
-			this.editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_element_text );
+	reRender( model, old ) {
+		if ( model.get( 'reRender' ) === true ) {
+			this.$el.replaceWith( this.render().el );
+			this.element.set( 'reRender', false );
 		}
 	}
 

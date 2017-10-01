@@ -32,12 +32,18 @@ export default class Column extends Backbone.View {
 
 					let currentCol = Math.round( target.width() / columnWidth );
 	        		let nextColumnCount = Math.round( next.width() / columnWidth );
+	        		currentCol = currentCol ? currentCol : 1;
 
 	        		let settings = {
 	        			...this.column.get( 'settings' ),
 	        			...{
 		    				class : 'pa-col-sm-' + currentCol,
 		    				element: 'pa_column',
+		    				responsive: {
+		    					normal: {
+		    						cols: currentCol
+		    					}
+		    				},
 		        			styles: {
 		        				width: ( ui.size.width * 100 ) / fullWidth
 		        			}
@@ -54,7 +60,8 @@ export default class Column extends Backbone.View {
 				if ( data.cid == this.column.cid ) {
 					let settings = { ...this.column.get( 'settings' ), ...data.settings };
 					this.column.set( 'settings', data.settings );
-					this.column.set( 'reRender', true );
+					// re-generate column, just run in debug mode
+					// this.column.set( 'reRender', true );
 				}
 			}
 		};
@@ -69,7 +76,7 @@ export default class Column extends Backbone.View {
 		this.listenTo( this.column.get( 'elements' ), 'add', this.addElement );
 
 		// delegate event
-		this.delegateEvents();
+		// this.delegateEvents();
 	}
 
 	/**
@@ -79,7 +86,6 @@ export default class Column extends Backbone.View {
 		new Promise( ( resolve, reject ) => {
 			let data = this.column.toJSON();
 			data.cid = this.column.cid;
-
 			this.template = _.template( $( '#pa-column-template' ).html(), { variable: 'data' } )( data );
 			this.setElement( this.template );
 			if ( this.column.get( 'elements' ) && this.column.get( 'elements' ).length > 0 ) {
@@ -161,14 +167,20 @@ export default class Column extends Backbone.View {
 				    stop: ( event, ui ) => {
 				    	let target = ui.element;
 				        let next = target.next();
-        				let nextColumnCount = Math.round( next.width() / columnWidth );
+        				let currentCol = Math.round( next.width() / columnWidth );
+        				currentCol = currentCol ? currentCol : 1;
 
 		        		new Promise( ( resolve, reject ) => {
 			        		// trigger save next column
 			        		next.trigger( 'trigger_save_next_column', {
 			        			cid: next.data( 'cid' ),
 			    				settings: {
-			    					class : 'pa-col-sm-' + nextColumnCount,
+			    					class : 'pa-col-sm-' + currentCol,
+			    					responsive: {
+				    					normal: {
+				    						cols: currentCol
+				    					}
+				    				},
 			    					element: 'pa_column',
 			        				styles: {
 			        					width: ( next.outerWidth() * 100 ) / fullWidth
@@ -177,7 +189,7 @@ export default class Column extends Backbone.View {
 			        		} );
 			        		resolve();
 		        		} ).then( () => {
-				    		this.column.set( 'reRender', true );
+				    		// this.column.set( 'reRender', true );
 		        		} );
 				    }
 		  		});
@@ -203,8 +215,8 @@ export default class Column extends Backbone.View {
 	/**
 	 * ReRender html layout
 	 */
-	_reRender( model ) {
-		if ( this.column.get( 'reRender' ) ) {
+	_reRender( model, old ) {
+		if ( this.column.get( 'reRender' ) === true ) {
 			this.$el.replaceWith( this.render().el );
 			this.column.set( 'reRender', false );
 		}
@@ -215,12 +227,9 @@ export default class Column extends Backbone.View {
 	 */
 	_deleteColumnHandler( e ) {
 		e.preventDefault();
-		// this.
 		if ( confirm( this.$( '.pa-delete-column' ).data( 'confirm' ) ) ) {
-			// this.remove();
 			this.column.destroy();
 		}
-
 		return false;
 	}
 
@@ -254,7 +263,6 @@ export default class Column extends Backbone.View {
 		let cid = button.data( 'cid' );
 		let model = this.column.get( 'elements' ).get( { cid: cid } );
 		let index = this.column.get( 'elements' ).indexOf( model );
-		// let newModel = model.clone();
 
 		this.column.get( 'elements' ).add( Common.toJSON( model.toJSON() ), { at: parseInt( index ) + 1 } );
 		return false;

@@ -18,7 +18,9 @@ function toJSON( data = {}, ignores = [] ) {
 		if ( data instanceof Backbone.Model ) {
 			let cid = data.cid !== undefined ? data.cid : false;
 			data = data.toJSON();
-			data.unique_ID = cid;
+			if ( data.settings !== undefined && data.settings.uniqid_id !== undefined && ! data.settings.uniqid_id ) {
+				data.settings.specifix_id = cid;
+			}
 		}
 
 		_.map( data, ( value, name ) => {

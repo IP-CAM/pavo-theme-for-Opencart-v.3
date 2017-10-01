@@ -58,7 +58,7 @@ export default class GoogleMap extends Backbone.View {
 		} else {
 			let settings = this.model.get( 'settings' );
 
-			let mapData = Object.assign( {}, this.defaults(), settings );
+			let mapData = { ...this.defaults(), ...settings };
 
 			mapData.center = {
 				lat: settings.lat !== undefined && ! isNaN( settings.lat ) && settings.lat ? parseFloat( settings.lat ) : -33.8688,

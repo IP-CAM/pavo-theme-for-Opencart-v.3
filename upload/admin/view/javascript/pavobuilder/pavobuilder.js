@@ -40,7 +40,6 @@ $( document ).ready(() => {
 						type: 'POST',
 						data: data,
 						beforeSend: () => {
-							Loading.$el.html( '<div id="loader" class="loading"></div>' );
 							$( 'title' ).text( PA_PARAMS.languages.updating_text );
 						}
 					}).always( () => {
@@ -51,7 +50,8 @@ $( document ).ready(() => {
 						}, 1500 );
 					} ).done( ( res ) => {
 						if ( res.success !== undefined ) {
-							Loading.$( '#loader' ).removeClass( 'loading' ).html( '<span>' + res.success + '</span>' );
+							Loading.$( '#loader' ).removeClass( 'loading' );
+							Loading.$( 'span' ).html( res.success );
 						}
 					} ).fail( () => {
 						

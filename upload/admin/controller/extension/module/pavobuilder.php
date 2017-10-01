@@ -190,6 +190,21 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			'name'		=> strip_tags( $this->language->get( 'heading_title' ) ),
 			'slug'		=> 'pa-widgets-list'
 		);
+		$this->data['width_roles'] = array(
+			12	=> $this->language->get( 'entry_12_columns_text' ),
+			11	=> $this->language->get( 'entry_11_columns_text' ),
+			10	=> $this->language->get( 'entry_10_columns_text' ),
+			9	=> $this->language->get( 'entry_9_columns_text' ),
+			8	=> $this->language->get( 'entry_8_columns_text' ),
+			7	=> $this->language->get( 'entry_7_columns_text' ),
+			6	=> $this->language->get( 'entry_6_columns_text' ),
+			5	=> $this->language->get( 'entry_5_columns_text' ),
+			4	=> $this->language->get( 'entry_4_columns_text' ),
+			3	=> $this->language->get( 'entry_3_columns_text' ),
+			2	=> $this->language->get( 'entry_2_columns_text' ),
+			1	=> $this->language->get( 'entry_1_columns_text' )
+		);
+
 		// var_dump($this->data['elements']); die();
 		foreach ( $widgets as $key => $widget ) {
 			$widget = $this->pavobuilder->widgets->getWidget( $key );
@@ -204,6 +219,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		// layout data
 		$layout = $id ? $this->model_setting_module->getModule( $id ) : array();
 		$layout = $layout ? $layout : array();
+		$this->data['layout'] = $layout;
 		$this->data['layout']['content'] 		= ! empty( $layout['content'] ) ? $this->validateElementData( $layout['content'] ) : array();
 
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;

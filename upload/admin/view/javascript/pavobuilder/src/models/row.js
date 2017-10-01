@@ -5,6 +5,7 @@ export default class RowModel extends Backbone.Model {
 
 	initialize( data = { settings: {}, columns: [], editing: false } ) {
 		this.set( 'columns', new ColumnsCollection( data.columns ) );
+		this.on( 'change:screen', this._switchScreenMode );
 	}
 
 	defaults() {
@@ -17,6 +18,12 @@ export default class RowModel extends Backbone.Model {
 			element_type: 'widget',
 			widget : 'pa_row'
 		}
+	}
+
+	_switchScreenMode( model ) {
+		model.get( 'columns' ).map( ( column ) => {
+			column.set( 'screen', model.get( 'screen' ) );
+		} );
 	}
 
 }

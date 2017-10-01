@@ -49,7 +49,7 @@ class PA_Widget_Column extends PA_Widgets {
 					'fields'		=> array(
 						array(
 							'type'	=> 'layout-onion',
-							'name'	=> 'layout_onion',
+							'name'	=> 'styles',
 							'label'	=> 'entry_box_text'
 						),
 						array(
@@ -76,6 +76,16 @@ class PA_Widget_Column extends PA_Widgets {
 						)
 					)
 				)
+				// ,
+				// 'responsive'		=> array(
+				// 	'label'			=> $this->language->get( 'entry_responsive_text' ),
+				// 	'fields'		=> array(
+				// 		array(
+				// 			'type'	=> 'responsive',
+				// 			'name'	=> 'responsive'
+				// 		)
+				// 	)
+				// )
 			)
 		);
 	}

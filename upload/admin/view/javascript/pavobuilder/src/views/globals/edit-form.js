@@ -18,13 +18,12 @@ export default class EditForm extends Backbone.View {
 		// this.data.set( 'fields', fields );
 		this.template = _.template( $( '#pa-edit-form-template' ).html(), { variable: 'data' } );
 		this.listenTo( this.data, 'change:editing', this._toggle_form );
-		// this.listenTo( this.data, 'change:fields', this.renderFields );
 		this.listenTo( this.data, 'destroy', this.remove );
 
 		this.events = {
-			'click .btn.pa-close'	: '_closeHandler',
-			'click .btn.pa-update'	: '_updateHandler',
-			'change #animate-select': '_effectChange'
+			'click .btn.pa-close'		: '_closeHandler',
+			'click .btn.pa-update'		: '_updateHandler',
+			'change #animate-select'	: '_effectChange'
 		}
 
 		this.render();
@@ -34,7 +33,7 @@ export default class EditForm extends Backbone.View {
 	 * Render html
 	 */
 	render() {
-		if ( this.data.get( 'editing' ) ) {
+		if ( this.data.get( 'editing' ) == true ) {
 			let data = this.data.toJSON();
 			data.edit_title = this.title;
 			let template = this.template( data );

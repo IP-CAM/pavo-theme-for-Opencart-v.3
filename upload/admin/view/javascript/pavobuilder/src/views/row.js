@@ -95,7 +95,7 @@ export default class Row extends Backbone.View {
 				classWrapper = 'pa-col-sm-12';
 			}
 			this.row.get( 'columns' ).map( ( model ) => {
-				let settings = model.get( 'settings' );
+				let settings = { ...model.get( 'settings' ) };
 				settings.class = classWrapper;
 				if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
 					delete settings.styles.width;
@@ -113,7 +113,7 @@ export default class Row extends Backbone.View {
 			new Promise( ( resolve, reject ) => {
 				let data = false;
 				this.row.get( 'columns' ).map( ( column ) => {
-					let settings = column.get( 'settings' );
+					let settings = { ...column.get( 'settings' ) };
 					let className = settings.class;
 					let col = className.replace( 'pa-col-sm-', '' );
 					if ( col >= 2 ) {
@@ -123,6 +123,7 @@ export default class Row extends Backbone.View {
 						};
 					}
 				} );
+
 				resolve( data );
 			} ).then( ( data = false ) => {
 
@@ -130,11 +131,12 @@ export default class Row extends Backbone.View {
 					alert( PA_PARAMS.languages.entry_column_is_maximum );
 				} else {
 					// change width old column
-					let settings = data.column.get( 'settings' );
+					let settings = { ...data.column.get( 'settings' ) };
 					settings.class = 'pa-col-sm-' + data.col;
 					if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
 						delete settings.styles.width;
 					}
+
 					data.column.set( 'settings', settings );
 					data.column.set( 'reRender', true );
 
@@ -173,7 +175,7 @@ export default class Row extends Backbone.View {
 			for ( let i = 0; i < newColumnsObject.length; i++ ) {
 				let model = this.row.get( 'columns' ).at( i );
 				if ( typeof model !== 'undefined' ) {
-					let settings = Object.assign( {}, model.get( 'settings' ) );
+					let settings = { ...model.get( 'settings' ) };
 					settings.class = newColumnsObject[i].class;
 
 					// delete width style
@@ -199,7 +201,7 @@ export default class Row extends Backbone.View {
 			var lastest_column_index = false;
 			this.row.get( 'columns' ).map( ( model, index ) => {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
-					let settings = Object.assign( {}, model.get( 'settings' ) );
+					let settings = { ...model.get( 'settings' ) };
 					settings.class = newColumnsObject[index].class;
 					// delete width style
 					if ( settings.styles !== undefined && settings.styles.width != undefined ) {

@@ -68,7 +68,10 @@ export default class Builder extends Backbone.View {
 	}
 
 	switchScreen( model ) {
-		console.log( model );
+		// this.$( '#pa-content' ).attr( 'data-screen', model.get( 'screen' ) );
+		this.model.get( 'rows' ).map( ( row ) => {
+			row.set( 'screen', model.get( 'screen' ) );
+		} );
 	}
 
 }

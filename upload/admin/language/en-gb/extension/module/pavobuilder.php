@@ -2,6 +2,7 @@
 // Heading Title
 $_['heading_title'] 		= 'PavoBuilder';
 $_['updating_text'] 		= 'Updating ...';
+$_['waiting_text'] 			= 'Please wait ...';
 $_['text_success']          = 'Success: You have modified layout!';
 $_['text_warning']          = 'ERROR: Permission denied';
 // layouts list
@@ -57,6 +58,7 @@ $_['entry_content_text']		= 'Content';
 $_['entry_wide_text']			= 'Wide';
 $_['entry_boxed_text']			= 'Boxed';
 $_['entry_effect_text']			= 'Effect';
+$_['entry_responsive_text']		= 'Responsive';
 $_['entry_background_text']		= 'Background';
 $_['entry_color_text']			= 'Color';
 $_['entry_background_color_text']	= 'Backbround Color';
@@ -71,6 +73,23 @@ $_['entry_padding_text']		= 'Padding';
 $_['entry_margin_text']			= 'Margin';
 $_['entry_text_block']			= 'Text Block';
 $_['entry_google_map']			= 'Google Map';
+
+// columns
+$_['entry_device_text']			= 'Device';
+$_['entry_width_text']			= 'Width';
+$_['entry_hide_text']			= 'Hide?';
+$_['entry_12_columns_text']		= '12 Columns';
+$_['entry_11_columns_text']		= '11 Columns';
+$_['entry_10_columns_text']		= '10 Columns';
+$_['entry_9_columns_text']		= '9 Columns';
+$_['entry_8_columns_text']		= '8 Columns';
+$_['entry_7_columns_text']		= '7 Columns';
+$_['entry_6_columns_text']		= '6 Columns';
+$_['entry_5_columns_text']		= '5 Columns';
+$_['entry_4_columns_text']		= '4 Columns';
+$_['entry_3_columns_text']		= '3 Columns';
+$_['entry_2_columns_text']		= '2 Columns';
+$_['entry_1_columns_text']		= '1 Column';
 
 // maps
 $_['entry_maptype_id_text']				= 'Map Type';
