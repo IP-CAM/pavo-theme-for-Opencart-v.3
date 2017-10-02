@@ -24,6 +24,7 @@ export default class Column extends Backbone.View {
 					return;
 				}
 				new Promise( ( resolve, reject ) => {
+					let screen = this.column.get( 'screen' );
 					let columns = 12;
 					let fullWidth = this.$el.parent().width();
 					let columnWidth = fullWidth / columns;
@@ -34,34 +35,23 @@ export default class Column extends Backbone.View {
 	        		let nextColumnCount = Math.round( next.width() / columnWidth );
 	        		currentCol = currentCol ? currentCol : 1;
 
-	        		let settings = {
-	        			...this.column.get( 'settings' ),
-	        			...{
-		    				class : 'pa-col-sm-' + currentCol,
-		    				element: 'pa_column',
-		    				responsive: {
-		    					normal: {
-		    						cols: currentCol
-		    					}
-		    				},
-		        			styles: {
-		        				width: ( ui.size.width * 100 ) / fullWidth
-		        			}
-		        		}
-	        		};
-
-	        		resolve( settings );
-				} ).then( ( settings = {} ) => {
-        			this.column.set( 'settings', settings );
+	        		let responsive = { ...this.column.get( 'responsive' ) };
+	        		responsive[screen] = {
+	        			cols: currentCol,
+	        			width: ( ui.size.width * 100 ) / fullWidth
+	        		}
+	        		resolve( responsive );
+				} ).then( ( responsive = {} ) => {
+        			this.column.set( 'responsive', responsive );
 				} );
 			},
 			// trigger save next column when resize events
-			'trigger_save_next_column'			: ( e, data = { cid: '', settings: {} } ) => {
+			'trigger_save_next_column'			: ( e, data = { cid: '', responsive: {} } ) => {
 				if ( data.cid == this.column.cid ) {
-					let settings = { ...this.column.get( 'settings' ), ...data.settings };
-					this.column.set( 'settings', data.settings );
-					// re-generate column, just run in debug mode
-					// this.column.set( 'reRender', true );
+					let responsive = { ...this.column.get( 'responsive' ) };
+					let screen = this.column.get( 'screen' );
+					responsive[screen] = data.responsive;
+					this.column.set( 'responsive', responsive );
 				}
 			}
 		};
@@ -86,6 +76,7 @@ export default class Column extends Backbone.View {
 		new Promise( ( resolve, reject ) => {
 			let data = this.column.toJSON();
 			data.cid = this.column.cid;
+
 			this.template = _.template( $( '#pa-column-template' ).html(), { variable: 'data' } )( data );
 			this.setElement( this.template );
 			if ( this.column.get( 'elements' ) && this.column.get( 'elements' ).length > 0 ) {
@@ -137,6 +128,7 @@ export default class Column extends Backbone.View {
 				let columns = 12;
 				let fullWidth = this.$el.parent().innerWidth();
 				let columnWidth = fullWidth / columns;
+				let screen = this.column.get( 'screen' );
 
 				this.$el.resizable({
 				    handles: 'e',
@@ -150,7 +142,11 @@ export default class Column extends Backbone.View {
 				      	target.resizable( 'option', 'minWidth', columnWidth );
 
 				      	let maxWidth = target.outerWidth() + next.outerWidth();
-				      	target.resizable( 'option', 'maxWidth', maxWidth - columnWidth );
+				      	if ( screen == 'sm' || screen == 'xs' ) {
+				      		target.resizable( 'option', 'maxWidth', maxWidth );
+				      	} else {
+				      		target.resizable( 'option', 'maxWidth', maxWidth - columnWidth );
+				      	}
 				    },
 				    resize: ( event, ui ) => {
 				      	let target = ui.element;
@@ -158,11 +154,13 @@ export default class Column extends Backbone.View {
 				        let maxWidth = target.outerWidth() + next.outerWidth();
 				      	maxWidth = Math.ceil( maxWidth / columnWidth ) * columnWidth;
 
-				      	if ( ui.size.width > ui.originalSize.width ) {
-			        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
-			        	} else {
-			        		next.width( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) );
-			        	}
+				      	if ( screen !== 'sm' && screen !== 'xs' ) {
+							if ( ui.size.width > ui.originalSize.width ) {
+				        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
+				        	} else {
+				        		next.width( ui.size.nextOriginWidth + ( ui.originalSize.width - ui.size.width ) );
+				        	}
+				      	}
 				    },
 				    stop: ( event, ui ) => {
 				    	let target = ui.element;
@@ -172,20 +170,13 @@ export default class Column extends Backbone.View {
 
 		        		new Promise( ( resolve, reject ) => {
 			        		// trigger save next column
+			        		let responsive = {
+			        			cols : currentCol,
+			        			width: ( next.outerWidth() * 100 ) / fullWidth
+			        		};
 			        		next.trigger( 'trigger_save_next_column', {
 			        			cid: next.data( 'cid' ),
-			    				settings: {
-			    					class : 'pa-col-sm-' + currentCol,
-			    					responsive: {
-				    					normal: {
-				    						cols: currentCol
-				    					}
-				    				},
-			    					element: 'pa_column',
-			        				styles: {
-			        					width: ( next.outerWidth() * 100 ) / fullWidth
-			        				}
-			    				}
+			    				responsive: responsive
 			        		} );
 			        		resolve();
 		        		} ).then( () => {

@@ -1,9 +1,10 @@
 import Backbone from 'Backbone';
+import _ from 'underscore';
 import ElementsCollection from '../collections/elements';
 
 export default class ColumnModel extends Backbone.Model {
 
-	initialize( data = { settings: { class: 'pa-col-sm-12', styles: {} }, elements: [] } ) {
+	initialize( data = { settings: { styles: {} }, elements: [] } ) {
 		this.set( 'elements', new ElementsCollection( data.elements ) );
 		this.on( 'change:screen', this._switchScreenMode );
 	}
@@ -16,23 +17,18 @@ export default class ColumnModel extends Backbone.Model {
 			responsive : {
 				lg : {
 					cols: 12,
-					width : '100%',
-					styles: {}
+					styles: {
+						width : 100,
+					}
 				},
 				md : {
-					cols: 12,
-					width : '100%',
-					styles: {}
+					cols: 12
 				},
 				sm : {
-					cols: 12,
-					width : '100%',
-					styles: {}
+					cols: 12
 				},
 				xs : {
-					cols : 12,
-					width : '100%',
-					styles: {}
+					cols: 12
 				}
 			},
 			elements : new ElementsCollection(),
@@ -45,9 +41,10 @@ export default class ColumnModel extends Backbone.Model {
 		};
 	}
 
-	_switchScreenMode( model ) {
-		if ( model.get( 'screen' ) !== 'lg' ) {
-
+	_switchScreenMode( model, old ) {
+		let screen = model.get( 'screen' );
+		if ( screen == 'sm' || screen == 'xs' ) {
+			this.set( 'editabled', true );
 		}
 		this.set( 'reRender', true );
 	}

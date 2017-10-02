@@ -25,16 +25,23 @@ export default class ColumnsCollection extends Backbone.Collection {
 	 */
 	_update() {
 		this.models.map( ( model, index ) => {
-			let editabled = model.get( 'editabled' );
-			let nextEditabled = index < this.length - 1;
-			model.set( 'editabled', nextEditabled );
-			if ( editabled != nextEditabled ) {
-				model.set( 'reRender', true );
+			// editabled
+			let screen = model.get( 'screen' );
+			if ( screen === 'sm'|| screen === 'xs' ) {
+				model.set( 'editabled', true );
+			} else {
+				let editabled = model.get( 'editabled' );
+				let nextEditabled = index < this.length - 1;
+				model.set( 'editabled', nextEditabled );
+				if ( editabled != nextEditabled ) {
+					model.set( 'reRender', true );
+				}
 			}
 		} );
 	}
 
 	_addParam( model ) {
+		// settings
 		let settings = {
 			...model.get( 'settings' ),
 			...{
@@ -53,17 +60,12 @@ export default class ColumnsCollection extends Backbone.Collection {
 		let numberColumn = this.length;
 		let percentWidth = 100 / numberColumn;
 		this.map( ( model ) => {
-			let settings = {
-				...model.get( 'settings' ),
-				...{
-					element: 'pa_column',
-					class: 'pa-col-sm-' + Math.floor( 12 / numberColumn ),
-					styles: {
-						width : percentWidth
-					}
-				}
-			};
-			model.set( 'settings', settings );
+			let responsive = model.get( 'responsive' );
+			responsive[model.get( 'screen' )] = {
+				cols: Math.floor( 12 / numberColumn ),
+				width: percentWidth
+			}
+			model.set( 'responsive', responsive );
 			model.set( 'reRender', true );
 		} );
 	}

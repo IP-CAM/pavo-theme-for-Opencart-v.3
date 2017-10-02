@@ -1,4 +1,5 @@
 import Backbone from 'Backbone';
+import _ from 'underscore';
 import ColumnsCollection from '../collections/columns';
 
 export default class RowModel extends Backbone.Model {
@@ -22,8 +23,27 @@ export default class RowModel extends Backbone.Model {
 	}
 
 	_switchScreenMode( model ) {
-		model.get( 'columns' ).map( ( column ) => {
-			column.set( 'screen', model.get( 'screen' ) );
+		let screen = model.get( 'screen' );
+		model.get( 'columns' ).map( ( column, index ) => {
+			let oldScreen = column.get( 'screen' );
+			column.set( 'screen', screen );
+			let responsive = column.get( 'responsive' );
+			let defaults = {
+				lg: {},
+				md: {},
+				sm: {},
+				xs: {},
+			}
+
+			if ( responsive[oldScreen] !== undefined ) {
+				_.map( defaults, ( ob, key ) => {
+					if ( responsive[key] === undefined || responsive[key].length === 0 ) {
+						responsive[key] = responsive[oldScreen];
+					}
+				} );
+			}
+
+			column.set( 'responsive', responsive );
 		} );
 	}
 

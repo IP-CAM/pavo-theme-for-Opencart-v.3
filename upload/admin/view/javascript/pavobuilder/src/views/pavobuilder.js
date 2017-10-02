@@ -49,7 +49,13 @@ export default class Builder extends Backbone.View {
 						element: 'pa_column'
 					}
 				}
-			]
+			],
+			responsive: {
+				lg: { cols: 12 },
+				md: { cols: 12 },
+				sm: { cols: 12 },
+				xs: { cols: 12 }
+			}
 		};
 		this.model.get( 'rows' ).add( row );
 		return false;

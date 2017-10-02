@@ -77,86 +77,57 @@ export default class Row extends Backbone.View {
 	_addColumnHandler( e ) {
 		e.preventDefault();
 
-		let cols = 0;
-		let fullWidth = this.$el.innerWidth();
-		let screen = this.row.get( 'screen' );
-		this.row.get( 'columns' ).map( ( column ) => {
-			let responsive = column.get( 'responsive' );
-			cols = cols + responsive[screen].cols;
-		} );
+		// define column width relationship
+		let screens = {
+			lg: 1,
+			md: 1,
+			sm: 6,
+			xs: 12
+		};
+		// current screen
+		let currentScreen = this.row.get( 'screen' );
+		let screen_modes = [ 'lg', 'md', 'sm', 'xs' ];
+		let RowWidth = this.$el.innerWidth();
 
-		if ( cols < 12 ) {
-			let columns = this.row.get( 'columns' ).length + 1;
-			let cols = Math.floor( 12 / parseInt( columns ) );
-			if ( this.row.get( 'columns' ).length >= 12 ) {
-				cols = '12';
-			}
-			this.row.get( 'columns' ).map( ( model ) => {
-				let responsive = { ...model.get( 'responsive' ) };
-				responsive[screen].cols = columns;//cols;
-				if ( responsive[screen].styles !== undefined && responsive[screen].styles.width !== undefined ) {
-					delete responsive[screen].styles.width;
-				}
-				model.set( 'responsive', responsive );
-				model.set( 'reRender', true );
-			} );
-
-			let newModel = {
-				settings: {
-					element: 'pa_column'
-				}
-			};
-
-			if ( ( this.row.get( 'columns' ).length + 1 ) % 2 !== 0 ) {
-				newModel.responsive[screen].styles = {
-					width: ( fullWidth - ( this.row.get( 'columns' ).length * ( fullWidth / 12 ) ) ) * 100 / fullWidth
-				}
-			}
-			this.row.get( 'columns' ).add( newModel );
+		if ( this.row.get( 'columns' ).length == 12 ) {
+			alert( PA_PARAMS.languages.entry_column_is_maximum );
 		} else {
+			let calcols = Math.floor( 12 / ( this.row.get( 'columns' ).length + 1 ) );
+			let columnWidth = calcols * ( RowWidth / 12 ) * 100 / RowWidth;
+
 			new Promise( ( resolve, reject ) => {
-				let data = false;
+				let lastest = false;
 				this.row.get( 'columns' ).map( ( column ) => {
 					let responsive = column.get( 'responsive' );
-					let cols = responsive[screen].cols;
-					if ( cols >= 2 ) {
-						data = {
-							column 	: column,
-							cols 	: cols - 1
-						};
+					_.map( screen_modes, ( screen ) => {
+						responsive[screen].cols = calcols;
+						if ( responsive[screen].styles === undefined ) {
+							responsive[screen].styles = {};
+						}
+						responsive[screen].styles.width = columnWidth;
+					} );
+
+					column.set( 'responsive', responsive );
+					column.set( 'reRender', true );
+				} );
+				resolve( lastest );
+			} ).then( ( lastest ) => {
+				let responsive = {};
+				_.map( screen_modes, ( sc ) => {
+					responsive[sc] = {
+						cols: calcols,
+						styles: {
+							width: 100 - ( columnWidth * this.row.get( 'columns' ).length )
+						}
 					}
 				} );
-
-				resolve( data );
-			} ).then( ( data = false ) => {
-
-				if ( data == false ) {
-					alert( PA_PARAMS.languages.entry_column_is_maximum );
-				} else {
-					let responsive = data.column.get( 'responsive' );
-					responsive[screen].cols = data.cols
-					// change width old column
-					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width !== undefined ) {
-						delete responsive[screen].styles.width;
-					}
-
-					data.column.set( 'responsive', responsive );
-					data.column.set( 'reRender', true );
-
-					let newCol = {
-						settings: {
-							element: 'pa_column'
-						}
-					};
-					newCol.responsive = {};
-					newCol.responsive[screen] = {
-						cols: 1
-					}
-					// new column
-					this.row.get( 'columns' ).add( newCol );
-				}
+				this.row.get( 'columns' ).add( {
+					screen: currentScreen,
+					responsive: responsive
+				} );
 			} );
 		}
+
 		return false;
 	}
 
@@ -170,6 +141,7 @@ export default class Row extends Backbone.View {
 		let columns_count = button.data('columns');
 		let cols = Math.floor( 12 / parseInt( columns_count ) );
 		let screen = this.row.get( 'screen' );
+		let screens = [ 'lg', 'md', 'sm', 'xs' ];
 
 		let newColumnsObject = [];
 		for ( let i = 0; i < columns_count; i++ ) {
@@ -185,11 +157,12 @@ export default class Row extends Backbone.View {
 				if ( typeof model !== 'undefined' ) {
 					let responsive = { ...model.get( 'responsive' ) };
 
-					// delete width style
-					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width != undefined ) {
-						delete responsive[screen].styles.width;
-					}
-					responsive[screen].cols = cols;
+					_.map( screens, ( sc ) => {
+						if ( responsive[sc].styles !== undefined && responsive[sc].styles.width !== undefined ) {
+							delete responsive[sc].styles.width;
+						}
+						responsive[sc].cols = cols;
+					} );
 					model.set( 'responsive', responsive );
 					model.set( 'reRender', true );
 				} else {
@@ -200,10 +173,11 @@ export default class Row extends Backbone.View {
 					};
 
 					newModel.responsive = {};
-					newModel.responsive[screen] = {
-						cols: cols
-					};
-					// newModel.responsive[screen].cols = cols
+					_.map( screens, ( sc ) => {
+						newModel.responsive[sc] = {
+							cols: cols
+						}
+					} );
 
 					this.row.get( 'columns' ).add( newModel );
 				}
@@ -215,11 +189,14 @@ export default class Row extends Backbone.View {
 			this.row.get( 'columns' ).map( ( model, index ) => {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
 					let responsive = { ...model.get( 'responsive' ) };
-					responsive[screen].cols = newColumnsObject[index].cols;
-					// delete width style
-					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width != undefined ) {
-						delete responsive[screen].styles.width;
-					}
+
+					_.map( screens, ( sc ) => {
+						responsive[sc].cols = newColumnsObject[index].cols;
+						// delete width style
+						if ( responsive[sc].styles !== undefined && responsive[sc].styles.width != undefined ) {
+							delete responsive[sc].styles.width;
+						}
+					} );
 					model.set( 'responsive', responsive );
 					model.set( 'reRender', true );
 
