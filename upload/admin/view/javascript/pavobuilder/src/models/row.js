@@ -16,7 +16,8 @@ export default class RowModel extends Backbone.Model {
 			columns: new ColumnsCollection(),
 			editing: false,
 			element_type: 'widget',
-			widget : 'pa_row'
+			widget : 'pa_row',
+			screen : 'lg'
 		}
 	}
 

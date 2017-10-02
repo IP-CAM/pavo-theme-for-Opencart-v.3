@@ -149,7 +149,11 @@ export default class EditForm extends Backbone.View {
 		e.preventDefault();
 		new Promise( ( resolve, reject ) => {
 			let settings = this.$el.find( '#pa-edit-form-settings' ).serializeJSON();
-			settings = { ...this.data.get('settings'), ...settings };
+			if ( this.data === 'pa_column' ) {
+				console.log( settings );
+			} else {
+				settings = { ...this.data.get('settings'), ...settings };
+			}
 			this.data.set( 'settings', settings );
 			// call close method
 			resolve();

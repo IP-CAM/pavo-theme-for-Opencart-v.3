@@ -44,7 +44,11 @@ export default class Builder extends Backbone.View {
 		let row = {
 			settings: {},
 			columns: [
-				{ settings: { element: 'pa_column', class: 'pa-col-sm-12' } }
+				{
+					settings: {
+						element: 'pa_column'
+					}
+				}
 			]
 		};
 		this.model.get( 'rows' ).add( row );
@@ -63,8 +67,7 @@ export default class Builder extends Backbone.View {
 		this.$( '.button-alignments .btn-default' ).removeClass( 'active' );
 		button.addClass( 'active' );
 
-		let screen = button.data( 'option' );
-		this.model.set( 'screen', screen );
+		this.model.set( 'screen', button.data( 'screen' ) );
 	}
 
 	switchScreen( model ) {

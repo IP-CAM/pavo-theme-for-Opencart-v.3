@@ -11,23 +11,28 @@ export default class ColumnModel extends Backbone.Model {
 	defaults() {
 		return {
 			settings : {
-				element : 'pa_column',
-				styles : {
-					width : '100%'
+				element : 'pa_column'
+			},
+			responsive : {
+				lg : {
+					cols: 12,
+					width : '100%',
+					styles: {}
 				},
-				responsive : {
-					normal : {
-						cols: 12
-					},
-					laptop : {
-						cols: 12
-					},
-					tablet : {
-						cols: 12
-					},
-					mobile : {
-						cols : 12
-					}
+				md : {
+					cols: 12,
+					width : '100%',
+					styles: {}
+				},
+				sm : {
+					cols: 12,
+					width : '100%',
+					styles: {}
+				},
+				xs : {
+					cols : 12,
+					width : '100%',
+					styles: {}
 				}
 			},
 			elements : new ElementsCollection(),
@@ -35,12 +40,16 @@ export default class ColumnModel extends Backbone.Model {
 			adding : false,
 			element_type : 'widget',
 			reRender: false,
-			widget : 'pa_column'
+			widget : 'pa_column',
+			screen: 'lg'
 		};
 	}
 
 	_switchScreenMode( model ) {
-		// this.set( 'reRender', true );
+		if ( model.get( 'screen' ) !== 'lg' ) {
+
+		}
+		this.set( 'reRender', true );
 	}
 
 }

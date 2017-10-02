@@ -26,7 +26,6 @@ export default class Row extends Backbone.View {
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
 		this.listenTo( this.row.get( 'columns' ), 'add', this.addColumn );
-		this.listenTo( this.row, 'change:editing', this.renderEditRowForm );
 	}
 
 	/**
@@ -66,9 +65,7 @@ export default class Row extends Backbone.View {
 	 */
 	_deleteRowHandler( e ) {
 		e.preventDefault();
-		// this.
 		if ( confirm( this.$( '.pa-delete-row' ).data( 'confirm' ) ) ) {
-			// this.remove();
 			this.row.destroy();
 		}
 		return false;
@@ -78,48 +75,54 @@ export default class Row extends Backbone.View {
 	 * Add column handler
 	 */
 	_addColumnHandler( e ) {
-		// stop event default
 		e.preventDefault();
 
 		let cols = 0;
+		let fullWidth = this.$el.innerWidth();
+		let screen = this.row.get( 'screen' );
 		this.row.get( 'columns' ).map( ( column ) => {
-			let settings = column.get( 'settings' );
-			let columnWidth = settings.class.match( /pa-col-sm-([0-9]{1,2})/gi );
-			cols = cols + parseInt( columnWidth[0].replace( 'pa-col-sm-', '' ) );
+			let responsive = column.get( 'responsive' );
+			cols = cols + responsive[screen].cols;
 		} );
 
 		if ( cols < 12 ) {
 			let columns = this.row.get( 'columns' ).length + 1;
-			let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns ) );
+			let cols = Math.floor( 12 / parseInt( columns ) );
 			if ( this.row.get( 'columns' ).length >= 12 ) {
-				classWrapper = 'pa-col-sm-12';
+				cols = '12';
 			}
 			this.row.get( 'columns' ).map( ( model ) => {
-				let settings = { ...model.get( 'settings' ) };
-				settings.class = classWrapper;
-				if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
-					delete settings.styles.width;
+				let responsive = { ...model.get( 'responsive' ) };
+				responsive[screen].cols = columns;//cols;
+				if ( responsive[screen].styles !== undefined && responsive[screen].styles.width !== undefined ) {
+					delete responsive[screen].styles.width;
 				}
-				model.set( 'settings', settings );
+				model.set( 'responsive', responsive );
 				model.set( 'reRender', true );
 			} );
-			this.row.get( 'columns' ).add({
+
+			let newModel = {
 				settings: {
-					element: 'pa_column',
-					class: classWrapper
+					element: 'pa_column'
 				}
-			});
+			};
+
+			if ( ( this.row.get( 'columns' ).length + 1 ) % 2 !== 0 ) {
+				newModel.responsive[screen].styles = {
+					width: ( fullWidth - ( this.row.get( 'columns' ).length * ( fullWidth / 12 ) ) ) * 100 / fullWidth
+				}
+			}
+			this.row.get( 'columns' ).add( newModel );
 		} else {
 			new Promise( ( resolve, reject ) => {
 				let data = false;
 				this.row.get( 'columns' ).map( ( column ) => {
-					let settings = { ...column.get( 'settings' ) };
-					let className = settings.class;
-					let col = className.replace( 'pa-col-sm-', '' );
-					if ( col >= 2 ) {
+					let responsive = column.get( 'responsive' );
+					let cols = responsive[screen].cols;
+					if ( cols >= 2 ) {
 						data = {
 							column 	: column,
-							col 	: col - 1
+							cols 	: cols - 1
 						};
 					}
 				} );
@@ -130,23 +133,27 @@ export default class Row extends Backbone.View {
 				if ( data == false ) {
 					alert( PA_PARAMS.languages.entry_column_is_maximum );
 				} else {
+					let responsive = data.column.get( 'responsive' );
+					responsive[screen].cols = data.cols
 					// change width old column
-					let settings = { ...data.column.get( 'settings' ) };
-					settings.class = 'pa-col-sm-' + data.col;
-					if ( settings.styles !== undefined && settings.styles.width !== undefined ) {
-						delete settings.styles.width;
+					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width !== undefined ) {
+						delete responsive[screen].styles.width;
 					}
 
-					data.column.set( 'settings', settings );
+					data.column.set( 'responsive', responsive );
 					data.column.set( 'reRender', true );
 
-					// new column
-					this.row.get( 'columns' ).add({
+					let newCol = {
 						settings: {
-							element: 'pa_column',
-							class: 'pa-col-sm-1'
+							element: 'pa_column'
 						}
-					});
+					};
+					newCol.responsive = {};
+					newCol.responsive[screen] = {
+						cols: 1
+					}
+					// new column
+					this.row.get( 'columns' ).add( newCol );
 				}
 			} );
 		}
@@ -161,12 +168,13 @@ export default class Row extends Backbone.View {
 
 		let button = $( e.target );
 		let columns_count = button.data('columns');
-		let classWrapper = 'pa-col-sm-' + Math.floor( 12 / parseInt( columns_count ) );
+		let cols = Math.floor( 12 / parseInt( columns_count ) );
+		let screen = this.row.get( 'screen' );
 
 		let newColumnsObject = [];
 		for ( let i = 0; i < columns_count; i++ ) {
 			newColumnsObject.push({
-				class: classWrapper
+				cols: cols
 			});
 		}
 
@@ -175,22 +183,27 @@ export default class Row extends Backbone.View {
 			for ( let i = 0; i < newColumnsObject.length; i++ ) {
 				let model = this.row.get( 'columns' ).at( i );
 				if ( typeof model !== 'undefined' ) {
-					let settings = { ...model.get( 'settings' ) };
-					settings.class = newColumnsObject[i].class;
+					let responsive = { ...model.get( 'responsive' ) };
 
 					// delete width style
-					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
-						delete settings.styles.width;
+					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width != undefined ) {
+						delete responsive[screen].styles.width;
 					}
-					model.set( 'settings', settings );
+					responsive[screen].cols = cols;
+					model.set( 'responsive', responsive );
 					model.set( 'reRender', true );
 				} else {
 					let newModel = {
 						settings: {
-							class: newColumnsObject[i].class,
 							elements: []
 						}
 					};
+
+					newModel.responsive = {};
+					newModel.responsive[screen] = {
+						cols: cols
+					};
+					// newModel.responsive[screen].cols = cols
 
 					this.row.get( 'columns' ).add( newModel );
 				}
@@ -201,13 +214,13 @@ export default class Row extends Backbone.View {
 			var lastest_column_index = false;
 			this.row.get( 'columns' ).map( ( model, index ) => {
 				if ( typeof newColumnsObject[index] !== 'undefined' ) {
-					let settings = { ...model.get( 'settings' ) };
-					settings.class = newColumnsObject[index].class;
+					let responsive = { ...model.get( 'responsive' ) };
+					responsive[screen].cols = newColumnsObject[index].cols;
 					// delete width style
-					if ( settings.styles !== undefined && settings.styles.width != undefined ) {
-						delete settings.styles.width;
+					if ( responsive[screen].styles !== undefined && responsive[screen].styles.width != undefined ) {
+						delete responsive[screen].styles.width;
 					}
-					model.set( 'settings', settings );
+					model.set( 'responsive', responsive );
 					model.set( 'reRender', true );
 
 					// lastest index if columns collection
@@ -243,17 +256,9 @@ export default class Row extends Backbone.View {
 	_setEditRowHandler( e ) {
 		e.preventDefault();
 		this.row.set( 'editing', true );
+		// row edit form
+		let editForm = new EditForm( this.row, PA_PARAMS.languages.entry_edit_row_text, PA_PARAMS.element_fields.pa_row );
 		return false;
-	}
-
-	/**
-	 * render edit row form
-	 */
-	renderEditRowForm( model ) {
-		if ( model.get( 'editing' ) === true ) {
-			// row edit form
-			let editForm = new EditForm( model, PA_PARAMS.languages.entry_edit_row_text, PA_PARAMS.element_fields.pa_row );
-		}
 	}
 
 }
