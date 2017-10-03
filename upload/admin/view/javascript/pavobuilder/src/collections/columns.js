@@ -25,15 +25,15 @@ export default class ColumnsCollection extends Backbone.Collection {
 	 */
 	_update() {
 		this.models.map( ( model, index ) => {
-			// editabled
+			// resizabled
 			let screen = model.get( 'screen' );
-			if ( screen === 'sm'|| screen === 'xs' ) {
-				model.set( 'editabled', true );
+			if ( screen === 'sm' || screen === 'xs' ) {
+				model.set( 'resizabled', true );
 			} else {
-				let editabled = model.get( 'editabled' );
+				let resizabled = model.get( 'resizabled' );
 				let nextEditabled = index < this.length - 1;
-				model.set( 'editabled', nextEditabled );
-				if ( editabled != nextEditabled ) {
+				model.set( 'resizabled', nextEditabled );
+				if ( resizabled != nextEditabled ) {
 					model.set( 'reRender', true );
 				}
 			}
@@ -50,7 +50,7 @@ export default class ColumnsCollection extends Backbone.Collection {
 		};
 
 		model.set( 'settings', settings );
-		model.set( 'editabled', this.indexOf( model ) < this.length );
+		model.set( 'resizabled', this.indexOf( model ) < this.length );
 	}
 
 	/**

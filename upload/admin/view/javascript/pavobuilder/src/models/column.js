@@ -42,10 +42,6 @@ export default class ColumnModel extends Backbone.Model {
 	}
 
 	_switchScreenMode( model, old ) {
-		let screen = model.get( 'screen' );
-		if ( screen == 'sm' || screen == 'xs' ) {
-			this.set( 'editabled', true );
-		}
 		this.set( 'reRender', true );
 	}
 

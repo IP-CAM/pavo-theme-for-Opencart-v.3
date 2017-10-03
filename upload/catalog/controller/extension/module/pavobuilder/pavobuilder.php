@@ -24,6 +24,10 @@ class PavoBuilder extends Controller {
 					return PA_Widgets::instance( $this->registry );
 				break;
 
+			case 'css':
+					return PA_Css::instance( $this->registry );
+				break;
+
 			default:
 					return $this;
 				break;

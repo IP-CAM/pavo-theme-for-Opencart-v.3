@@ -1,4 +1,4 @@
-<div class="pa-column-container {{ settings.class }}{{ settings.parallax ? ' parallax' : '' }}{{ settings.extra_class ? ' extra_class' : '' }}{{ settings.effect ? [ ' ', settings.effect ] | join() }}"{{ settings.uniqid_id ? [ ' id="pa-unique-id-', settings.uniqid_id, '"' ] | join : '' }}>
+<div class="pa-column-container {{ settings.class }}" id="{{ settings.id }}" data-uniqueid="{{ settings.specifix_id }}">
 	<div class="column-inner pa-row-column-inner">
 		{{ content }}
 	</div>

@@ -20,6 +20,11 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 				echo $this->renderElement( $row );
 			}
 		}
+		$uniqid_id = ! empty( $setting['uniqid_id'] ) ? $setting['uniqid_id'] : '';
+		$file = DIR_APPLICATION . 'controller/extension/module/pavobuilder/stylesheet/' . $uniqid_id . '.css';
+		if ( file_exists( $file ) ) {
+			$this->document->addStyle('catalog/controller/extension/module/pavobuilder/stylesheet/' . $uniqid_id . '.css' );
+		}
 		return ob_get_clean();
 	}
 
@@ -51,7 +56,9 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 			}
 			$content = ob_get_clean();
 		}
-
+		if ( isset( $data['widget'] ) && $data['widget'] == 'pa_column' && ! empty( $data['responsive'] ) ) {
+			$settings['responsive'] = $data['responsive'];
+		}
 		return $this->pavobuilder->widgets->renderWidget( $data['widget'], $settings, $content );
 	}
 

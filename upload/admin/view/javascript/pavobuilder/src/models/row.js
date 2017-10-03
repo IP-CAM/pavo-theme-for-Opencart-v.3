@@ -44,6 +44,13 @@ export default class RowModel extends Backbone.Model {
 			}
 
 			column.set( 'responsive', responsive );
+
+			if ( screen == 'sm' || screen == 'xs' ) {
+				column.set( 'resizabled', true );
+			} else {
+				let resizabled = ( index + 1 ) < model.get( 'columns' ).length;
+				column.set( 'resizabled', resizabled );
+			}
 		} );
 	}
 

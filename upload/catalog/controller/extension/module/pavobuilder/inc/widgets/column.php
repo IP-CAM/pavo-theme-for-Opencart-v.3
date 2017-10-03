@@ -90,7 +90,31 @@ class PA_Widget_Column extends PA_Widgets {
 		);
 	}
 
-	public function render( $settings = array(), $content = '' ){
+	public function render( $settings = array(), $content = '' ) {
+		$class = array();
+		if ( ! empty( $settings['extra_class'] ) ) {
+			$class[] = $settings['extra_class'];
+		}
+		if ( ! empty( $settings['parallax'] ) ) {
+			$class[] = $settings['parallax'];
+		}
+		if ( ! empty( $settings['effect'] ) ) {
+			$class[] = $settings['effect'];
+		}
+		if ( $settings['responsive'] ) {
+			foreach ( $settings['responsive'] as $type => $opt ) {
+				if ( ! empty( $opt['cols'] ) ) {
+					$class[] = 'col-' . $type . '-' . $opt['cols'];
+				}
+			}
+		}
+		$settings['class'] = implode( ' ', $class );
+		$settings['id'] = ! empty( $settings['uniqid_id'] ) ? $settings['uniqid_id'] : '';
+		$settings['id'] = ! $settings['id'] && ! empty( $settings['specifix_id'] ) ? $settings['specifix_id'] : '';
+		if ( ! $settings['id'] ) {
+			$settings['id'] = uniqid();
+		}
+
 		return $this->load->view( 'extension/module/pavobuilder/pa_column/pa_column', array( 'settings' => $settings, 'content' => $content ) );
 	}
 

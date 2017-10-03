@@ -10,7 +10,7 @@ import Common from '../common/functions';
 
 export default class Column extends Backbone.View {
 
-	initialize( column = { settings: {}, 'elements' : {}, editabled: false } ) {
+	initialize( column = { settings: {}, 'elements' : {}, resizabled: false } ) {
 		this.column = column;
 
 		this.events = {
@@ -38,7 +38,9 @@ export default class Column extends Backbone.View {
 	        		let responsive = { ...this.column.get( 'responsive' ) };
 	        		responsive[screen] = {
 	        			cols: currentCol,
-	        			width: ( ui.size.width * 100 ) / fullWidth
+	        			styles: {
+	        				width: ( ui.size.width * 100 ) / fullWidth
+	        			}
 	        		}
 	        		resolve( responsive );
 				} ).then( ( responsive = {} ) => {
@@ -124,7 +126,7 @@ export default class Column extends Backbone.View {
 			}).disableSelection();
 
 			// resizable
-			if ( this.column.get( 'editabled' ) ) {
+			if ( this.column.get( 'resizabled' ) ) {
 				let columns = 12;
 				let fullWidth = this.$el.parent().innerWidth();
 				let columnWidth = fullWidth / columns;
@@ -143,7 +145,7 @@ export default class Column extends Backbone.View {
 
 				      	let maxWidth = target.outerWidth() + next.outerWidth();
 				      	if ( screen == 'sm' || screen == 'xs' ) {
-				      		target.resizable( 'option', 'maxWidth', maxWidth );
+				      		target.resizable( 'option', 'maxWidth', fullWidth );
 				      	} else {
 				      		target.resizable( 'option', 'maxWidth', maxWidth - columnWidth );
 				      	}
@@ -172,7 +174,9 @@ export default class Column extends Backbone.View {
 			        		// trigger save next column
 			        		let responsive = {
 			        			cols : currentCol,
-			        			width: ( next.outerWidth() * 100 ) / fullWidth
+			        			styles: {
+			        				width: ( next.outerWidth() * 100 ) / fullWidth
+			        			}
 			        		};
 			        		next.trigger( 'trigger_save_next_column', {
 			        			cid: next.data( 'cid' ),

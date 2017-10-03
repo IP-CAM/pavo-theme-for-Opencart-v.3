@@ -205,7 +205,6 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			1	=> $this->language->get( 'entry_1_columns_text' )
 		);
 
-		// var_dump($this->data['elements']); die();
 		foreach ( $widgets as $key => $widget ) {
 			$widget = $this->pavobuilder->widgets->getWidget( $key );
 			$widgetFields = $widget->fields();
@@ -220,6 +219,9 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		$layout = $id ? $this->model_setting_module->getModule( $id ) : array();
 		$layout = $layout ? $layout : array();
 		$this->data['layout'] = $layout;
+		if ( empty( $layout['uniqid_id'] ) ) {
+			$this->data['layout']['uniqid_id'] = uniqid();
+		}
 		$this->data['layout']['content'] 		= ! empty( $layout['content'] ) ? $this->validateElementData( $layout['content'] ) : array();
 
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
@@ -281,15 +283,30 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->model_setting_module->editModule( $id, $this->request->post );
 		}
 
+		$uniqid_id = ! empty( $this->request->post['uniqid_id'] ) ? $this->request->post['uniqid_id'] : 0;
+		// generate css for layout
+		$saved = $this->pavobuilder->css->save( $uniqid_id, $content );
+
 		// ajax save
 		if ( $is_ajax ) {
 			$this->response->addHeader( 'Content-Type: application/json' );
-			$this->response->setOutput( json_encode( array(
+			$results = array(
 				'status'	=> true,
 				'success'	=> $this->language->get( 'text_success' )
-			) ) );
+			);
+			if ( $saved !== true ) {
+				$results = array(
+					'status'	=> false,
+					'success'	=> $saved
+				);
+			}
+			$this->response->setOutput( json_encode( $results ) );
 		} else {
-			$this->session->data['success'] = $this->language->get( 'text_success' );
+			if ( $saved === true ) {
+				$this->session->data['success'] = $this->language->get( 'text_success' );
+			} else {
+				$this->session->data['error_warning'] = $saved;
+			}
 			// redirect
 			$this->response->redirect( $this->url->link( 'extension/module/pavobuilder/edit', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
 		}

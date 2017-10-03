@@ -40,7 +40,7 @@ export default class Row extends Backbone.View {
 		// each collection
 		if ( this.row.get( 'columns' ) && this.row.get( 'columns' ).length > 0 ) {
 			this.row.get( 'columns' ).map( ( model, index ) => {
-				model.set( 'editabled', index < this.row.get( 'columns' ).length - 1 );
+				model.set( 'resizabled', index < this.row.get( 'columns' ).length - 1 );
 				// map column models add add it to Row View
 				this.addColumn( model );
 			} );

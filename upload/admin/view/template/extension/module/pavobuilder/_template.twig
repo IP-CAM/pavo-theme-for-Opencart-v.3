@@ -347,7 +347,7 @@
 	</div>
 </script>
 <script type="text/html" id="pa-column-template">
-	<div class="pa-column pa-col-<%= [data.screen] %>-<%= data.responsive[data.screen].cols %>" style="<%= data.responsive[data.screen].styles !== undefined && data.responsive[data.screen].styles.width !== undefined ? 'width:' + data.responsive[data.screen].styles.width + '%' : '' %>" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>" data-editabled="<%= data.editabled %>">
+	<div class="pa-column pa-col-<%= [data.screen] %>-<%= data.responsive[data.screen].cols %>" style="<%= data.responsive[data.screen].styles !== undefined && data.responsive[data.screen].styles.width !== undefined ? 'width:' + data.responsive[data.screen].styles.width + '%' : '' %>" data-element="<%= data.settings.element %>" data-cid="<%= data.cid %>" data-resizabled="<%= data.resizabled %>">
 		<div class="pa-controls column-controls top">
 			<a href="#" class="pa-add pa-add-element" title="{{ entry_add_element_text }}"><i class="fa fa-plus" aria-hidden="true"></i></a>
 			<a href="#" class="pa-edit pa-edit-column" title="{{ entry_edit_column_text }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>

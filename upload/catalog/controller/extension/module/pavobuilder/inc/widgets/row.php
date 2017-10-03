@@ -69,7 +69,7 @@ class PA_Widget_Row extends PA_Widgets {
 					'fields'		=> array(
 						array(
 							'type'	=> 'layout-onion',
-							'name'	=> 'layout_onion',
+							'name'	=> 'styles',
 							'label'	=> 'entry_box_text'
 						),
 						array(
@@ -100,7 +100,7 @@ class PA_Widget_Row extends PA_Widgets {
 		);
 	}
 
-	public function render( $settings = array(), $content = '' ){
+	public function render( $settings = array(), $content = '' ) {
 		return $this->load->view( 'extension/module/pavobuilder/pa_row/pa_row', array( 'settings' => $settings, 'content' => $content ) );
 	}
 
