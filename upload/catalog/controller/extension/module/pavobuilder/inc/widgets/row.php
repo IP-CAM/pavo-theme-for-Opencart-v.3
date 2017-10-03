@@ -70,12 +70,7 @@ class PA_Widget_Row extends PA_Widgets {
 						array(
 							'type'	=> 'layout-onion',
 							'name'	=> 'styles',
-							'label'	=> 'entry_box_text'
-						),
-						array(
-							'type'	=> 'colorpicker',
-							'name'	=> 'color',
-							'label'	=> 'entry_color_text'
+							'label'	=> $this->language->get( 'entry_box_text' )
 						)
 					)
 				),
@@ -101,6 +96,23 @@ class PA_Widget_Row extends PA_Widgets {
 	}
 
 	public function render( $settings = array(), $content = '' ) {
+		$class = array();
+		if ( ! empty( $settings['extra_class'] ) ) {
+			$class[] = $settings['extra_class'];
+		}
+		if ( ! empty( $settings['parallax'] ) ) {
+			$class[] = $settings['parallax'];
+		}
+		if ( ! empty( $settings['effect'] ) ) {
+			$class[] = $settings['effect'];
+		}
+
+		$settings['class'] = implode( ' ', $class );
+		$settings['id'] = ! empty( $settings['uniqid_id'] ) ? $settings['uniqid_id'] : '';
+		$settings['id'] = ! $settings['id'] && ! empty( $settings['specifix_id'] ) ? $settings['specifix_id'] : '';
+		if ( ! $settings['id'] ) {
+			$settings['id'] = uniqid();
+		}
 		return $this->load->view( 'extension/module/pavobuilder/pa_row/pa_row', array( 'settings' => $settings, 'content' => $content ) );
 	}
 

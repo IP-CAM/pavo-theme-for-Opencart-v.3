@@ -44,13 +44,13 @@
 					<% _.each( data.field.options, function( options, name ) { %>
 						<optgroup label="<%= name %>">
 							<% _.each( options, function( label, val ){ %>
-								<option value="<%= val %>"<%= val == data.settings[data.field.name] ? ' selected' : '' %>><%= label %></option>
+								<option value="<%= val %>"<%= val == data.field.value ? ' selected' : '' %>><%= label %></option>
 							<% }) %>
 						</optgroup>
 					<% }); %>
 				<% } else { %>
 					<% _.each( data.field.options, function( f ) { %>
-						<option value="<%= f.value %>"<%= f.value == data.settings[data.field.name] ? ' selected' : '' %>><%= f.label %></option>
+						<option value="<%= f.value %>"<%= f.value == data.field.value ? ' selected' : '' %>><%= f.label %></option>
 					<% }); %>
 				<% } %>
 			</select>
@@ -64,7 +64,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<input type="text" name="<%= data.field.name %>" id="<%= data.field.name %>" value="<%= data.settings[data.field.name] %>" class="form-control" />
+			<input type="text" name="<%= data.field.name %>" id="<%= data.field.name %>" value="<%= data.field.value %>" class="form-control" />
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -75,7 +75,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<input type="number" step="<%= data.field.step %>" min="<%= data.field.min %>" max="<%= data.field.max %>" name="<%= data.field.name %>" id="<%= data.field.name %>" value="<%= data.settings[data.field.name] %>" class="form-control" />
+			<input type="number" step="<%= data.field.step %>" min="<%= data.field.min %>" max="<%= data.field.max %>" name="<%= data.field.name %>" id="<%= data.field.name %>" value="<%= data.field.value %>" class="form-control" />
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -88,7 +88,7 @@
 		<div class="col-sm-10">
 			<label class="checkbox-inline">
 				<input type="hidden" name="<%= data.field.name %>" value="0" class="form-control" />
-				<input type="checkbox" name="<%= data.field.name %>" id="<%= data.field.name %>" value="1" class="form-control"<%= data.settings[data.field.name] == 1 ? ' checked' : '' %>/>
+				<input type="checkbox" name="<%= data.field.name %>" id="<%= data.field.name %>" value="1" class="form-control"<%= data.field.value == 1 ? ' checked' : '' %>/>
 			</label>
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
@@ -102,7 +102,7 @@
 		<div class="col-sm-10">
 			<% _.each( data.field.options, function( value ) { %>
 				<label class="radio-inline">
-					<input type="radio" name="<%= data.field.name %>" value="<%= value.value %>" <%= data.settings[data.field.name] == value.value ? ' checked' : '' %>/> <%= value.label %>
+					<input type="radio" name="<%= data.field.name %>" value="<%= value.value %>" <%= data.field.value == value.value ? ' checked' : '' %>/> <%= value.label %>
 			    </label>
 			<% } ); %>
 			<% if ( data.field.desc ) { %>
@@ -115,7 +115,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<input type="text" name="<%= data.field.name %>" value="<%= data.settings[data.field.name] %>" class="pa-colorpicker-input"/>
+			<input type="text" name="<%= data.field.name %>" value="<%= data.field.value %>" class="pa-colorpicker-input"/>
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -126,11 +126,11 @@
 	<% var uniqid = new Date().getTime() %>
 	<%
 		var image = '';
-		if ( data.settings[data.field.name] !== undefined ) {
-			var lastIndex = new File( [''], data.settings[data.field.name] ).name.lastIndexOf('.');
-			var name = data.settings[data.field.name].slice( 0, lastIndex );
-			var ext = data.settings[data.field.name].slice( lastIndex );
-			image = PA_PARAMS.site_url + 'image/cache/' + name + '-100x100' + ext;
+		if ( data.field.value !== undefined && data.field.value ) {
+			var lastIndex = new File( [''], data.field.value ).name.lastIndexOf('.');
+			var name = data.field.value.slice( 0, lastIndex );
+			var ext = data.field.value.slice( lastIndex );
+			image = name ? PA_PARAMS.site_url + 'image/cache/' + name + '-100x100' + ext : '';
 		}
 	%>
 	<div class="form-group">
@@ -139,7 +139,7 @@
 			<a href="#" id="thumb-<%= uniqid %>" data-toggle="image" class="img-thumbnail" data-original-title="" title="">
 				<img src="<%= image %>" />
 			</a>
-            <input type="hidden" name="<%= data.field.name %>" value="<%= data.settings[data.field.name] %>" id="input-<%= uniqid %>">
+            <input type="hidden" name="<%= data.field.name %>" value="<%= data.field.value %>" id="input-<%= uniqid %>">
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -160,29 +160,66 @@
 </script>
 <script type="text/html" id="pa-layout-onion-form-field">
 	<div class="form-group">
-		<label class="col-sm-2 control-label"><%= data.field.label %></label>
+		<label class="col-sm-2 control-label"><%= PA_PARAMS.languages.entry_box_text %></label>
 		<div class="col-sm-10">
 			<div class="pa-layout-onion">
 				<div class="margin">
-					<input type="number" class="top" step="any" name="<%= data.field.name %>[margin_top]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].margin_top != undefined ? data.settings[data.field.name].margin_top : '' %>" />
-					<input type="number" class="right" step="any" name="<%= data.field.name %>[margin_right]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].margin_right != undefined ? data.settings[data.field.name].margin_right : '' %>" />
-					<input type="number" class="bottom" step="any" name="<%= data.field.name %>[margin_bottom]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].margin_bottom != undefined ? data.settings[data.field.name].margin_bottom : '' %>" />
-					<input type="number" class="left" step="any" name="<%= data.field.name %>[margin_left]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].margin_left != undefined ? data.settings[data.field.name].margin_left : '' %>" />
+					<input type="number" class="top" step="any" name="<%= data.field.name %>[margin_top]" value="<%= data.field.value && data.field.value.margin_top != undefined ? data.field.value.margin_top : '' %>" />
+					<input type="number" class="right" step="any" name="<%= data.field.name %>[margin_right]" value="<%= data.field.value && data.field.value.margin_right != undefined ? data.field.value.margin_right : '' %>" />
+					<input type="number" class="bottom" step="any" name="<%= data.field.name %>[margin_bottom]" value="<%= data.field.value && data.field.value.margin_bottom != undefined ? data.field.value.margin_bottom : '' %>" />
+					<input type="number" class="left" step="any" name="<%= data.field.name %>[margin_left]" value="<%= data.field.value && data.field.value.margin_left != undefined ? data.field.value.margin_left : '' %>" />
 					<div class="border">
-						<input type="number" class="top" step="any" name="<%= data.field.name %>[border_top]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].border_top != undefined ? data.settings[data.field.name].border_top : '' %>" />
-						<input type="number" class="right" step="any" name="<%= data.field.name %>[border_right]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].border_right != undefined ? data.settings[data.field.name].border_right : '' %>" />
-						<input type="number" class="bottom" step="any" name="<%= data.field.name %>[border_bottom]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].border_bottom != undefined ? data.settings[data.field.name].border_bottom : '' %>" />
-						<input type="number" class="left" step="any" name="<%= data.field.name %>[border_left]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].border_left != undefined ? data.settings[data.field.name].border_left : '' %>" />
+						<input type="number" class="top" step="any" name="<%= data.field.name %>[border_top]" value="<%= data.field.value && data.field.value.border_top != undefined ? data.field.value.border_top : '' %>" />
+						<input type="number" class="right" step="any" name="<%= data.field.name %>[border_right]" value="<%= data.field.value && data.field.value.border_right != undefined ? data.field.value.border_right : '' %>" />
+						<input type="number" class="bottom" step="any" name="<%= data.field.name %>[border_bottom]" value="<%= data.field.value && data.field.value.border_bottom != undefined ? data.field.value.border_bottom : '' %>" />
+						<input type="number" class="left" step="any" name="<%= data.field.name %>[border_left]" value="<%= data.field.value && data.field.value.border_left != undefined ? data.field.value.border_left : '' %>" />
 						<div class="padding">
-							<input type="number" class="top" step="any" name="<%= data.field.name %>[padding_top]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].padding_top != undefined ? data.settings[data.field.name].padding_top : '' %>" />
-							<input type="number" class="right" step="any" name="<%= data.field.name %>[padding_right]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].padding_right != undefined ? data.settings[data.field.name].padding_right : '' %>" />
-							<input type="number" class="bottom" step="any" name="<%= data.field.name %>[padding_bottom]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].padding_bottom != undefined ? data.settings[data.field.name].padding_bottom : '' %>" />
-							<input type="number" class="left" step="any" name="<%= data.field.name %>[padding_left]" value="<%= data.settings[data.field.name] && data.settings[data.field.name].padding_left != undefined ? data.settings[data.field.name].padding_left : '' %>" />
+							<input type="number" class="top" step="any" name="<%= data.field.name %>[padding_top]" value="<%= data.field.value && data.field.value.padding_top != undefined ? data.field.value.padding_top : '' %>" />
+							<input type="number" class="right" step="any" name="<%= data.field.name %>[padding_right]" value="<%= data.field.value && data.field.value.padding_right != undefined ? data.field.value.padding_right : '' %>" />
+							<input type="number" class="bottom" step="any" name="<%= data.field.name %>[padding_bottom]" value="<%= data.field.value && data.field.value.padding_bottom != undefined ? data.field.value.padding_bottom : '' %>" />
+							<input type="number" class="left" step="any" name="<%= data.field.name %>[padding_left]" value="<%= data.field.value && data.field.value.padding_left != undefined ? data.field.value.padding_left : '' %>" />
 							<div class="content"></div>
 						</div>
 					</div>
 				</div>
 			</div>
+			<% if ( data.field.desc ) { %>
+				<p style="font-style: italic"><%= data.field.desc %></p>
+			<% } %>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><%= PA_PARAMS.languages.entry_border_color_text %></label>
+		<div class="col-sm-10">
+			<input type="text" name="<%= data.field.name %>[border_color]" value="<%= data.field.value.border_color %>" class="pa-colorpicker-input" />
+			<% if ( data.field.desc ) { %>
+				<p style="font-style: italic"><%= data.field.desc %></p>
+			<% } %>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><%= PA_PARAMS.languages.entry_border_style_text %></label>
+		<div class="col-sm-10">
+			<select name="<%= data.field.name %>[border_style]" class="form-control">
+				<option value="none"<%= data.field.value.border_style == 'none' ? ' selected' : '' %>>None</option>
+				<option value="hidden"<%= data.field.value.border_style == 'hidden' ? ' selected' : '' %>>Hidden</option>
+				<option value="dotted"<%= data.field.value.border_style == 'dotted' ? ' selected' : '' %>>Dotted</option>
+				<option value="dashed"<%= data.field.value.border_style == 'dashed' ? ' selected' : '' %>>Dashed</option>
+				<option value="solid"<%= data.field.value.border_style == 'solid' ? ' selected' : '' %>>Solid</option>
+				<option value="double"<%= data.field.value.border_style == 'double' ? ' selected' : '' %>>Double</option>
+				<option value="groove"<%= data.field.value.border_style == 'groove' ? ' selected' : '' %>>Groove</option>
+				<option value="ridge"<%= data.field.value.border_style == 'ridge' ? ' selected' : '' %>>Ridge</option>
+				<option value="inset"<%= data.field.value.border_style == 'inset' ? ' selected' : '' %>>Inset</option>
+				<option value="outset"<%= data.field.value.border_style == 'outset' ? ' selected' : '' %>>Outset</option>
+				<option value="initial"<%= data.field.value.border_style == 'initial' ? ' selected' : '' %>>Initial</option>
+				<option value="inherit"<%= data.field.value.border_style == 'inherit' ? ' selected' : '' %>></option>
+			</select>
+		</div>
+	</div>
+	<div class="form-group">
+		<label class="col-sm-2 control-label"><%= PA_PARAMS.languages.entry_color_text %></label>
+		<div class="col-sm-10">
+			<input type="text" name="<%= data.field.name %>[color]" value="<%= data.field.value.color %>" class="pa-colorpicker-input" />
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -194,7 +231,7 @@
 	<div class="form-group">
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
-			<textarea id="<%= uniqid %>" name="<%= data.field.name %>" class="form-control pa-editor" data-toggle="summernote"><% print( _.unescape( data.settings[data.field.name] ) ) %></textarea>
+			<textarea id="<%= uniqid %>" name="<%= data.field.name %>" class="form-control pa-editor" data-toggle="summernote"><% print( _.unescape( data.field.value ) ) %></textarea>
 			<% if ( data.field.desc ) { %>
 				<p style="font-style: italic"><%= data.field.desc %></p>
 			<% } %>
@@ -211,7 +248,7 @@
 	</script>
 </script>
 <script type="text/html" id="pa-responsive-form-field">
-	<% var settings = data.settings[data.field.name] ? data.settings[data.field.name] : {}; %>
+	<% var settings = data.field.value ? data.field.value : {}; %>
 	<table class="pa-table table table-striped">
 		<thead>
 			<tr>
@@ -228,7 +265,7 @@
 						<select name="<%= data.field.name %>[<%= value %>][cols]" class="form-control">
 							<% _.each( PA_PARAMS.width_roles, function( text, cols ) { %>
 								<option value="<%= cols %>"<%= settings[value] !== undefined && cols == settings[value].cols ? ' selected' : '' %>><%= text %></option>
-							<% } ) %>
+							<% } ); %>
 						</select>
 					</td>
 					<td class="text-center">

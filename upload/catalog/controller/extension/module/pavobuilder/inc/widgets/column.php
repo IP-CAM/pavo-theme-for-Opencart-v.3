@@ -50,12 +50,7 @@ class PA_Widget_Column extends PA_Widgets {
 						array(
 							'type'	=> 'layout-onion',
 							'name'	=> 'styles',
-							'label'	=> 'entry_box_text'
-						),
-						array(
-							'type'	=> 'colorpicker',
-							'name'	=> 'color',
-							'label'	=> 'entry_color_text'
+							'label'	=> $this->language->get( 'entry_box_text' )
 						)
 					)
 				),

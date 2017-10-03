@@ -58,35 +58,44 @@ class PA_Css extends Controller {
 			$responsive = ! empty( $element['responsive'] ) ? $element['responsive'] : array();
 			// just columns
 			if ( $responsive ) {
+						// var_dump($element['columns'][0]['responsive']);
 				$responsive = array_reverse( $responsive );
 				foreach ( $responsive as $type => $opt ) {
 					if ( ! empty( $opt['cols'] ) ) {
+						$customWidth = array();
+						$write = false;
 						switch ( $type ) {
 							case 'lg':
-								$css[] = '@media (min-width: 1200px){';
+								$customWidth[] = '@media (min-width: 1200px){';
 								break;
 
 							case 'md':
-								$css[] = '@media (min-width: 992px){';
+								$customWidth[] = '@media (min-width: 992px){';
 								break;
 
 							case 'sm':
-								$css[] = '@media (min-width: 768px){';
+								$customWidth[] = '@media (min-width: 768px){';
 								break;
 							
 							default:
-								# code...
+								$customWidth[] = '@media (max-width: 768px){';
 								break;
 						}
-						$css[] = '#' . $id . '.col-' . $type . '-' . $opt['cols'] . '{';
+
+						$customWidth[] = '#' . $id . '.col-' . $type . '-' . $opt['cols'] . '{';
 
 						$styles = ! empty( $opt['styles'] ) ? $opt['styles'] : array();
 						if ( ! empty( $styles['width'] ) ) {
-							$css[] = 'width:' . $styles['width'] . '%;';
+							$write = true;
+							$customWidth[] = 'width:' . $styles['width'] . '%;';
 						}
-						$css[] = '}';
-						if ( in_array( $type, array( 'lg', 'md', 'sm' ) ) ) {
-							$css[] = '}';
+						$customWidth[] = '}';
+						if ( in_array( $type, array( 'lg', 'md', 'sm', 'xs' ) ) ) {
+							$customWidth[] = '}';
+						}
+
+						if ( $write ) {
+							$css[] = implode( ' ', $customWidth );
 						}
 					}
 				}

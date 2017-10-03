@@ -101,9 +101,7 @@ export default class EditForm extends Backbone.View {
 					}
 
 					// set default values
-					if ( ( cloneSettings[cloneField.name] == undefined || cloneField.value == '' ) && cloneField.default !== undefined ) {
-						cloneSettings[cloneField.name] = cloneField.default;
-					}
+					cloneField.value = cloneSettings[cloneField.name] !== undefined ? cloneSettings[cloneField.name] : ( cloneField.default !== undefined ? cloneField.default : false );
 					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + cloneField.type + '-form-field' ).html(), { variable: 'data' } )( { field: cloneField, settings: cloneSettings } ) );
 				} );
 			} );
@@ -139,6 +137,7 @@ export default class EditForm extends Backbone.View {
 	 */
 	_close() {
 		$( 'body' ).find( this.$el ).modal( 'hide' );
+		$( 'body' ).find( '.sp-container' ).remove();
 		this.data.set( 'editing', false );
 	}
 
