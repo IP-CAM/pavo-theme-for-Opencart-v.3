@@ -23,7 +23,7 @@ class PavoThemerHelper {
 	 * write file
 	 */
 	public function writeFile( $file = '', $content = '' ) {
-		if ( ! is_writable( dirname( $file ) ) ) return false;
+		if ( ! is_writable( dirname( $file ) ) || ! is_writable( $file ) ) return false;
 		$fopen = fopen( $file, 'w+' );
 		if ( $fopen ) {
 			fwrite( $fopen, $content );

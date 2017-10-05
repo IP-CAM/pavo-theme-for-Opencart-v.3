@@ -39,7 +39,7 @@ class PA_Css extends Controller {
 		}
 
 		if ( $id ) {
-			$css[] = '#' . $id . ' ' . $inner . '{';
+			$css[] = '#' . $id . ' ' . $inner . ' > div:first{';
 			$css[] = ! empty( $settings['color'] ) ? 'color:' . $settings['color'] . ';' : '';
 			$base_url = $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG;
 			$css[] = ! empty( $settings['background_image'] ) ? 'background-image: url( '. $base_url . 'image/' . $settings['background_image'].' )' . ';' : '';
