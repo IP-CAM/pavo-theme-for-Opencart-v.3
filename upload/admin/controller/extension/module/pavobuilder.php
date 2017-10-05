@@ -48,6 +48,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			foreach ( $this->data['layouts'] as $k => $layout ) {
 				$this->data['layouts'][$k]['edit_link'] = $this->url->link( 'extension/module/pavobuilder', 'module_id=' . $layout['module_id'] . '&user_token=' . $this->session->data['user_token'], true );
 			}
+			$this->data['delete_url'] = str_replace( '&amp;', '&', $this->url->link( 'extension/module/pavobuilder/delete', 'user_token=' . $this->session->data['user_token'], true ) );
 			// set page document title
 			if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
 
@@ -345,6 +346,24 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		}
 
 		return $content;
+	}
+
+	public function delete() {
+		$this->load->language( 'extension/module/pavobuilder' );
+		if ( ! $this->user->hasPermission( 'modify', 'extension/module/pavobuilder' ) ) {
+			$this->error['warning'] = $this->language->get('error_permission');
+		} else {
+			if ( empty( $this->request->post['selected'] ) ) {
+				$this->error['warning'] = $this->language->get('error_no_selected');
+			} else {
+				$selected = $this->request->post['selected'];
+				$this->load->model( 'setting/module' );
+				foreach ( $selected as $id ) {
+					$this->model_setting_module->deleteModule( $id );
+				}
+			}
+		}
+		$this->response->redirect( $this->url->link( 'extension/module/pavobuilder/index', 'user_token=' . $this->session->data['user_token'], true ) );
 	}
 
 	/**

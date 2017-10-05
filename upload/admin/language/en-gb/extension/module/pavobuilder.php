@@ -5,6 +5,8 @@ $_['updating_text'] 		= 'Updating ...';
 $_['waiting_text'] 			= 'Please wait ...';
 $_['text_success']          = 'Success: You have modified layout!';
 $_['text_warning']          = 'ERROR: Permission denied';
+$_['error_permission'] 		= 'ERROR: permission denied';
+$_['error_no_selected']		= 'ERROR: no selected';
 // layouts list
 $_['layout_list_text'] 		= 'Layouts';
 $_['entry_add_new_text'] 	= 'Add New';
