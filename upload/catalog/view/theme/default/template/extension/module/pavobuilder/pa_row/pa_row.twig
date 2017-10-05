@@ -1,0 +1,12 @@
+<div class="pa-row-container {{ settings.class }}" id="{{ settings.id }}" data-uniqid="{{ settings.specifix_id }}">
+	{% if ( settings.background_video ) %}
+		<div class="pa-bg-video" data-video="{{ settings.background_video }}"></div>
+	{% endif %}
+	<div class="pa-row-inner">
+		<div class="{{ settings.layout == 'boxed' ? 'container' : 'container-fullwidth' }}">
+			<div class="row">
+				{{ content }}
+			</div>
+		</div>
+	</div>
+</div>

@@ -18,7 +18,7 @@ class PA_Css extends Controller {
 	public function build( $content ) {
 		$css = array();
 		foreach ( $content as $key => $row ) {
-			$css[] = implode( '', $this->elementBuilder( $row, '.row-inner' ) );
+			$css[] = implode( '', $this->elementBuilder( $row, '.pa-row-inner' ) );
 		}
 
 		$css = implode( '', $css );
@@ -28,27 +28,33 @@ class PA_Css extends Controller {
 	/**
 	 * element builder css
 	 */
-	private function elementBuilder( $element = array(), $inner = '.row-inner' ) {
+	private function elementBuilder( $element = array(), $inner = '.pa-row-inner' ) {
 		$css = array();
 		$settings = ! empty( $element['settings'] ) ? $element['settings'] : array();
 		$id = false;
 		if ( ! empty( $settings['uniqid_id'] ) ) {
 			$id = $settings['uniqid_id'];
-			// $css[] = '#'.$settings['uniqid_id'].' ' .$inner. '{';
 		} else if ( ! empty( $settings['specifix_id'] ) ) {
 			$id = $settings['specifix_id'];
-			// $css[] = '#'.$settings['specifix_id'].' ' .$inner. '{';
 		}
 
 		if ( $id ) {
-			$css[] = '#'. $id .' ' .$inner. '{';
+			$css[] = '#' . $id . ' ' . $inner . '{';
 			$css[] = ! empty( $settings['color'] ) ? 'color:' . $settings['color'] . ';' : '';
-			$css[] = ! empty( $settings['background-image'] ) ? 'background-image: url( '.$settings['background-image'].' )' . ';' : '';
-			$css[] = ! empty( $settings['background-color'] ) ? 'background-color: '.$settings['background-color'] . ';' : '';
+			$base_url = $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG;
+			$css[] = ! empty( $settings['background_image'] ) ? 'background-image: url( '. $base_url . 'image/' . $settings['background_image'].' )' . ';' : '';
+			$css[] = ! empty( $settings['background_color'] ) ? 'background-color: '.$settings['background_color'] . ';' : '';
+			if ( ! isset( $settings['parallax'] ) || ! $settings['parallax'] ) {
+				$css[] = ! empty( $settings['background_repeat'] ) ? 'background-repeat: '.$settings['background_repeat'] . ';' : '';
+				$css[] = ! empty( $settings['background_position'] ) ? 'background-position: '.$settings['background_position'] . ';' : '';
+			}
 			if ( ! empty( $settings['styles'] ) ) {
 				foreach ( $settings['styles'] as $attr => $value ) {
-					if ( $value ) {
-						$css[] = str_replace( '_', '-', $attr ) . ':' . $value . 'px;';
+					$parser = explode( '_', $attr );
+					if ( isset( $parser[1] ) && in_array( $parser[1], array( 'top', 'left', 'bottom', 'right' ) ) ) {
+						$css[] = $value ? str_replace( '_', '-', $attr ) . ':' . $value . 'px;' : 0;
+					} else {
+						$css[] = $value ? str_replace( '_', '-', $attr ) . ':' . $value . ';' : '';
 					}
 				}
 			}
@@ -58,7 +64,7 @@ class PA_Css extends Controller {
 			$responsive = ! empty( $element['responsive'] ) ? $element['responsive'] : array();
 			// just columns
 			if ( $responsive ) {
-						// var_dump($element['columns'][0]['responsive']);
+				// var_dump($element['columns'][0]['responsive']);
 				$responsive = array_reverse( $responsive );
 				foreach ( $responsive as $type => $opt ) {
 					if ( ! empty( $opt['cols'] ) ) {
@@ -100,10 +106,10 @@ class PA_Css extends Controller {
 					}
 				}
 			}
-		}// die();
+		}
 
 		$subs = ! empty( $element['columns'] ) ? $element['columns'] : ( ! empty( $element['elements'] ) ? $element['elements'] : array() );
-		$inner = ! empty( $element['columns'] ) ? '.column-inner' : '.element-inner';
+		$inner = ! empty( $element['columns'] ) ? '.pa-column-inner' : '.element-inner';
 
 		if ( $subs ) {
 			foreach ( $subs as $sub ) {

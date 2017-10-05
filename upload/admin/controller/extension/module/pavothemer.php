@@ -183,6 +183,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 
 			$cache_key = 'pavothemer_extensions_api' . $apiType;
 			$purchased_codes = $this->config->get( 'pavothemer_purchased_codes' );
+			$purchased_codes = $purchased_codes ? $purchased_codes : array();
 			// get cached before
 			// $this->cache->delete( $cache_key );
 			$extensions = $this->cache->get( $cache_key );

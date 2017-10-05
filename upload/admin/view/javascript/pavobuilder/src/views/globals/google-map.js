@@ -10,7 +10,10 @@ export default class GoogleMap extends Backbone.View {
 	          	center: { lat: -33.8688, lng: 151.2195 },
 	          	zoom: 13,
 	          	mapTypeControl: 1,
-	          	mapTypeId: 'roadmap'
+	          	mapTypeId: 'roadmap',
+	          	draggable: 1,
+	          	scrollwheel: 1,
+	          	zoomControl: 1
 	        };
 	}
 

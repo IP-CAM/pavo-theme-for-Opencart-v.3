@@ -33,6 +33,31 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 	 */
 	private function renderElement( $data = array(), $content = '' ) {
 		$settings = ! empty( $data['settings'] ) ? $data['settings'] : array();
+		if ( ! empty( $settings['background_video'] ) ) {
+			$url = $settings['background_video'];
+			// $url = 'https://youtu.be/2WRz96r9axM';
+			// $url = 'https://www.youtube.com/watch?v=2WRz96r9axM';
+			// validate youtube url
+			preg_match( '/\s*[a-zA-Z\/\/:\.]*youtu(be.com\/watch\?v=|.be\/)([a-zA-Z0-9\-_]+)([a-zA-Z0-9\/\*\-\_\?\&\;\%\=\.]*)/i', $url, $match );
+			$video_id = ! empty( $match[2] ) ? $match[2] : false;
+			$settings['background_video'] = false;
+			if ( $video_id ) {
+				$query = array(
+					'playlist'		=> $video_id,
+					'enablejsapi' 	=> 1,
+					'iv_load_policy'	=> 3,
+					'disablekb'		=> 1,
+					'autoplay'		=> 1,
+					'controls'		=> 0,
+					'showinfo'		=> 0,
+					'rel'			=> 0,
+					'loop'			=> 1,
+					'mute'			=> 1,
+					'wmode'			=> 'transparent'
+				);
+				$settings['background_video'] = 'https://youtube.com/embed/' . $video_id . '?' . http_build_query( $query );
+			}
+		}
 		$this->load->model( 'setting/module' );
 		$content = '';
 

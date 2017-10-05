@@ -101,7 +101,7 @@ export default class EditForm extends Backbone.View {
 					}
 
 					// set default values
-					cloneField.value = cloneSettings[cloneField.name] !== undefined ? cloneSettings[cloneField.name] : ( cloneField.default !== undefined ? cloneField.default : false );
+					cloneField.value = cloneSettings[cloneField.name] !== undefined ? cloneSettings[cloneField.name] : ( cloneField.default !== undefined ? cloneField.default : '' );
 					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + cloneField.type + '-form-field' ).html(), { variable: 'data' } )( { field: cloneField, settings: cloneSettings } ) );
 				} );
 			} );

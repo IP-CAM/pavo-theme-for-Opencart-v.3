@@ -44,17 +44,67 @@ class PA_Widget_Row extends PA_Widgets {
 					'fields'		=> array(
 						array(
 							'type'	=> 'colorpicker',
-							'name'	=> 'background-color',
+							'name'	=> 'background_color',
 							'label'	=> $this->language->get( 'entry_background_color_text' )
 						),
 						array(
 							'type'	=> 'image',
-							'name'	=> 'background-image',
+							'name'	=> 'background_image',
 							'label'	=> $this->language->get( 'entry_background_image_text' )
 						),
 						array(
+							'type'	=> 'select',
+							'name'	=> 'background_position',
+							'label'	=> $this->language->get( 'entry_background_position' ),
+							'options'	=> array(
+								array(
+									'label'		=> 'Inherit',
+									'value'		=> 'inherit'
+								),
+								array(
+									'label'		=> 'Top Left',
+									'value'		=> 'top left'
+								),
+								array(
+									'label'		=> 'Top Right',
+									'value'		=> 'top right'
+								),
+								array(
+									'label'		=> 'Bottom Left',
+									'value'		=> 'bottom left'
+								),
+								array(
+									'label'		=> 'Bottom Right',
+									'value'		=> 'bottom right'
+								),
+								array(
+									'label'		=> 'Center Center',
+									'value'		=> 'center center'
+								)
+							)
+						),
+						array(
+							'type'	=> 'select',
+							'name'	=> 'background_repeat',
+							'label'	=> $this->language->get( 'entry_background_repeat_text' ),
+							'options'	=> array(
+								array(
+									'label'	=> 'No Repeat',
+									'value'	=> 'no-repeat'
+								),
+								array(
+									'label'	=> 'Repeat x',
+									'value'	=> 'repeat-x'
+								),
+								array(
+									'label'	=> 'Repeat y',
+									'value'	=> 'repeat-y'
+								)
+							)
+						),
+						array(
 							'type'	=> 'text',
-							'name'	=> 'background-video',
+							'name'	=> 'background_video',
 							'label'	=> $this->language->get( 'entry_video_url_text' )
 						),
 						array(
@@ -98,10 +148,10 @@ class PA_Widget_Row extends PA_Widgets {
 	public function render( $settings = array(), $content = '' ) {
 		$class = array();
 		if ( ! empty( $settings['extra_class'] ) ) {
-			$class[] = $settings['extra_class'];
+			$class[] = $settings['extra_class'] ? $settings['extra_class'] : '';
 		}
 		if ( ! empty( $settings['parallax'] ) ) {
-			$class[] = $settings['parallax'];
+			$class[] = $settings['parallax'] ? 'pa-parallax' : '';
 		}
 		if ( ! empty( $settings['effect'] ) ) {
 			$class[] = $settings['effect'];

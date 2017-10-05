@@ -11,7 +11,7 @@ export default class GoogleMap {
 	}
 
 	render() {
-		if ( google === undefined ) return;
+		if ( typeof google === 'undefined' ) return;
 
 		let data = Object.assign( {}, this.data );
 		if ( data.lat && data.lng ) {
