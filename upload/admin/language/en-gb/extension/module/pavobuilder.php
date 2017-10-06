@@ -54,7 +54,9 @@ $_['entry_general_text']		= 'General';
 $_['entry_animate_text']		= 'Animate';
 $_['entry_row_id_text']			= 'Row ID';
 $_['entry_column_id_text']		= 'Column ID';
+$_['entry_column_desc_text']	= 'Specific id for this element';
 $_['entry_extra_class_text']	= 'Extra Class';
+$_['entry_extra_class_desc_text']	= 'Addition for this element. Ex: \'addition_1 addition_2\' ';
 $_['entry_layout_type_text']	= 'Layout';
 $_['entry_content_text']		= 'Content';
 $_['entry_wide_text']			= 'Wide';
@@ -79,6 +81,14 @@ $_['entry_padding_text']		= 'Padding';
 $_['entry_margin_text']			= 'Margin';
 $_['entry_text_block']			= 'Text Block';
 $_['entry_google_map']			= 'Google Map';
+$_['entry_reassurance_text']	= 'Reassurance';
+$_['entry_single_image_text']	= 'Single Image';
+$_['entry_image_size_text']		= 'Image Size';
+$_['entry_image_size_desc']		= 'Enter image size. Ex: \'full\' or width x height( 200x200 )';
+$_['entry_link_text']			= 'Link';
+$_['entry_link_desc_text']		= 'Enter link, default is #';
+$_['entry_alt_text']			= 'Alt';
+$_['entry_alt_desc_text']		= 'Alt attribute for image';
 
 // columns
 $_['entry_device_text']			= 'Device';

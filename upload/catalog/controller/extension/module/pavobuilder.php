@@ -84,6 +84,12 @@ class ControllerExtensionModulePavoBuilder extends Controller {
 		if ( isset( $data['widget'] ) && $data['widget'] == 'pa_column' && ! empty( $data['responsive'] ) ) {
 			$settings['responsive'] = $data['responsive'];
 		}
+
+		if ( ! in_array( $data['widget'], array( 'pa_row', 'pa_column' ) ) ) {
+			ob_start();
+			echo $this->pavobuilder->widgets->renderWidget( $data['widget'], $settings, $content );
+			return $this->load->view( 'extension/module/pavobuilder/pa_element_wrapper', array( 'data' => $data, 'settings' => $settings, 'content' => ob_get_clean() ) );
+		}
 		return $this->pavobuilder->widgets->renderWidget( $data['widget'], $settings, $content );
 	}
 

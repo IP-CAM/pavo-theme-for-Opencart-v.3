@@ -15,7 +15,8 @@ class PA_Widget_Text extends PA_Widgets {
 						array(
 							'type'	=> 'text',
 							'name'	=> 'extra_class',
-							'label'	=> $this->language->get( 'entry_extra_class_text' )
+							'label'	=> $this->language->get( 'entry_extra_class_text' ),
+							'desc'	=> $this->language->get( 'entry_extra_class_desc_text' )
 						),
 						array(
 							'type'		=> 'editor',

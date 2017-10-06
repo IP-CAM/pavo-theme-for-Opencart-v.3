@@ -1,5 +1,5 @@
-<div class="pa-element-wrapper">
-	<div class="pa-element-inner">
+<div class="pa-element-container" id="{{ settings.specifix_id }}" data-uniqid="{{ settings.specifix_id }}">
+	<div class="pa-element-inner {{ data.widget ? [ data.widget, '_', 'element' ] | join() : ( data.module ? [ data.module, '_', 'module' ] | join() : '' ) }}">
 		{{ content }}
 	</div>
 </div>

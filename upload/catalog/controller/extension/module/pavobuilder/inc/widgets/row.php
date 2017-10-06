@@ -15,12 +15,14 @@ class PA_Widget_Row extends PA_Widgets {
 						array(
 							'type'	=> 'text',
 							'name'	=> 'uniqid_id',
-							'label'	=> $this->language->get( 'entry_row_id_text' )
+							'label'	=> $this->language->get( 'entry_row_id_text' ),
+							'desc'	=> $this->language->get( 'entry_column_desc_text' )
 						),
 						array(
 							'type'	=> 'text',
 							'name'	=> 'extra_class',
-							'label'	=> $this->language->get( 'entry_extra_class_text' )
+							'label'	=> $this->language->get( 'entry_extra_class_text' ),
+							'desc'	=> $this->language->get( 'entry_extra_class_desc_text' )
 						),
 						array(
 							'type'	=> 'select',
