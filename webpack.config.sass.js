@@ -53,9 +53,9 @@ module.exports = {
 			},
 			{
 				// image extensions, fonts extensions
-				test: /\.(png|jpg|jpeg|ttf|woff|woff2|eot|svg|)$/,
+				test: /\.(png|jpg|jpeg|ttf|woff|woff2|eot|svg|gif|)$/,
 				exclude: /node_modules/,
-				loader: [ 'url-loader', 'file-loader?emitFile=false' ]
+				loader: [ 'url-loader?emitFile=false' ]//, 'file-loader?emitFile=false'
 			}
 		]
 	},

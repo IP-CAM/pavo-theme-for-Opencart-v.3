@@ -103,6 +103,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			unset( $this->session->data['success'] );
 		}
 		if ( ! empty( $this->session->data['error_warning'] ) ) {
+
 			$this->data['error_warning'] = $this->session->data['error_warning'];
 			unset( $this->session->data['error_warning'] );
 		}
@@ -143,6 +144,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		if ( ! class_exists( 'PavoThemerHelper' ) && file_exists( $file ) ) {
 			require $file;
 		}
+
 		// theme helper
 		$theme = $this->config->get( 'config_theme' );
 		$themeHelper = PavoThemerHelper::instance( $theme );
@@ -253,6 +255,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		// set page document title
 		if ( $this->language && $this->document ) $this->document->setTitle( $this->language->get( 'heading_title' ) );
 		$this->data['errors'] = $this->errors;
+
 		$this->data = array_merge( array(
 			'header'		=> $this->load->controller( 'common/header' ),
 			'column_left' 	=> $this->load->controller( 'common/column_left' ),
@@ -266,6 +269,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 	 * save module
 	 */
 	public function saveModule( $id = 0 ) {
+		if ( ! $this->validate() ) return;
 		$this->load->model( 'setting/extension' );
 		$this->load->model( 'setting/module' );
 		$this->load->language( 'extension/module/pavobuilder' );
@@ -374,7 +378,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->error['warning'] = $this->language->get('error_permission');
 		}
 
-		return !$this->error;
+		return ! $this->error;
 	}
 
 }

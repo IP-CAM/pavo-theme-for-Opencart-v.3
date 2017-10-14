@@ -26,7 +26,7 @@ export default class Column extends Backbone.View {
 				new Promise( ( resolve, reject ) => {
 					let screen = this.column.get( 'screen' );
 					let columns = 12;
-					let fullWidth = this.$el.parent().width();
+					let fullWidth = this.$el.parent().innerWidth();
 					let columnWidth = fullWidth / columns;
 					let target = ui.element;
 			        let next = target.next();
@@ -36,10 +36,11 @@ export default class Column extends Backbone.View {
 	        		currentCol = currentCol ? currentCol : 1;
 
 	        		let responsive = { ...this.column.get( 'responsive' ) };
+	        		let percent = ( ui.size.width * 100 ) / fullWidth;
 	        		responsive[screen] = {
 	        			cols: currentCol,
 	        			styles: {
-	        				width: ( ui.size.width * 100 ) / fullWidth
+	        				width: percent.toFixed( 4 )
 	        			}
 	        		}
 	        		resolve( responsive );
@@ -53,7 +54,10 @@ export default class Column extends Backbone.View {
 					let responsive = { ...this.column.get( 'responsive' ) };
 					let screen = this.column.get( 'screen' );
 					responsive[screen] = data.responsive;
-					this.column.set( 'responsive', responsive );
+					this.column.set( {
+						// reRender: true,
+						responsive: responsive
+					} );
 				}
 			}
 		};
@@ -127,9 +131,9 @@ export default class Column extends Backbone.View {
 
 			// resizable
 			if ( this.column.get( 'resizabled' ) ) {
-				let columns = 12;
+				if ( this.$el.parent().length === 0 ) return;
 				let fullWidth = this.$el.parent().innerWidth();
-				let columnWidth = fullWidth / columns;
+				let columnWidth = fullWidth / 12;
 				let screen = this.column.get( 'screen' );
 
 				this.$el.resizable({
@@ -137,26 +141,47 @@ export default class Column extends Backbone.View {
 				    start: ( event, ui ) => {
 				      	let target = ui.element;
 				        let next = target.next();
+				        let row = $( target ).parents( '.pa-row:first' );
+				        let columns = row.find( '> .pa-column' );
 
 				        ui.element.cid = $( target ).data( 'cid' );
-				      	ui.size.currentOriginWidth = target.outerWidth();
-				      	ui.size.nextOriginWidth = next.outerWidth();
+				      	ui.size.currentOriginWidth = target.get( 0 ).getBoundingClientRect().width;// target.outerWidth();
+				      	ui.size.nextOriginWidth = next.length > 0 ? next.get(0).getBoundingClientRect().width : 0;//next.outerWidth();
 				      	target.resizable( 'option', 'minWidth', columnWidth );
 
-				      	let maxWidth = target.outerWidth() + next.outerWidth();
+				      	let maxWidth = ui.size.currentOriginWidth + ui.size.nextOriginWidth;//target.outerWidth() + next.outerWidth();
 				      	if ( screen == 'sm' || screen == 'xs' ) {
-				      		target.resizable( 'option', 'maxWidth', fullWidth );
+				      		let oldWidth = 0;
+				      		for ( let i = 0; i <= this.$el.index(); i++ ) {
+				      			let bounding = columns.get( i ).getBoundingClientRect();
+				      			if ( Math.ceil( oldWidth ) >= Math.ceil( fullWidth ) ) {
+				      				oldWidth = 0;
+				      			} else {
+				      				oldWidth = oldWidth + bounding.width;
+				      			}
+				      		}
+				      		console.log( oldWidth );
+				      		maxWidth = fullWidth - oldWidth;
+				      		// maxWidth = maxWidth <= 10 ? fullWidth : maxWidth;
 				      	} else {
-				      		target.resizable( 'option', 'maxWidth', maxWidth - columnWidth );
+				      		maxWidth = maxWidth - columnWidth;
 				      	}
+			      		target.resizable( 'option', 'maxWidth', maxWidth );
 				    },
 				    resize: ( event, ui ) => {
 				      	let target = ui.element;
 				        let next = target.next();
-				        let maxWidth = target.outerWidth() + next.outerWidth();
+				        let row = $( target ).parents( '.pa-row:first' );
+				        let columns = row.find( '> .pa-column' );
+				        let targetWidth = target.get(0).getBoundingClientRect().width;// target.outerWidth()
+				        let nextWidth = next.length > 0 ? next.get(0).getBoundingClientRect().width : 0;// ext.outerWidth();
+				        let maxWidth = targetWidth + nextWidth;
+
 				      	maxWidth = Math.ceil( maxWidth / columnWidth ) * columnWidth;
 
-				      	if ( screen !== 'sm' && screen !== 'xs' ) {
+				      	if ( screen == 'sm' || screen == 'xs' ) {
+
+				      	} else {
 							if ( ui.size.width > ui.originalSize.width ) {
 				        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );
 				        	} else {
@@ -167,15 +192,18 @@ export default class Column extends Backbone.View {
 				    stop: ( event, ui ) => {
 				    	let target = ui.element;
 				        let next = target.next();
-        				let currentCol = Math.round( next.width() / columnWidth );
+
+				        if ( next.length == 0 ) return;
+        				let currentCol = Math.round( next.get( 0 ).getBoundingClientRect().width / columnWidth );//Math.round( next.width() / columnWidth );
         				currentCol = currentCol ? currentCol : 1;
 
 		        		new Promise( ( resolve, reject ) => {
 			        		// trigger save next column
+			        		let percent = ( next.get( 0 ).getBoundingClientRect().width * 100 ) / fullWidth;//( next.outerWidth() * 100 ) / fullWidth;
 			        		let responsive = {
 			        			cols : currentCol,
 			        			styles: {
-			        				width: ( next.outerWidth() * 100 ) / fullWidth
+			        				width: percent.toFixed( 4 )
 			        			}
 			        		};
 			        		next.trigger( 'trigger_save_next_column', {

@@ -15,10 +15,10 @@ export default class Row extends Backbone.View {
 
 		this.events = {
 			'click > .pa-controls .pa-delete-row'					: '_deleteRowHandler',
-			'click > .pa-row-column-control .pa-add-column'			: '_addColumnHandler',
-			'click > .pa-row-column-control .pa-edit-column-num'	: '_changeColumnsHandler',
+			'click .pa-add-column'									: '_addColumnHandler',
+			'click .pa-edit-column-num'								: '_changeColumnsHandler',
 			'click > .pa-row-container > .row-controls > .left-controls > .pa-edit-row, > .row-controls > .left-controls > .pa-edit-row'		: '_setEditRowHandler',
-			'click .pa-reorder'			: () => {
+			'click .pa-reorder, .pa-set-column'			: () => {
 				return false;
 			}
 		}
@@ -26,6 +26,14 @@ export default class Row extends Backbone.View {
 		// listen this.row model
 		this.listenTo( this.row, 'destroy', this.remove );
 		this.listenTo( this.row.get( 'columns' ), 'add', this.addColumn );
+		this.listenTo( this.row, 'change:screen', ( model ) => {
+			let screen = model.get( 'screen' );
+			if ( screen == 'lg' || screen == 'md' ) {
+				this.$( '.pa-set-column' ).removeClass( 'hide' );
+			} else {
+				this.$( '.pa-set-column' ).addClass( 'hide' );
+			}
+		} );
 	}
 
 	/**
@@ -76,14 +84,6 @@ export default class Row extends Backbone.View {
 	 */
 	_addColumnHandler( e ) {
 		e.preventDefault();
-
-		// define column width relationship
-		let screens = {
-			lg: 1,
-			md: 1,
-			sm: 6,
-			xs: 12
-		};
 		// current screen
 		let currentScreen = this.row.get( 'screen' );
 		let screen_modes = [ 'lg', 'md', 'sm', 'xs' ];
@@ -94,37 +94,115 @@ export default class Row extends Backbone.View {
 		} else {
 			let calcols = Math.floor( 12 / ( this.row.get( 'columns' ).length + 1 ) );
 			let columnWidth = calcols * ( RowWidth / 12 ) * 100 / RowWidth;
+			let columnWidthPercent = ( RowWidth / 12 ) * 100 / RowWidth;
 
 			new Promise( ( resolve, reject ) => {
-				let lastest = false;
-				this.row.get( 'columns' ).map( ( column ) => {
-					let responsive = column.get( 'responsive' );
-					_.map( screen_modes, ( screen ) => {
-						responsive[screen].cols = calcols;
-						if ( responsive[screen].styles === undefined ) {
-							responsive[screen].styles = {};
-						}
-						responsive[screen].styles.width = columnWidth;
-					} );
 
-					column.set( 'responsive', responsive );
-					column.set( 'reRender', true );
-				} );
-				resolve( lastest );
-			} ).then( ( lastest ) => {
-				let responsive = {};
-				_.map( screen_modes, ( sc ) => {
-					responsive[sc] = {
-						cols: calcols,
-						styles: {
-							width: 100 - ( columnWidth * this.row.get( 'columns' ).length )
+				let screens = [ 'lg', 'md', 'sm', 'xs' ];
+				let columnsData = {};
+				// calculate responsive columns
+				_.map( screens, ( screen ) => {
+					let surplus = 0;
+					let newRps = {};
+					let successed = false;
+					for ( let index = this.row.get( 'columns' ).length - 1; index >= 0; index-- ) {
+						if ( successed && ! surplus ) return false;
+						let breakCal = false;
+						columnsData[index] = columnsData[index] == undefined ? {} : columnsData[index];
+						// if ( columnsData[index][screen] !== undefined ) return;
+						let column = this.row.get( 'columns' ).at( index );
+						let colResponsive = column.get( 'responsive' );
+						// resposive attributes
+						let cols = colResponsive[screen] !== undefined && colResponsive[screen].cols !== undefined ? colResponsive[screen].cols : 1;
+						let styles = colResponsive[screen] !== undefined && colResponsive[screen].styles ? colResponsive[screen].styles : false;
+						let width = styles && styles.width !== undefined ? styles.width : false;
+
+						if ( cols > 1 || ( cols == 1 && width ) ) {
+							console.log( surplus );
+							switch ( screen ) {
+								case 'lg':
+								case 'md':
+									if ( surplus ) {
+										if ( width ) {
+											surplus = parseFloat( width ) - parseFloat( cols * columnWidthPercent ) + parseFloat( surplus );
+											if ( Math.abs( surplus ) > columnWidthPercent ) {
+												cols = parseInt( cols ) + 1;
+console.log( 'DKM' );
+												console.log( surplus );
+												surplus = surplus > 0 ? surplus - columnWidthPercent : - ( Math.abs( surplus ) - columnWidthPercent );
+												successed = true;
+											}
+										}
+									} else if ( width ) {
+										surplus = parseFloat( width ) - parseFloat( cols * columnWidthPercent );
+									}
+
+									if ( cols > 1 ) {
+										successed = true;
+									}
+
+									columnsData[index][screen] = {
+										cols: cols > 1 ? cols - 1 : cols
+									};
+
+									if ( surplus ) {
+										width = parseFloat( cols * columnWidthPercent ) + surplus;
+										if ( successed ) {
+											columnsData[index][screen].styles = {
+												width: width - columnWidthPercent
+											};
+											surplus = false;
+										}
+									}
+									if ( screen == 'lg' && index === 2 ) {
+										console.log( surplus );
+									}
+
+								break;
+
+								case 'sm':
+
+								break;
+
+								case 'xs':
+
+								break;
+							}
 						}
 					}
 				} );
-				this.row.get( 'columns' ).add( {
-					screen: currentScreen,
-					responsive: responsive
+
+				resolve( columnsData );
+			} ).then( ( cols ) => {
+				_.map( cols, ( data, index ) => {
+					if ( data ) {
+						let column = this.row.get( 'columns' ).at( index );
+						let responsive = { ...column.get( 'responsive' ), ...data };
+						column.set( {
+							reRender: true,
+							responsive: responsive
+						} );
+					}
 				} );
+
+				let newColumnsObject = {
+					screen: currentScreen,
+					responsive: {
+						lg: {
+							cols: 1
+						},
+						md: {
+							cols: 1
+						},
+						sm: {
+							cols: 6
+						},
+						xs: {
+							cols: 12
+						}
+					}
+				};
+				this.row.get( 'columns' ).add( newColumnsObject );
 			} );
 		}
 
