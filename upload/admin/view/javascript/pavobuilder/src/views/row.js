@@ -29,9 +29,9 @@ export default class Row extends Backbone.View {
 		this.listenTo( this.row, 'change:screen', ( model ) => {
 			let screen = model.get( 'screen' );
 			if ( screen == 'lg' || screen == 'md' ) {
-				this.$( '.pa-set-column' ).removeClass( 'hide' );
+				this.$( '.pa-set-column, .pa-add-column' ).removeClass( 'hide' );
 			} else {
-				this.$( '.pa-set-column' ).addClass( 'hide' );
+				this.$( '.pa-set-column, .pa-add-column' ).addClass( 'hide' );
 			}
 		} );
 	}
@@ -117,45 +117,56 @@ export default class Row extends Backbone.View {
 						let styles = colResponsive[screen] !== undefined && colResponsive[screen].styles ? colResponsive[screen].styles : false;
 						let width = styles && styles.width !== undefined ? styles.width : false;
 
-						if ( cols > 1 || ( cols == 1 && width ) ) {
-							console.log( surplus );
+						if ( cols > 1 || ( cols == 1 && width ) || ( cols === 1 && successed ) ) {
 							switch ( screen ) {
 								case 'lg':
 								case 'md':
-									if ( surplus ) {
-										if ( width ) {
-											surplus = parseFloat( width ) - parseFloat( cols * columnWidthPercent ) + parseFloat( surplus );
-											if ( Math.abs( surplus ) > columnWidthPercent ) {
-												cols = parseInt( cols ) + 1;
-console.log( 'DKM' );
-												console.log( surplus );
-												surplus = surplus > 0 ? surplus - columnWidthPercent : - ( Math.abs( surplus ) - columnWidthPercent );
-												successed = true;
-											}
-										}
-									} else if ( width ) {
-										surplus = parseFloat( width ) - parseFloat( cols * columnWidthPercent );
+									let nosuccess = false;
+									if ( successed ) {
+										nosuccess = true;
 									}
 
-									if ( cols > 1 ) {
+									let newsurplus = 0;
+									if ( width ) {
+										newsurplus = width - cols * columnWidthPercent;
+									}
+									surplus = parseFloat( surplus ) + parseFloat( newsurplus );
+									// if cols > 1 always true
+									if ( cols > 1 && ! successed ) {
+										cols = cols - 1;
 										successed = true;
 									}
 
-									columnsData[index][screen] = {
-										cols: cols > 1 ? cols - 1 : cols
-									};
-
 									if ( surplus ) {
-										width = parseFloat( cols * columnWidthPercent ) + surplus;
-										if ( successed ) {
-											columnsData[index][screen].styles = {
-												width: width - columnWidthPercent
-											};
-											surplus = false;
+										if ( surplus > 0 ) {
+											if ( surplus > columnWidthPercent ) {
+												if ( nosuccess ) {
+													cols = parseInt( cols ) + 1;
+													surplus = surplus - columnWidthPercent;
+												} else {
+													surplus = surplus - columnWidthPercent;
+												}
+											}
+										} else {
+											if ( surplus + columnWidthPercent < 0 ) {
+												cols = ! nosuccess ? cols - 1 : cols;
+												surplus = surplus + columnWidthPercent;
+											}
 										}
 									}
-									if ( screen == 'lg' && index === 2 ) {
-										console.log( surplus );
+
+									columnsData[index][screen] = {
+										cols: cols
+									};
+
+									if ( surplus && cols >= 1 ) {
+										width = parseFloat( columnWidthPercent * cols ) + surplus;
+										if ( successed && cols >= 1 && width >= columnWidthPercent ) {
+											columnsData[index][screen].styles = {
+												width : width
+											}
+											surplus = false;
+										}
 									}
 
 								break;

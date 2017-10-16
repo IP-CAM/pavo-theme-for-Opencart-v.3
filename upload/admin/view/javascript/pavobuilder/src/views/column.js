@@ -40,7 +40,7 @@ export default class Column extends Backbone.View {
 	        		responsive[screen] = {
 	        			cols: currentCol,
 	        			styles: {
-	        				width: percent.toFixed( 4 )
+	        				width: percent.toFixed( 5 )
 	        			}
 	        		}
 	        		resolve( responsive );
@@ -203,7 +203,7 @@ export default class Column extends Backbone.View {
 			        		let responsive = {
 			        			cols : currentCol,
 			        			styles: {
-			        				width: percent.toFixed( 4 )
+			        				width: percent.toFixed( 5 )
 			        			}
 			        		};
 			        		next.trigger( 'trigger_save_next_column', {

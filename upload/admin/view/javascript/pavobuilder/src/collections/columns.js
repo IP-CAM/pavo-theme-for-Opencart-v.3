@@ -56,18 +56,40 @@ export default class ColumnsCollection extends Backbone.Collection {
 	/**
 	 * re-calculator column width
 	 */
-	_calculatorColumnWidth( model ) {
+	_calculatorColumnWidth( model, collection, y ) {
 		let numberColumn = this.length;
 		let percentWidth = 100 / numberColumn;
-		this.map( ( model ) => {
+		if ( 12 % numberColumn === 0 ) {
+			this.map( ( model ) => {
+				let responsive = model.get( 'responsive' );
+				responsive[model.get( 'screen' )] = {
+					cols: Math.floor( 12 / numberColumn ),
+					width: percentWidth
+				}
+				model.set( 'responsive', responsive );
+				model.set( 'reRender', true );
+			} );
+		} else {
 			let responsive = model.get( 'responsive' );
-			responsive[model.get( 'screen' )] = {
-				cols: Math.floor( 12 / numberColumn ),
-				width: percentWidth
-			}
-			model.set( 'responsive', responsive );
-			model.set( 'reRender', true );
-		} );
+			let prevModel = this.at( y.index - 1 );
+			let newResponsive = prevModel.get( 'responsive' );
+			_.map( responsive, ( data, screen ) => {
+				if ( screen === 'lg' || screen === 'md' ) {
+					newResponsive[screen].cols = parseInt( newResponsive[screen].cols ) + parseInt( responsive[screen].cols );
+					let width = 0;
+					if ( responsive[screen].styles  !== undefined && responsive[screen].styles.width !== undefined ) {
+						width = parseInt( width ) + parseInt( responsive[screen].styles.width );// + parseInt( responsive[screen].cols );
+					}
+					if ( newResponsive[screen].styles !== undefined && newResponsive[screen].styles.width  !== undefined ) {
+						width = parseInt( width ) + parseInt( newResponsive[screen].styles.width );
+					}
+				}
+			} );
+			prevModel.set( {
+				reRender 	: true,
+				responsive 	: newResponsive
+			} )
+		}
 	}
 
 }
