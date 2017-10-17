@@ -153,14 +153,16 @@ export default class Column extends Backbone.View {
 				      	if ( screen == 'sm' || screen == 'xs' ) {
 				      		let oldWidth = 0;
 				      		for ( let i = 0; i <= this.$el.index(); i++ ) {
-				      			let bounding = columns.get( i ).getBoundingClientRect();
-				      			if ( Math.ceil( oldWidth ) >= Math.ceil( fullWidth ) ) {
-				      				oldWidth = 0;
-				      			} else {
-				      				oldWidth = oldWidth + bounding.width;
+				      			if ( maxWidth === fullWidth ) maxWidth = 0;
+				      			if ( target.index() !== i ) {
+					      			let bounding = columns.get( i ).getBoundingClientRect();
+					      			if ( Math.ceil( oldWidth ) >= Math.ceil( fullWidth ) ) {
+					      				oldWidth = 0;
+					      			} else {
+					      				oldWidth = oldWidth + bounding.width;
+					      			}
 				      			}
 				      		}
-				      		console.log( oldWidth );
 				      		maxWidth = fullWidth - oldWidth;
 				      		// maxWidth = maxWidth <= 10 ? fullWidth : maxWidth;
 				      	} else {
@@ -180,7 +182,7 @@ export default class Column extends Backbone.View {
 				      	maxWidth = Math.ceil( maxWidth / columnWidth ) * columnWidth;
 
 				      	if ( screen == 'sm' || screen == 'xs' ) {
-
+				      		console.log( ui, targetWidth / columnWidth );
 				      	} else {
 							if ( ui.size.width > ui.originalSize.width ) {
 				        		next.width( ui.size.nextOriginWidth - ( ui.size.width - ui.originalSize.width ) );

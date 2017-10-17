@@ -200,10 +200,10 @@ export default class Row extends Backbone.View {
 					screen: currentScreen,
 					responsive: {
 						lg: {
-							cols: 1
+							cols: this.row.get( 'columns' ).length == 0 ? 12 : 1
 						},
 						md: {
-							cols: 1
+							cols: this.row.get( 'columns' ).length == 0 ? 12 : 1
 						},
 						sm: {
 							cols: 6

@@ -72,23 +72,25 @@ export default class ColumnsCollection extends Backbone.Collection {
 		} else {
 			let responsive = model.get( 'responsive' );
 			let prevModel = this.at( y.index - 1 );
-			let newResponsive = prevModel.get( 'responsive' );
-			_.map( responsive, ( data, screen ) => {
-				if ( screen === 'lg' || screen === 'md' ) {
-					newResponsive[screen].cols = parseInt( newResponsive[screen].cols ) + parseInt( responsive[screen].cols );
-					let width = 0;
-					if ( responsive[screen].styles  !== undefined && responsive[screen].styles.width !== undefined ) {
-						width = parseInt( width ) + parseInt( responsive[screen].styles.width );// + parseInt( responsive[screen].cols );
+			if ( prevModel !== undefined ) {
+				let newResponsive = prevModel.get( 'responsive' );
+				_.map( responsive, ( data, screen ) => {
+					if ( screen === 'lg' || screen === 'md' ) {
+						newResponsive[screen].cols = parseInt( newResponsive[screen].cols ) + parseInt( responsive[screen].cols );
+						let width = 0;
+						if ( responsive[screen].styles  !== undefined && responsive[screen].styles.width !== undefined ) {
+							width = parseInt( width ) + parseInt( responsive[screen].styles.width );// + parseInt( responsive[screen].cols );
+						}
+						if ( newResponsive[screen].styles !== undefined && newResponsive[screen].styles.width  !== undefined ) {
+							width = parseInt( width ) + parseInt( newResponsive[screen].styles.width );
+						}
 					}
-					if ( newResponsive[screen].styles !== undefined && newResponsive[screen].styles.width  !== undefined ) {
-						width = parseInt( width ) + parseInt( newResponsive[screen].styles.width );
-					}
-				}
-			} );
-			prevModel.set( {
-				reRender 	: true,
-				responsive 	: newResponsive
-			} )
+				} );
+				prevModel.set( {
+					reRender 	: true,
+					responsive 	: newResponsive
+				} )
+			}
 		}
 	}
 
