@@ -39,7 +39,7 @@ class PA_Css extends Controller {
 		}
 
 		if ( $id ) {
-			$css[] = '#' . $id . ' ' . $inner . ' > div:first{';
+			$css[] = '#' . $id . ' ' . $inner . ' > div:first-child{';
 			$css[] = ! empty( $settings['color'] ) ? 'color:' . $settings['color'] . ';' : '';
 			$base_url = $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTP_CATALOG;
 			$css[] = ! empty( $settings['background_image'] ) ? 'background-image: url( '. $base_url . 'image/' . $settings['background_image'].' )' . ';' : '';
@@ -52,7 +52,7 @@ class PA_Css extends Controller {
 				foreach ( $settings['styles'] as $attr => $value ) {
 					$parser = explode( '_', $attr );
 					if ( isset( $parser[1] ) && in_array( $parser[1], array( 'top', 'left', 'bottom', 'right' ) ) ) {
-						$css[] = $value ? str_replace( '_', '-', $attr ) . ':' . $value . 'px;' : 0;
+						$css[] = $value ? str_replace( '_', '-', $attr ) . ':' . $value . 'px;' : '';
 					} else {
 						$css[] = $value ? str_replace( '_', '-', $attr ) . ':' . $value . ';' : '';
 					}

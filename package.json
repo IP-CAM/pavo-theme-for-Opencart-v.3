@@ -16,7 +16,6 @@
     "jquery-serializejson": "^2.8.1",
     "jquery-ui": "^1.12.1",
     "jquery-ui-bundle": "^1.12.1",
-    "npm": "^5.4.1",
     "spectrum-colorpicker": "^1.8.0",
     "underscore": "^1.8.3",
     "webpack": "^3.5.5"
