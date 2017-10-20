@@ -18,6 +18,7 @@ class Pavo_Pagination extends Pagination {
 	public $text_last = '&gt;|';
 	public $text_next = '&gt;';
 	public $text_prev = '&lt;';
+	public $uniqid = '';
 
 	/**
      *
@@ -43,7 +44,7 @@ class Pavo_Pagination extends Pagination {
 
 		$this->url = str_replace('%7Bpage%7D', '{page}', $this->url);
 
-		$output = '<ul class="pavo-pagination pagination">';
+		$output = '<ul class="pavo-pagination'.( $this->uniqid ? ' ' . $this->uniqid : '' ).'">';
 
 		if ($page > 1) {
 			$output .= '<li><a href="' . str_replace('{page}', $page - 1, $this->url) . '">' . $this->text_prev . '</a></li>';
@@ -55,7 +56,7 @@ class Pavo_Pagination extends Pagination {
 			$output .= '<li><a href="' . str_replace(array('&amp;page={page}', '?page={page}', '&page={page}'), '', $this->url) . '">1</a></li>';
 		}
 
-		$dotted_before = $dotted_after = $dotted = false;
+		$dotted_before = $dotted_after = false;
 		if ( $num_pages > 1 ) {
 			for ( $i = 2; $i <= $num_pages - 1; $i++ ) {
 				if ( $page == $i ) {
