@@ -94,7 +94,7 @@ class ControllerExtensionModulePavothemer extends PavoThemerController {
 					$value = isset( $this->request->post[ $name ] ) ? $this->request->post[ $name ] : $this->config->get( $name );
 					// $value = $value ? $value : ( isset( $item['default'] ) ? $item['default'] : '' );
 
-					$label = $this->language->get( $item['label'] );
+					$label = $this->language->get( 'pavothemer_setting_' . $item['id'] );
 					$label = $label ? $label : ( isset( $item['label'] ) ? $item['label'] : '' );
 					// override item value
 					$item['value'] = $value;

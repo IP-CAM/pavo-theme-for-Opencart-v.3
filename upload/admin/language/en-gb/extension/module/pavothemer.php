@@ -155,3 +155,41 @@ $_['entry_import_success_text']		= 'Import successfully. Please go to Extensions
 //
 $_['entry_delete_successfully'] 	= 'Delete backup successfully';
 $_['entry_successfully_text'] 		= 'successfully';
+
+// SETTINGS TEXT
+$_['pavothemer_setting_general']	 	= 'xxx';
+$_['pavothemer_setting_default_skin'] 	= 'Default Skin';
+$_['pavothemer_setting_theme_width'] 	= 'Width';
+$_['pavothemer_setting_enable_custom_copyright'] 	= 'Enabled Custom Copyright';
+$_['pavothemer_setting_copyright_text']	= 'Copyright';
+$_['pavothemer_setting_google_map_api_key'] = 'Google Map API Key';
+$_['pavothemer_setting_google_recaptra_api_key'] = 'Google ReCaptcha Key';
+$_['pavothemer_setting_google_recaptra_secret_key'] = 'Google ReCaptcha Secret Key';
+$_['pavothemer_setting_quickview']			= 'Quickview';
+$_['pavothemer_setting_logo_type']			= 'Logo Type';
+$_['pavothemer_setting_header_layout']		= 'Header Layout';
+$_['pavothemer_setting_footer_layout']		= 'Footer Layout';
+$_['pavothemer_setting_category_layout']	= 'Category Layout';
+$_['pavothemer_setting_product_layout']		= 'Product Layout';
+$_['pavothemer_setting_offcanvas']			= 'Offcanvas Menu';
+$_['pavothemer_setting_layout']				= 'Layout';
+
+$_['pavothemer_setting_custom_css']			= 'Custom Css';
+$_['pavothemer_setting_custom_js']			= 'Custom Javascript';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
