@@ -7,12 +7,35 @@
 		animate_groups 	: {{ animate_groups|json_encode() }},
 		animates 		: {{ animates|json_encode() }},
 		site_url 		: '{{ site_url }}',
-		languages 		: {{ languages }},
+		languages 		: {{ i18n }},
+		languages_list 	: {{ languages|json_encode() }},
 		user_token 		: '{{ user_token }}',
 		elements 		: {{ elements|json_encode() }},
 		devices 		: { 'laptop' : 'fa fa-laptop', 'tablet' : 'fa fa-tablet', 'mobile' : 'fa fa-mobile' },
 		width_roles 	: {{ width_roles|json_encode() }}
 	}
+</script>
+<script type="text/html" id="pa-languages-panel">
+	<ul class="nav nav-tabs" id="language">
+		{% set i = 0 %}
+		{% for language in languages %}
+			<li{{ i == 0 ? ' class="active"' : '' }}>
+				<a href="#language{{ language.language_id }}" data-toggle="tab" aria-expanded="true"><img src="language/{{ language.code }}/{{ language.code }}.png" /> {{ language.name }}</a>
+			</li>
+		{% set i = i + 1 %}
+		{% endfor %}
+	</ul>
+	<div class="tab-content">
+		{% set i = 0 %}
+		{% for language in languages %}
+			<div class="tab-pane{{ i == 0 ? ' active' : '' }}" id="language{{ language.language_id }}"></div>
+		{% set i = i + 1 %}
+		{% endfor %}
+	</div>
+	<script type="text/javascript">
+		$('#language').tab();
+		$('#language a:first').tab('show');
+	</script>
 </script>
 <script type="text/html" id="pa-modal-panel">
 	<% if ( data.tabs.length ) { %>

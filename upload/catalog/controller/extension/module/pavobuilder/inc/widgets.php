@@ -35,6 +35,11 @@ class PA_Widgets extends Controller {
 		return $this;
 	}
 
+	/**
+	 * get widgets
+	 *
+	 * @return array
+	 */
 	public function getWidgets() {
 		if ( ! $this->widgets ) {
 			$this->registerWidgets();
@@ -56,6 +61,11 @@ class PA_Widgets extends Controller {
 		return $widgets;
 	}
 
+	/**
+	 * get width
+	 *
+	 * @param $widget
+	 */
 	public function getWidget( $widget = '' ) {
 		if ( ! $this->widgets ) {
 			$this->registerWidgets();
@@ -67,8 +77,20 @@ class PA_Widgets extends Controller {
 	/**
 	 * render widget
 	 */
-	public function renderWidget( $widget = '', $settings = array(), $content = '' ) {
-		$widget = $this->getWidget( $widget );
+	public function renderWidget( $widget_code = '', $settings = array(), $content = '' ) {
+		$language_id = $this->config->get('config_language_id');
+		$this->load->model( 'localisation/language' );
+		$language = $this->model_localisation_language->getLanguage( $language_id );
+		$code = ! empty( $language['code'] ) ? $language['code'] : $this->config->get('config_language');
+
+		$widget = $this->getWidget( $widget_code );
+		foreach ( $settings as $key => $setting ) {
+			if ( $key === $code ) {
+				foreach ( $setting as $name => $value ) {
+					$settings[$name] = $value;
+				}
+			}
+		}
 		return $widget->render( $settings, $content );
 	}
 

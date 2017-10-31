@@ -53,6 +53,16 @@ $( document ).ready(() => {
 							Loading.$( '#loader' ).removeClass( 'loading' );
 							Loading.$( 'span' ).html( res.success );
 						}
+						if ( res.id !== undefined ) {
+							if ( $( '#pavohomebuilder-layout-edit #module_id' ).length == 0 ) {
+								$( '#pavohomebuilder-layout-edit' ).append( '<input type="hidden" id="module_id" name="module_id" value="'+res.id+'" />' );
+								let href = window.location.href;
+								href = href.replace( '/add', '' );
+								window.history.pushState( '', '', href + '&module_id=' + res.id );
+							} else {
+								$( '#pavohomebuilder-layout-edit #module_id' ).val( res.id );
+							}
+						}
 					} ).fail( () => {
 						
 					} );

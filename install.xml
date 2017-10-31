@@ -95,7 +95,7 @@
             'customize'
         );
 
-        $this->document->addStyle( 'view/javascript/pavobuilder/dist/pavobuilder.min.css' );
+        $this->document->addStyle( 'catalog/view/javascript/pavobuilder/dist/pavobuilder.min.css' );
         foreach ( $styles as $style ) {
             if ( ! $style ) continue;
             $style = DIR_TEMPLATE . $theme . '/stylesheet/' . $style;
@@ -213,7 +213,7 @@
             // load model
             $this->load->model('catalog/information');
             $layout_id = $this->model_catalog_information->getInformationLayoutId($this->request->get['information_id']);
-            $classes = 'information';
+            $classes[] = 'information';
         }
 
         $classes[] = 'layout-' . $layout_id;

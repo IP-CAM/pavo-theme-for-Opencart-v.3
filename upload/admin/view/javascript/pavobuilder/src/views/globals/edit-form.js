@@ -78,22 +78,15 @@ export default class EditForm extends Backbone.View {
 			_.map( this.fields, ( fields, tab ) => {
 				// clone to new object is required
 				let clonefields = { ...fields };
-				// if ( clonefields.label != undefined ){
-				// 	clonefields.label = PA_PARAMS.languages[clonefields.label];
-				// }
+
+				let languageFields = [];
 				_.map( clonefields.fields, ( field, key ) => {
 					let cloneField = { ...field };
-					// if ( cloneField.label != undefined ){
-					// 	cloneField.label = PA_PARAMS.languages[cloneField.label];
-					// }
+					if ( cloneField.language !== undefined && cloneField.language == true ) {
+						languageFields.push( cloneField );
+						return false;
+					}
 
-					// if ( cloneField.options != undefined ) {
-					// 	for ( let i = 0; i < cloneField.options.length; i++ ) {
-					// 		if ( cloneField.options[i].label !== undefined ) {
-					// 			cloneField.options[i].label = PA_PARAMS.languages[cloneField.options[i].label] !== undefined ? PA_PARAMS.languages[cloneField.options[i].label] : cloneField.options[i].label;
-					// 		}
-					// 	}
-					// }
 					if ( cloneField.type == 'select-animate' ) {
 						cloneField.type = 'select';
 						cloneField.groups = true;
@@ -104,6 +97,20 @@ export default class EditForm extends Backbone.View {
 					cloneField.value = cloneSettings[cloneField.name] !== undefined ? cloneSettings[cloneField.name] : ( cloneField.default !== undefined ? cloneField.default : '' );
 					this.$( '#nav-' + tab ).append( _.template( $( '#pa-' + cloneField.type + '-form-field' ).html(), { variable: 'data' } )( { field: cloneField, settings: cloneSettings } ) );
 				} );
+
+				if ( Object.keys( languageFields ).length > 0 ) {
+					this.$( '#nav-' + tab ).append( _.template( $( '#pa-languages-panel' ).html(), { variable: 'data' } ) );
+					_.map( window.PA_PARAMS.languages_list, ( language, key ) => {
+						_.map( languageFields, ( field, key ) => {
+							let cloneField = { ...field };
+							let value = cloneSettings[language.code] !== undefined && cloneSettings[language.code][cloneField.name] !== undefined ? cloneSettings[language.code][cloneField.name] : false;
+							cloneField.value = ! value && cloneField.value !== '' ? cloneField.value : ( value ? value : cloneField.default !== undefined ? cloneField.default : '' );
+							let name = language.code + '[' + cloneField.name + ']';
+							cloneField.name = name;
+							this.$( '#language' + language.language_id ).append( _.template( $( '#pa-' + cloneField.type + '-form-field' ).html(), { variable: 'data' } )( { field: cloneField, settings: cloneSettings } ) );
+						} );
+					} );
+				}
 			} );
 		}
 

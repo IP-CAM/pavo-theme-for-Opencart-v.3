@@ -113,7 +113,9 @@ class ControllerExtensionModulePavobuilder extends Controller {
 		}
 
 		// languages
-		$this->data['languages'] = json_encode( $this->language->all() );
+		$this->load->model( 'localisation/language' );
+		$this->data['i18n'] = json_encode( $this->language->all() );
+		$this->data['languages'] = $this->model_localisation_language->getLanguages();
 		$this->data['layout_id'] = $id;
 		$this->data['elements']	= array();
 		$this->data['groups']	= array();
@@ -297,11 +299,13 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->response->addHeader( 'Content-Type: application/json' );
 			$results = array(
 				'status'	=> true,
+				'id'		=> $id,
 				'success'	=> $this->language->get( 'text_success' )
 			);
 			if ( $saved !== true ) {
 				$results = array(
 					'status'	=> false,
+					'id'		=> $id,
 					'success'	=> $saved
 				);
 			}
