@@ -219,7 +219,7 @@ class ControllerExtensionModulePavobuilder extends Controller {
 			$this->data['elements'][$key]['name'] = $this->data['element_mask'][$key]['label'];
 		}
 
-		$this->data['user_token'] 	= $this->session->data['user_token'];
+		$this->data['user_token'] = $this->session->data['user_token'];
 		// layout data
 		$layout = $id ? $this->model_setting_module->getModule( $id ) : array();
 		$layout = $layout ? $layout : array();
@@ -231,6 +231,10 @@ class ControllerExtensionModulePavobuilder extends Controller {
 
 		$this->data['site_url'] 	= $this->request->server['HTTPS'] ? HTTPS_CATALOG : HTTPS_CATALOG;
 		$this->data['edit_layout_url'] = str_replace( '&amp;', '&', $this->url->link( 'extension/module/pavobuilder/saveModule', 'module_id=' . $id . '&user_token=' . $this->session->data['user_token'], true ) );
+		
+		// default image
+		$this->load->model( 'tool/image' );
+		$this->data['no_image'] = $this->model_tool_image->resize('no_image.png', 100, 100);
 		$this->data['underscore_template'] = $this->load->view( 'extension/module/pavobuilder/_template', $this->data );
 
 		// addScripts

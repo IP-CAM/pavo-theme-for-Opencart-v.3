@@ -12,7 +12,8 @@
 		user_token 		: '{{ user_token }}',
 		elements 		: {{ elements|json_encode() }},
 		devices 		: { 'laptop' : 'fa fa-laptop', 'tablet' : 'fa fa-tablet', 'mobile' : 'fa fa-mobile' },
-		width_roles 	: {{ width_roles|json_encode() }}
+		width_roles 	: {{ width_roles|json_encode() }},
+		no_image 		: '{{ no_image }}'
 	}
 </script>
 <script type="text/html" id="pa-languages-panel">
@@ -150,7 +151,7 @@
 <script type="text/html" id="pa-image-form-field">
 	<% var uniqid = new Date().getTime() %>
 	<%
-		var image = '';
+		var image = PA_PARAMS.no_image;
 		if ( data.field.value !== undefined && data.field.value ) {
 			var lastIndex = new File( [''], data.field.value ).name.lastIndexOf('.');
 			var name = data.field.value.slice( 0, lastIndex );
