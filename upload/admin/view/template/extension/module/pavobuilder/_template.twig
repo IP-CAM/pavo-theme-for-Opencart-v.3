@@ -163,7 +163,7 @@
 		<label class="col-sm-2 control-label"><%= data.field.label %></label>
 		<div class="col-sm-10">
 			<a href="#" id="thumb-<%= uniqid %>" data-toggle="image" class="img-thumbnail" data-original-title="" title="">
-				<img src="<%= image %>" />
+				<img src="<%= image %>" data-placeholder="<%= PA_PARAMS.no_image %>" />
 			</a>
             <input type="hidden" name="<%= data.field.name %>" value="<%= data.field.value %>" id="input-<%= uniqid %>">
 			<% if ( data.field.desc ) { %>
